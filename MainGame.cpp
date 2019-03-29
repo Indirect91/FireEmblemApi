@@ -15,7 +15,8 @@ MainGame::~MainGame()
 void MainGame::Init()
 {
 	SOUNDMANAGER->Init();
-
+	SCENEMANAGER->AddScene("TitleScene", new TitleScene);
+	SCENEMANAGER->LoadScene("TitleScene");
 }
 
 void MainGame::Release()
