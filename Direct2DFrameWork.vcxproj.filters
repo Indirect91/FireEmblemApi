@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GameFrameWork">
+      <UniqueIdentifier>{df6493d1-6848-453a-ae58-643c4784d7b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinMain">
+      <UniqueIdentifier>{834ff15f-9abd-440e-ae41-35163b41ec00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame">
+      <UniqueIdentifier>{9ff93593-6c95-4c3e-b041-deb1f4c6b96b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\D2D">
+      <UniqueIdentifier>{9d78ff19-7585-4f31-97ec-88d32273718e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\Util">
+      <UniqueIdentifier>{dace94de-b540-4e1a-96a4-0772c2afd567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\Image">
+      <UniqueIdentifier>{fa31defc-94d9-45f3-9551-19d86bb86a3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\KEYMANAGER">
+      <UniqueIdentifier>{ba0c48df-d85a-4d1e-ad4e-0a9d0df68ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\SceneManager">
+      <UniqueIdentifier>{adcc0422-1f89-4a79-8d0f-b8af50a2a8a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\TimeManager">
+      <UniqueIdentifier>{f1c7b3c4-21ea-4970-98d8-7dc7b90d6f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFrameWork\SoundManager">
+      <UniqueIdentifier>{3fe7a9cb-2a5e-4332-ae3f-59904a225fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\TitleScene">
+      <UniqueIdentifier>{1ed2e2af-6694-4e1c-b606-daeacdf11c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\MapToolScene">
+      <UniqueIdentifier>{71519b39-b20a-4de9-89b3-282ce729956f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\WorldMapScene">
+      <UniqueIdentifier>{b0a4dcee-31ef-471a-b07e-9615c006bf62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\LoadingScene">
+      <UniqueIdentifier>{dc087090-cc06-4849-9777-258725436606}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Resource.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct2DFrameWork.h">
+      <Filter>리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>WinMain</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNode.h">
+      <Filter>WinMain</Filter>
+    </ClInclude>
+    <ClInclude Include="D2DRenderer.h">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClInclude>
+    <ClInclude Include="SingletonBase.h">
+      <Filter>GameFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonMacroFunction.h">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyManager.h">
+      <Filter>GameFrameWork\KEYMANAGER</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>GameFrameWork\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>GameFrameWork\TimeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>GameFrameWork\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>MainGame\TitleScene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>리소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>MainGame</Filter>
+    </ClCompile>
+    <ClCompile Include="GameNode.cpp">
+      <Filter>WinMain</Filter>
+    </ClCompile>
+    <ClCompile Include="D2DRenderer.cpp">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClCompile>
+    <ClCompile Include="D2DRenderer + DrawFunc.cpp">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonMacroFunction.cpp">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyManager.cpp">
+      <Filter>GameFrameWork\KEYMANAGER</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>GameFrameWork\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>GameFrameWork\TimeManager</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>GameFrameWork\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct2DFrameWork.cpp">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>MainGame\TitleScene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Direct2DFrameWork.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Direct2DFrameWork.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
