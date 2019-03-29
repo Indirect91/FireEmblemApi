@@ -114,7 +114,7 @@ void TitleScene::Update()
 		{
 			//▼윈도우 이동이 완료되었을떄
 			
-			SCENEMANAGER->LoadScene("맵툴");
+			SCENEMANAGER->LoadScene("MapToolScene");
 		}
 	}
 
