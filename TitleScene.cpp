@@ -27,8 +27,10 @@ void TitleScene::Init()
 	isMaptool = false;		//맵툴선택여부 false
 	isIngame = false;		//인게임 선택여부 false
 	isDone = false;			//윈도우창 재조정이 끝났는지 여부 false
-	frameCounter = 0;		//팔시온프레임카운터 초기 0 설정
+	Tcounter = 0;		
+	falchionframeX = 0;		//팔시온프레임카운터 초기 0 설정
 	pickAlpha = 0.f;		//픽창 알파값 초기 0 설정
+	titleAlpha = 0.f;		//타이틀 알파값 초기 0 설정
 }
 
 void TitleScene::Release()
@@ -38,6 +40,7 @@ void TitleScene::Release()
 
 void TitleScene::Update()
 {
+	Tcounter++;
 	//▼아래키 입력받았을때
 	if (KEYMANAGER->IsOnceKeyDown(VK_DOWN) || KEYMANAGER->IsOnceKeyDown('W'))
 	{
@@ -96,7 +99,7 @@ void TitleScene::Update()
 			{
 				resizeWindowRateX += 13.5f;
 			}
-			if (resizeWindowRateY >= 240) resizeWindowRateY = 240;
+			if (resizeWindowRateY >= 260) resizeWindowRateY = 260;
 			else
 			{
 				resizeWindowRateAccY += 1.04f;
@@ -104,18 +107,29 @@ void TitleScene::Update()
 			}
 
 			SetWindowPos(_hWnd, 0, 150 + moveWindowRateX, 130 + moveWindowRateY, 1300 - resizeWindowRateX, 640 + resizeWindowRateY, 0);
-			if (moveWindowRateX == 0 && moveWindowRateY == 0 && resizeWindowRateX == 100 && resizeWindowRateY == 240) isDone = true;
+			if (moveWindowRateX <= 0 && moveWindowRateY <= 0 && resizeWindowRateX >= 300 && resizeWindowRateY >= 260) isDone = true;
 
 		}
 		else
 		{
-			Sleep(500);
+			//▼윈도우 이동이 완료되었을떄
+			
 			SCENEMANAGER->LoadScene("맵툴");
 		}
 	}
 
+	//▼파이어엠블렘 시리즈 대대로 내려오는 명검 팔시온의 프레임
+	if (Tcounter % 3 == 0 && Tcounter>54)
+	{
+		falchionframeX += 1;
+		if (falchionframeX > 33)
+			falchionframeX = 0;
+		if (Tcounter > 153)
+			Tcounter = 0;
+	}
+
 	//▼픽네모 알파가 올라가고있을때
-	if (ascending) 
+	if (ascending&&SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
 	{
 		pickAlpha += 0.01f; //알파 증가
 		if (pickAlpha >= 1.f)
@@ -124,7 +138,8 @@ void TitleScene::Update()
 			ascending = false;
 		}
 	}
-	else //아닐때
+	//▼픽네모 알파가 내려가고있을때
+	else if(ascending==false && SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)//아닐때
 	{
 		pickAlpha -= 0.01f; //알파 감소
 		if (pickAlpha <= 0.3f)
@@ -134,15 +149,25 @@ void TitleScene::Update()
 		}
 	}
 
-	//▼픽값 항시 변동
+	//씬 커튼이 전부 올라갔을때부터 파이어엠블렘 로고 출력
+	if (SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
+	{
+		titleAlpha += 0.01f;
+		if (titleAlpha > 1.f) titleAlpha = 1.f;
+	}
+
+	//▼알파값 항시 변동
 	IMAGEMANAGER->FindImage("타이틀선택박스")->SetAlpha(pickAlpha);
+	IMAGEMANAGER->FindImage("타이틀텍스트")->SetAlpha(titleAlpha);
 }
 
 void TitleScene::Render()
 {
 	//▼뭐 랜더할지 너무 이름이 명확해서 더이상 설명이 필요없다
 	IMAGEMANAGER->FindImage("타이틀백그라운드")->Render(0, 0); 
+	IMAGEMANAGER->FindImage("타이틀팔시온")->SetSize(IMAGEMANAGER->FindImage("타이틀팔시온")->GetFrameSize());
+	IMAGEMANAGER->FindImage("타이틀팔시온")->SetReverseY(true);
+	IMAGEMANAGER->FindImage("타이틀팔시온")->FrameRender(WINSIZEX/2,WINSIZEY/2+100,falchionframeX,0,Pivot::Center);
 	IMAGEMANAGER->FindImage("타이틀텍스트")->Render(0,0);
 	IMAGEMANAGER->FindImage("타이틀선택박스")->Render(selectionBox.x, selectionBox.y);
-	
 }

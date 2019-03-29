@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MainGame.h"
 #include "TitleScene.h"
+#include "MapToolScene.h"
 
 MainGame::MainGame()
 {
@@ -16,6 +17,7 @@ void MainGame::Init()
 {
 	SOUNDMANAGER->Init();
 	SCENEMANAGER->AddScene("TitleScene", new TitleScene);
+	SCENEMANAGER->AddScene("MapToolScene", new MapToolScene);
 	SCENEMANAGER->LoadScene("TitleScene");
 }
 

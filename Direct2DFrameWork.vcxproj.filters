@@ -108,6 +108,9 @@
     <ClInclude Include="TitleScene.h">
       <Filter>MainGame\TitleScene</Filter>
     </ClInclude>
+    <ClInclude Include="MapToolScene.h">
+      <Filter>MainGame\MapToolScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>MainGame\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="MapToolScene.cpp">
+      <Filter>MainGame\MapToolScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

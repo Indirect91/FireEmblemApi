@@ -44,7 +44,7 @@
 //▼공용 자료형
 enum class Pivot : int
 {
-	LeftTop, Center, Bottom
+	LeftTop, Center, Bottom, 
 };
 
 //▼내가 생성한 헤더

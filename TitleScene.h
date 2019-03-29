@@ -12,9 +12,11 @@ class TitleScene : public GameNode
 	BOOL isIngame;		//인게임이 픽된 여부
 	BOOL isDone;		//윈도우 재배치 끝났는지 여부
 	BOOL ascending;		//픽하는 빨간네모 알파값 상승중인지
-	UINT frameCounter;	//팔시온 프레임 카운터
+	UINT Tcounter;		//그냥 카운터
+	UINT falchionframeX;//팔시온 프레임 카운터X
 
 	float pickAlpha;		//픽하는 네모 알파값
+	float titleAlpha;		//픽하는 네모 알파값
 	float moveWindowRateX;	//윈도우 이동시킬 수치
 	float moveWindowRateY;	//윈도우 이동시킬 수치
 	float moveWindowRateAccX; //윈도우 이동시킬 수치 가속

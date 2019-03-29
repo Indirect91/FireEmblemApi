@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "StringHelper.h"
 
-//////////////////////////////////////////////////////////////////////////
-///@brief 문자열 자르기
-///@param orgin : 원본 문자열
-///@param tok : 자를 기준이 되는 문자열
-///@return 완료된 문자열 배열
-//////////////////////////////////////////////////////////////////////////
 void StringHelper::SplitString(std::vector<std::string>* result, std::string origin, std::string tok)
 {
 	result->clear();
@@ -115,7 +109,6 @@ void StringHelper::Replace(std::wstring* str, std::wstring comp, std::wstring re
 		temp.replace(start_pos, comp.length(), rep);
 		start_pos += rep.length();
 	}
-
 	*str = temp;
 }
 

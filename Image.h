@@ -47,7 +47,7 @@ private:
 	Image operator = (const Image& image) {}
 public:
 	void Render( int x,  int y,  Pivot pivot = Pivot::LeftTop);
-	void FrameRender( int x,  int y,  int frameX,  int frameY,  Pivot pivot = Pivot::Center);
+	void FrameRender( int x,  int y,  int frameX,  int frameY,  Pivot pivot = Pivot::LeftTop);
 
 	void ResetRenderOption();
 
