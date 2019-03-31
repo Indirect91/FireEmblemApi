@@ -9,7 +9,7 @@ using namespace FMOD;
 //=============================================================
 
 //사용할 사운드버퍼 (사운드갯수가 30개가 넘어가면 크기를 더 늘려줘야 한다)
-#define SOUNDBUFFER 30
+#define SOUNDBUFFER 40
 
 class SoundManager : public SingletonBase<SoundManager>
 {
@@ -18,22 +18,22 @@ private:
 	typedef std::map<std::string, Sound**>::iterator arrSoundIter;
 
 private:
+	float totalVolume;		//전체 볼륨
 	System* _system;		//시스템 클래스
 	Sound** _sound;			//사운드 클래스
 	Channel** _channel;		//채널 클래스
-
 	arrSound _mTotalSound;	//맵에 담아둘 사운드들
 
 public:
 	HRESULT Init(void);
 	void Release(void);
 	void Update(void);
-
+	
 	//사운드 추가(키값, 파일이름, BGM?, 루프시킬거냐?)
 	void addSound(std::string keyName, std::string soundName, bool bgm = false, bool loop = false);
 
 	//사운드 재생
-	void play(std::string keyName, float volume = 1.0f); //0.0f(Min) ~ 1.0f(Max)
+	void play(std::string keyName); 
 	//사운드 정지
 	void stop(std::string keyName);
 	//사운드 일시정지
@@ -45,6 +45,9 @@ public:
 	bool isPlaySound(std::string keyName);
 	//일시정지 중이냐?
 	bool isPauseSound(std::string keyName);
+
+	float &refTotalVolume() { return totalVolume; } //0.0f(Min) ~ 1.0f(Max)
+	void setTotalVolume(float volume); //0.0f(Min) ~ 1.0f(Max)
 
 	SoundManager() : _system(NULL), _sound(NULL), _channel(NULL){}
 	~SoundManager() {}

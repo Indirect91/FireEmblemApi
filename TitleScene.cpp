@@ -53,6 +53,7 @@ void TitleScene::Update()
 		if (selectionBox.y == 450) selectionBox.y = 385;
 		else if (selectionBox.y == 520) selectionBox.y = 450;
 	}
+
 	//▼엔터키 입력받았을때. 알파값이 변동중이라면 씹음
 	else if (KEYMANAGER->IsOnceKeyDown(VK_RETURN) && SCENEMANAGER->RefAlphaStatue()==SceneManager::tagCoverStatue::Idle)
 	{

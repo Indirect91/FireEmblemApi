@@ -10,6 +10,9 @@ void MapToolScene::Init()
 	moveWindowRateX = 989.5;	//윈도우 이동시킬 초기값
 	moveWindowRateAccX = 5; //윈도우 이동시킬 수치 가속
 	isMovingDone = false;
+	IMAGEMANAGER->AddImage("MapToolBg1", L"IMAGE/MapToolScene/MapToolBg1.png");
+	IMAGEMANAGER->AddImage("MapToolBg2", L"IMAGE/MapToolScene/MapToolBg2.png");
+	
 }
 
 void MapToolScene::Release()
@@ -22,11 +25,6 @@ void MapToolScene::Update()
 	if(!isMovingDone) moveWindowFrame();
 }
 
-void MapToolScene::Render()
-{
-
-}
-
 void MapToolScene::moveWindowFrame()
 {
 	//▼윈도우 1600까지 맞추는 코드
@@ -37,9 +35,18 @@ void MapToolScene::moveWindowFrame()
 	}
 	else moveWindowRateX += moveWindowRateAccX;
 
-	if (moveWindowRateAccX <300) moveWindowRateAccX += 3.f;
+	if (moveWindowRateAccX < 300) moveWindowRateAccX += 3.f;
 	else if (moveWindowRateAccX >= 300) moveWindowRateAccX = 300;
 
 
 	SetWindowPos(_hWnd, 0, 150, 130, moveWindowRateX, 900, SWP_NOMOVE);
+	D2DRENDERER->GetRenderTarget()->Resize({ static_cast<UINT32>(moveWindowRateX),900 });
 }
+
+void MapToolScene::Render()
+{
+	//IMAGEMANAGER->FindImage("MapToolBg1")->SetSize({ 500, 640 });
+	IMAGEMANAGER->FindImage("MapToolBg1")->Render(0, 0);
+	IMAGEMANAGER->FindImage("MapToolBg2")->Render(0, 0);
+}
+

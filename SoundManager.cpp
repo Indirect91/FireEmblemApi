@@ -17,6 +17,8 @@ HRESULT SoundManager::Init(void)
 	memset(_sound, 0, sizeof(Sound*) * SOUNDBUFFER);
 	memset(_channel, 0, sizeof(Channel*) * SOUNDBUFFER);
 
+	totalVolume = 1.f;
+
 	return S_OK;
 }
 
@@ -87,7 +89,7 @@ void SoundManager::addSound(std::string keyName, std::string soundName, bool bgm
 
 }
 
-void SoundManager::play(std::string keyName, float volume)
+void SoundManager::play(std::string keyName)
 {
 	int count = 0;
 	arrSoundIter iter = _mTotalSound.begin();
@@ -98,10 +100,9 @@ void SoundManager::play(std::string keyName, float volume)
 			//사운드 플레이
 			_system->playSound(FMOD_CHANNEL_FREE, *iter->second, false, &_channel[count]);
 			//볼륨세팅
-			_channel[count]->setVolume(volume);
+			_channel[count]->setVolume(totalVolume);
 		}
 	}
-
 }
 
 void SoundManager::stop(std::string keyName)
@@ -183,3 +184,18 @@ bool SoundManager::isPauseSound(std::string keyName)
 
 	return isPause;
 }
+
+//▼BGM은 이후 재생되는것들의 볼륨을 바꿔주는 동시에 현재 재생중인 BGM의 사운드 또한 바꾸어준다
+void SoundManager::setTotalVolume(float volume)
+{
+	totalVolume = volume;
+
+	int count = 0;
+	arrSoundIter iter = _mTotalSound.begin();
+
+	for (iter; iter != _mTotalSound.end(); ++iter, count++)
+	{
+		_channel[count]->setVolume(volume);
+	}
+}
+

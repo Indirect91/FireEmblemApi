@@ -32,6 +32,7 @@ private:
 public:
 	void AddTextFormat(std::wstring font,  float defaultSize = 1.f);
 	inline ID2D1HwndRenderTarget*const GetRenderTarget()const { return this->mD2DRenderTarget; }
+	inline ID2D1Factory*const GetD2DFactory()const { return this->mD2DFactory; }
 public:
 	//텍스트 출력(기본 브러쉬 사용) 
 	void RenderText( int x,  int y, std::wstring text,  int size,
