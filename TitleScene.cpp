@@ -66,6 +66,7 @@ void TitleScene::Update()
 			resizeWindowRateY = 0;
 			SCENEMANAGER->RefCoverSpeed() = 0.04f;	//페이드아웃 속도 제어
 			SetCoverStatue::FadeOut; //페이드아웃상태로 변환
+			SOUNDMANAGER->setFadeOut();
 		}
 		else if (selectionBox.y == 385) //인겜이 골라졌을때
 		{
@@ -95,10 +96,10 @@ void TitleScene::Update()
 				moveWindowRateAccX += 0.7f;
 				moveWindowRateX -= moveWindowRateAccX;
 			}
-			if (resizeWindowRateX >= 300) resizeWindowRateX = 300;
+			if (resizeWindowRateX >= 500) resizeWindowRateX = 500;
 			else
 			{
-				resizeWindowRateX += 13.5f;
+				resizeWindowRateX += 22.5f;
 			}
 			if (resizeWindowRateY >= 260) resizeWindowRateY = 260;
 			else
@@ -108,13 +109,13 @@ void TitleScene::Update()
 			}
 
 			SetWindowPos(_hWnd, 0, 150 + moveWindowRateX, 130 + moveWindowRateY, 1300 - resizeWindowRateX, 640 + resizeWindowRateY, 0);
-			if (moveWindowRateX <= 0 && moveWindowRateY <= 0 && resizeWindowRateX >= 300 && resizeWindowRateY >= 260) isDone = true;
+			if (moveWindowRateX <= 0 && moveWindowRateY <= 0 && resizeWindowRateX >= 500 && resizeWindowRateY >= 260) isDone = true;
 
 		}
 		else
 		{
 			//▼윈도우 이동이 완료되었을떄
-			
+	
 			SCENEMANAGER->LoadScene("MapToolScene");
 		}
 	}

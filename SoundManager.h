@@ -19,6 +19,9 @@ private:
 
 private:
 	float totalVolume;		//전체 볼륨
+	float prevVolume;		//이전 볼륨
+	BOOL isFadingOut;		//페이드아웃중인지
+	BOOL isFadingIn;		//페이드인 중인지	
 	System* _system;		//시스템 클래스
 	Sound** _sound;			//사운드 클래스
 	Channel** _channel;		//채널 클래스
@@ -46,8 +49,17 @@ public:
 	//일시정지 중이냐?
 	bool isPauseSound(std::string keyName);
 
+	//▼다음 재생부터 적용되는 볼륨 제어
 	float &refTotalVolume() { return totalVolume; } //0.0f(Min) ~ 1.0f(Max)
+	//▼현재 재생중인거까지 바꾸어버리는 소리 제어
 	void setTotalVolume(float volume); //0.0f(Min) ~ 1.0f(Max)
+	
+	//▼소리 페이드아웃
+	void setFadeOut();
+	void FadeOut();
+	//▼소리 페이드인
+	void setFadeIn();
+	void FadeIn();
 
 	SoundManager() : _system(NULL), _sound(NULL), _channel(NULL){}
 	~SoundManager() {}

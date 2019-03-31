@@ -17,8 +17,11 @@ HRESULT SoundManager::Init(void)
 	memset(_sound, 0, sizeof(Sound*) * SOUNDBUFFER);
 	memset(_channel, 0, sizeof(Channel*) * SOUNDBUFFER);
 
-	totalVolume = 1.f;
+	isFadingIn = false;
+	isFadingOut = false;
 
+	totalVolume = 1.f;
+	prevVolume = totalVolume;
 	return S_OK;
 }
 
@@ -59,6 +62,11 @@ void SoundManager::Update(void)
 	//사운드 시스템은 볼륨이 변경되거나, 재생이 끝난후 사운드를 변경하는등
 	//사운드 전반적으로 변경이 이뤄질때 즉각적으로 처리해준다
 	_system->update();
+
+	//▼페이드인, 아웃 상태에 따라 업데이트 영향
+	if(isFadingIn) FadeIn();
+	else if (isFadingOut) FadeOut();
+
 }
 
 void SoundManager::addSound(std::string keyName, std::string soundName, bool bgm, bool loop)
@@ -197,5 +205,41 @@ void SoundManager::setTotalVolume(float volume)
 	{
 		_channel[count]->setVolume(volume);
 	}
+}
+
+void SoundManager::setFadeOut()
+{
+	prevVolume = totalVolume; //페이드 아웃 시키기 전에 마지막 볼륨 저장
+	isFadingOut = true;
+}
+
+void SoundManager::FadeOut()
+{
+	if(totalVolume>0) totalVolume -= 0.05f;
+	else if (totalVolume >= 0)
+	{
+		totalVolume = 0;
+		isFadingOut = false;
+		isFadingIn = false;
+	}
+	setTotalVolume(totalVolume);
+}
+
+void SoundManager::setFadeIn()
+{
+	isFadingOut = false;
+	totalVolume = 0;
+	isFadingIn = true;
+}
+
+void SoundManager::FadeIn()
+{
+	if (totalVolume < prevVolume) totalVolume += 0.01f;
+	else if (totalVolume >= prevVolume)
+	{
+		totalVolume = prevVolume;
+		isFadingIn = false;
+	}
+	setTotalVolume(totalVolume);
 }
 

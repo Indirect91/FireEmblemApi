@@ -57,6 +57,7 @@ enum class Pivot : int
 #include "SceneManager.h"
 #include "TimeManager.h"
 #include "SoundManager.h"
+#include "Camera.h"
 
 //▼싱글톤 겟인스턴스
 #define D2DRENDERER D2DRenderer::Get()
@@ -65,6 +66,7 @@ enum class Pivot : int
 #define SCENEMANAGER SceneManager::Get()
 #define TIMEMANAGER TimeManager::Get()
 #define SOUNDMANAGER SoundManager::Get()
+#define CAMERA Camera::Get()
 
 //▼윈도우
 #define WINNAME			L"신한영 WinApi+D2D"
@@ -78,8 +80,8 @@ enum class Pivot : int
 #define SAFE_DELETE(p)		{if(p) {delete (p); (p) = NULL;}}
 #define SAFE_DELETE_ARRAY(p)	{if(p) {delete[] (p); (p) = NULL;}}
 #define SAFE_RELEASE(p){if(p){(p)->Release();(p) = NULL;}}
-#define RelativeCameraRect(RECT) {(RECT).left - CAMERA.getCRc().left, (RECT).top - CAMERA.getCRc().top, (RECT).right - CAMERA.getCRc().left, (RECT).bottom - CAMERA.getCRc().top}
-#define RelativeCameraPoint(POINT) {(POINT).x - CAMERA.getCRc().left, (POINT).y - CAMERA.getCRc().top}
+#define RelativeCameraRect(RECT) {(RECT).left - CAMERA.GetCameraRc().left, (RECT).top - CAMERA.GetCameraRc().top, (RECT).right - CAMERA.GetCameraRc().left, (RECT).bottom - CAMERA.GetCameraRc().top}
+#define RelativeCameraPoint(POINT) {(POINT).x - CAMERA.GetCameraRc().left, (POINT).y - CAMERA.GetCameraRc().top}
 #define SetCoverStatue SCENEMANAGER->RefAlphaStatue()=SceneManager::tagCoverStatue
 
 //▼전역 변수

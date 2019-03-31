@@ -35,6 +35,7 @@ public:
 	tagCoverStatue &RefAlphaStatue() { return coverStatue; }; 
 	//▼커버속도 참조자 반환, 커튼속도 제어
 	float &RefCoverSpeed() { return coverSpeed; };
+
 	//▼씬추가
 	class GameNode* AddScene(std::string sceneName,class GameNode* scene);
 	//▼씬변경
