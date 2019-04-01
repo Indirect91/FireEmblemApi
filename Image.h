@@ -48,7 +48,7 @@ private:
 public:
 	void Render( int x,  int y,  Pivot pivot = Pivot::LeftTop);
 	void FrameRender( int x,  int y,  int frameX,  int frameY,  Pivot pivot = Pivot::LeftTop);
-
+	void SkewRender(int x, int y, Pivot pivot, float angleX, float angleY, POINTFLOAT centerPoint);
 	void ResetRenderOption();
 
 	void SetSize(const POINTFLOAT& vec) { this->mSize = vec; }
