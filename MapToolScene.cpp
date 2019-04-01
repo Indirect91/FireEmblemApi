@@ -13,6 +13,9 @@ void MapToolScene::Init()
 	isMovingDone = false;
 	IMAGEMANAGER->AddImage("MapToolBg1", L"IMAGE/MapToolScene/MapToolBg1.png");
 	IMAGEMANAGER->AddImage("MapToolBg2", L"IMAGE/MapToolScene/MapToolBg2.png");
+	IMAGEMANAGER->AddImage("MapToolTitle", L"IMAGE/MapToolScene/MaptoolTitle.png"); 
+	IMAGEMANAGER->AddImage("MapToolMapbox", L"IMAGE/MapToolScene/MaptoolMapbox.png");
+	IMAGEMANAGER->AddImage("MapToolMat2", L"IMAGE/MapToolScene/MaptoolMat2.png");
 	SOUNDMANAGER->addSound("¸ÊÅøBGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
 	SOUNDMANAGER->pause("Å¸ÀÌÆ²BGM");
@@ -82,26 +85,38 @@ void MapToolScene::moveCamera()
 {
 	if (KEYMANAGER->IsStayKeyDown(VK_RIGHT) || KEYMANAGER->IsStayKeyDown('D'))
 	{
-		CAMERA.RefCameraRc().left += 5;
-		CAMERA.RefCameraRc().right += 5;
+		if (CAMERA.GetCameraRc().right < 975)
+		{
+			CAMERA.RefCameraRc().left += 5;
+			CAMERA.RefCameraRc().right += 5;
+		}
 	}
 
 	if (KEYMANAGER->IsStayKeyDown(VK_LEFT) || KEYMANAGER->IsStayKeyDown('A'))
 	{
-		CAMERA.RefCameraRc().left -= 5;
-		CAMERA.RefCameraRc().right -= 5;
+		if(CAMERA.GetCameraRc().left>-20)
+		{
+			CAMERA.RefCameraRc().left -= 5;
+			CAMERA.RefCameraRc().right -= 5; 
+		}
 	}
 
 	if (KEYMANAGER->IsStayKeyDown(VK_DOWN) || KEYMANAGER->IsStayKeyDown('S'))
 	{
-		CAMERA.RefCameraRc().top += 5;
-		CAMERA.RefCameraRc().bottom += 5;
+		if(CAMERA.GetCameraRc().top<490)
+		{
+			CAMERA.RefCameraRc().top += 5;
+			CAMERA.RefCameraRc().bottom += 5;
+		}
 	}
 
 	if (KEYMANAGER->IsStayKeyDown(VK_UP) || KEYMANAGER->IsStayKeyDown('W'))
 	{
-		CAMERA.RefCameraRc().top -= 5;
-		CAMERA.RefCameraRc().bottom -= 5;
+		if(CAMERA.GetCameraRc().top>-45)
+		{
+			CAMERA.RefCameraRc().top -= 5;
+			CAMERA.RefCameraRc().bottom -= 5;
+		}
 	}
 	showArea = CAMERA.GetCameraRc();
 	showArea.left += 150;
@@ -114,15 +129,19 @@ void MapToolScene::moveCamera()
 void MapToolScene::Render()
 {
 	IMAGEMANAGER->FindImage("MapToolBg1")->Render(0, 0);
-
+	
 	for (int i = 0; i < fieldX_Column * fieldY_Row; i++)
 	{
 		if (IntersectRect(&tempC, &arrField[i].GetRc(), &showArea))
 		{
 			arrField[i].Render();
 		}
+
 			
 	}
+	IMAGEMANAGER->FindImage("MapToolMat2")->Render(1200, 140);
+	IMAGEMANAGER->FindImage("MapToolMapbox")->Render(108, 60);
+	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70,Pivot::Center);
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
 }
 
