@@ -20,6 +20,9 @@ private:
 	RECT tempC;
 	void moveCamera();
 
+	RECT palletes[9];
+	
+
 public:
 	virtual void Init();
 	virtual void Release();

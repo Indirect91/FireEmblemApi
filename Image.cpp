@@ -163,11 +163,12 @@ void Image::FrameRender( int x,  int y,  int frameX,  int frameY,  Pivot pivot)
 	this->ResetRenderOption();
 }
 
-void Image::SkewRender(int x, int y, Pivot pivot, float angleX, float angleY, POINTFLOAT centerPoint)
+void Image::SkewRender(int x, int y,float angleX, float angleY, Pivot pivot)
 {
 	//그릴 사이즈 = 사이즈 * 스케일
-	this->mSize.x = mSize.x * mScale;
-	this->mSize.y = mSize.y * mScale;
+	this->mSize.x = mSize.x * mScale * (cosf(angleY * 3.14 / 180));
+	this->mSize.y = mSize.y * mScale* (cosf(angleX * 3.14 / 180));
+
 	//렌더링 좌표
 	POINTFLOAT renderPos = GetPivotPosition(x, y, pivot);
 
@@ -190,7 +191,8 @@ void Image::SkewRender(int x, int y, Pivot pivot, float angleX, float angleY, PO
 	//angle정보를 기준으로 회전 행렬 구축 
 	D2D1::Matrix3x2F rotation = D2D1::Matrix3x2F::Rotation(mAngle, D2D1::Point2F(mSize.x / 2.f, mSize.y / 2.f));
 
-	D2D1::Matrix3x2F skew = D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2(centerPoint.x, centerPoint.y));
+	//D2D1::Matrix3x2F skew = D2D1::Matrix3x2F::Skew(angleX, angleY, D2D1::Point2(centerPoint.x, centerPoint.y));
+	D2D1::Matrix3x2F skew = D2D1::Matrix3x2F::Skew(angleX, angleY);
 
 	//위치 정보와 offset값을 기반으로 이동 행렬 구축
 	D2D1::Matrix3x2F translation = D2D1::Matrix3x2F::Translation((renderPos.x + offset.x), (renderPos.y + offset.y));

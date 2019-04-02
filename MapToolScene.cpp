@@ -16,6 +16,7 @@ void MapToolScene::Init()
 	IMAGEMANAGER->AddImage("MapToolTitle", L"IMAGE/MapToolScene/MaptoolTitle.png"); 
 	IMAGEMANAGER->AddImage("MapToolMapbox", L"IMAGE/MapToolScene/MaptoolMapbox.png");
 	IMAGEMANAGER->AddImage("MapToolMat2", L"IMAGE/MapToolScene/MaptoolMat2.png");
+	IMAGEMANAGER->AddImage("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
 	SOUNDMANAGER->addSound("¸ÊÅøBGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
 	SOUNDMANAGER->pause("Å¸ÀÌÆ²BGM");
@@ -94,16 +95,16 @@ void MapToolScene::moveCamera()
 
 	if (KEYMANAGER->IsStayKeyDown(VK_LEFT) || KEYMANAGER->IsStayKeyDown('A'))
 	{
-		if(CAMERA.GetCameraRc().left>-20)
+		if (CAMERA.GetCameraRc().left > -20)
 		{
 			CAMERA.RefCameraRc().left -= 5;
-			CAMERA.RefCameraRc().right -= 5; 
+			CAMERA.RefCameraRc().right -= 5;
 		}
 	}
 
 	if (KEYMANAGER->IsStayKeyDown(VK_DOWN) || KEYMANAGER->IsStayKeyDown('S'))
 	{
-		if(CAMERA.GetCameraRc().top<490)
+		if (CAMERA.GetCameraRc().top < 490)
 		{
 			CAMERA.RefCameraRc().top += 5;
 			CAMERA.RefCameraRc().bottom += 5;
@@ -112,7 +113,7 @@ void MapToolScene::moveCamera()
 
 	if (KEYMANAGER->IsStayKeyDown(VK_UP) || KEYMANAGER->IsStayKeyDown('W'))
 	{
-		if(CAMERA.GetCameraRc().top>-45)
+		if (CAMERA.GetCameraRc().top > -45)
 		{
 			CAMERA.RefCameraRc().top -= 5;
 			CAMERA.RefCameraRc().bottom -= 5;
@@ -125,23 +126,31 @@ void MapToolScene::moveCamera()
 	showArea.bottom += 100;
 }
 
-
 void MapToolScene::Render()
 {
 	IMAGEMANAGER->FindImage("MapToolBg1")->Render(0, 0);
-	
+
 	for (int i = 0; i < fieldX_Column * fieldY_Row; i++)
 	{
 		if (IntersectRect(&tempC, &arrField[i].GetRc(), &showArea))
 		{
 			arrField[i].Render();
 		}
-
-			
 	}
+
 	IMAGEMANAGER->FindImage("MapToolMat2")->Render(1200, 140);
 	IMAGEMANAGER->FindImage("MapToolMapbox")->Render(108, 60);
-	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70,Pivot::Center);
+	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Center);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-00, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-2, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-4, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-6, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-8, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-10, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-12, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-14, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-16, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-18, 0);
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
 }
 
