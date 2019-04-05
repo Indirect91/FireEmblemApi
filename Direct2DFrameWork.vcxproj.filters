@@ -43,26 +43,32 @@
     <Filter Include="GameFrameWork\SoundManager">
       <UniqueIdentifier>{3fe7a9cb-2a5e-4332-ae3f-59904a225fec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\TitleScene">
-      <UniqueIdentifier>{1ed2e2af-6694-4e1c-b606-daeacdf11c95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\MapToolScene">
-      <UniqueIdentifier>{71519b39-b20a-4de9-89b3-282ce729956f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\WorldMapScene">
-      <UniqueIdentifier>{b0a4dcee-31ef-471a-b07e-9615c006bf62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\LoadingScene">
-      <UniqueIdentifier>{dc087090-cc06-4849-9777-258725436606}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\Camera">
       <UniqueIdentifier>{51000531-2b9e-40cb-ab20-5ccf4acdb34d}</UniqueIdentifier>
     </Filter>
     <Filter Include="MainGame\GameObject">
       <UniqueIdentifier>{79f270b2-2e40-4877-9d36-19aa428166b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\TestScene">
+    <Filter Include="GameFrameWork\Loading">
+      <UniqueIdentifier>{33fa53af-cb75-414e-99cd-e3d454bb1220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들">
+      <UniqueIdentifier>{c400ead9-bdcf-4c67-a41f-f191deab7e49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\TestScene">
       <UniqueIdentifier>{71cf4d03-2b6c-4311-81e4-2b40d6c44d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\TitleScene">
+      <UniqueIdentifier>{1ed2e2af-6694-4e1c-b606-daeacdf11c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\WorldMapScene">
+      <UniqueIdentifier>{b0a4dcee-31ef-471a-b07e-9615c006bf62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\MapToolScene">
+      <UniqueIdentifier>{71519b39-b20a-4de9-89b3-282ce729956f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\LoadingScene">
+      <UniqueIdentifier>{dc087090-cc06-4849-9777-258725436606}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,13 +106,13 @@
       <Filter>GameFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="Classes\MapToolScene.h">
-      <Filter>MainGame\MapToolScene</Filter>
+      <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Tiles.h">
-      <Filter>MainGame\MapToolScene</Filter>
+      <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\TitleScene.h">
-      <Filter>MainGame\TitleScene</Filter>
+      <Filter>MainGame\Scene들\TitleScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\GameNode.h">
       <Filter>WinMain</Filter>
@@ -124,13 +130,19 @@
       <Filter>MainGame\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Classes\testScene.h">
-      <Filter>MainGame\TestScene</Filter>
+      <Filter>MainGame\Scene들\TestScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\MainGame.h">
       <Filter>MainGame</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>WinMain</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Loading.h">
+      <Filter>GameFrameWork\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\LoadingScene.h">
+      <Filter>MainGame\Scene들\LoadingScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -168,13 +180,13 @@
       <Filter>GameFrameWork\Util</Filter>
     </ClCompile>
     <ClCompile Include="Classes\MapToolScene.cpp">
-      <Filter>MainGame\MapToolScene</Filter>
+      <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Tiles.cpp">
-      <Filter>MainGame\MapToolScene</Filter>
+      <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\TitleScene.cpp">
-      <Filter>MainGame\TitleScene</Filter>
+      <Filter>MainGame\Scene들\TitleScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\GameNode.cpp">
       <Filter>WinMain</Filter>
@@ -189,10 +201,16 @@
       <Filter>MainGame\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Classes\testScene.cpp">
-      <Filter>MainGame\TestScene</Filter>
+      <Filter>MainGame\Scene들\TestScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\MainGame.cpp">
       <Filter>MainGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Loading.cpp">
+      <Filter>GameFrameWork\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LoadingScene.cpp">
+      <Filter>MainGame\Scene들\LoadingScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

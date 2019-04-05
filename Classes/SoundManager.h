@@ -1,7 +1,7 @@
 #pragma once
 #include "singletonBase.h"
 /*FMOD 사용하기 위해 라이브러리 추가*/
-#include "SOUND/inc/fmod.hpp"
+#include "../SOUND/inc/fmod.hpp"
 #pragma comment (lib, "SOUND/lib/fmodex_vc.lib")
 using namespace FMOD;
 //=============================================================

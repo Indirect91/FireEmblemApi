@@ -148,6 +148,8 @@
     <ClInclude Include="Classes\Image.h" />
     <ClInclude Include="Classes\ImageManager.h" />
     <ClInclude Include="Classes\KeyManager.h" />
+    <ClInclude Include="Classes\Loading.h" />
+    <ClInclude Include="Classes\LoadingScene.h" />
     <ClInclude Include="Classes\MainGame.h" />
     <ClInclude Include="Classes\MapToolScene.h" />
     <ClInclude Include="Classes\Resource.h" />
@@ -173,6 +175,8 @@
     <ClCompile Include="Classes\Image.cpp" />
     <ClCompile Include="Classes\ImageManager.cpp" />
     <ClCompile Include="Classes\KeyManager.cpp" />
+    <ClCompile Include="Classes\Loading.cpp" />
+    <ClCompile Include="Classes\LoadingScene.cpp" />
     <ClCompile Include="Classes\MainGame.cpp" />
     <ClCompile Include="Classes\MapToolScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />

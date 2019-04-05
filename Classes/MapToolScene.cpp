@@ -11,13 +11,8 @@ void MapToolScene::Init()
 	moveWindowRateX = 789.5;	//윈도우 이동시킬 초기값
 	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속
 	isMovingDone = false;
-	IMAGEMANAGER->AddImage("MapToolBg1", L"IMAGE/MapToolScene/MapToolBg1.png");
-	IMAGEMANAGER->AddImage("MapToolBg2", L"IMAGE/MapToolScene/MapToolBg2.png");
-	IMAGEMANAGER->AddImage("MapToolTitle", L"IMAGE/MapToolScene/MaptoolTitle.png"); 
-	IMAGEMANAGER->AddImage("MapToolMapbox", L"IMAGE/MapToolScene/MaptoolMapbox.png");
-	IMAGEMANAGER->AddImage("MapToolMat2", L"IMAGE/MapToolScene/MaptoolMat2.png");
-	IMAGEMANAGER->AddImage("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
-	SOUNDMANAGER->addSound("맵툴BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
+
+	
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
 	SOUNDMANAGER->pause("타이틀BGM");
 	SOUNDMANAGER->play("맵툴BGM");

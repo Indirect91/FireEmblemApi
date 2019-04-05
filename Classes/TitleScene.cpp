@@ -12,13 +12,6 @@ void TitleScene::Init()
 	resizeWindowRateY = 0;
 	resizeWindowRateAccX = 0;
 	resizeWindowRateAccY = 0;
-
-	//TODO : 로딩씬으로 이동 필요
-	IMAGEMANAGER->AddImage("타이틀백그라운드", L"IMAGE/TitleScene/TitleBackground.png");
-	IMAGEMANAGER->AddFrameImage("타이틀팔시온", L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
-	IMAGEMANAGER->AddImage("타이틀선택박스", L"IMAGE/TitleScene/TitlePick.png");
-	IMAGEMANAGER->AddImage("타이틀텍스트", L"IMAGE/TitleScene/TitleLogo.png");
-	SOUNDMANAGER->addSound("타이틀BGM", "SOUND/FE/TitleBgm.mp3", true, true);
 	
 	//▼각종 이닛
 	SOUNDMANAGER->play("타이틀BGM"); //타이틀 BGM 재생

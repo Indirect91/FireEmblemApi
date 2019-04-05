@@ -1,25 +1,25 @@
 #pragma once
-#include "gameNode.h"
-#include "loading.h"
+#include "GameNode.h"
+#include "Loading.h"
 
-class loadingScene : public gameNode
+class LoadingScene : public GameNode
 {
 private:
-	loading* _loading;
-	float per;
+	Loading* _loading; //로딩씬에선 로딩 하나 이닛해서 쓸거기에 포인터 보유
+	float per;		   //퍼센테이지
 
 public:
-	HRESULT init(void);
-	void release(void);
-	void update(void);
-	void render(void);
+	void Init();
+	void Release();
+	void Update();
+	void Render();
 
-	//로딩이미지 함수(이곳에 이미지를 전부 넣어라)
-	void loadingImage();
-	//로딩사운드 함수(이곳에 사운드를 전부 넣어라)
-	void loadingSound();
+	
+	void LoadingImage(); //로딩할 이미지 넣어두는 곳
+	void LoadingSound(); //사운드 로드하는 곳
+	void LoadScenes();	 //씬들 모아서 로딩하는곳
 
-	loadingScene() {}
-	~loadingScene() {}
+	LoadingScene() {}
+	~LoadingScene() {}
 };
 
