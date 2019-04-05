@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "MainGame.h"
 #include "TitleScene.h"
 #include "MapToolScene.h"

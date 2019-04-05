@@ -1,6 +1,6 @@
 #pragma once
 
-#include "targetver.h"
+#include "Classes/targetver.h"
 
 //°ÂPI
 #define PI 3.141592f
@@ -48,16 +48,16 @@ enum class Pivot : int
 };
 
 //°Â≥ª∞° ª˝º∫«— «Ï¥ı
-#include "GameNode.h"
-#include "CommonMacroFunction.h"
-#include "StringHelper.h"
-#include "D2DRenderer.h"
-#include "ImageManager.h"
-#include "KeyManager.h"
-#include "SceneManager.h"
-#include "TimeManager.h"
-#include "SoundManager.h"
-#include "Camera.h"
+#include "Classes/GameNode.h"
+#include "Classes/CommonMacroFunction.h"
+#include "Classes/StringHelper.h"
+#include "Classes/D2DRenderer.h"
+#include "Classes/ImageManager.h"
+#include "Classes/KeyManager.h"
+#include "Classes/SceneManager.h"
+#include "Classes/TimeManager.h"
+#include "Classes/SoundManager.h"
+#include "Classes/Camera.h"
 
 //°ÂΩÃ±€≈Ê ∞Ÿ¿ŒΩ∫≈œΩ∫
 #define D2DRENDERER D2DRenderer::Get()

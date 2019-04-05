@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "MapToolScene.h"
 #include "Tiles.h"
 

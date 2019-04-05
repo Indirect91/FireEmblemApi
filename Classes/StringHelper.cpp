@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "StringHelper.h"
 
 void StringHelper::SplitString(std::vector<std::string>* result, std::string origin, std::string tok)
@@ -38,9 +38,6 @@ void StringHelper::SplitString(std::vector<std::wstring>* result, std::wstring o
 
 //////////////////////////////////////////////////////////////////////////
 ///@brief 시작 문자열이 같은지 체크
-///@param str : 체크하려는 문자열
-///@param comp : 시작 비교문자열
-//////////////////////////////////////////////////////////////////////////
 bool StringHelper::StartsWith(std::string str, std::string comp)
 {
 	std::wstring::size_type index = str.find(comp);
@@ -61,9 +58,6 @@ bool StringHelper::StartsWith(std::wstring str, std::wstring comp)
 
 //////////////////////////////////////////////////////////////////////////
 ///@brief 해당 문자열이 포함되어 있는지
-///@param str : 체크하려는 문자열
-///@param comp : 비교문자열
-//////////////////////////////////////////////////////////////////////////
 bool StringHelper::Contain(std::string str, std::string comp)
 {
 	size_t found = str.find(comp);
@@ -81,10 +75,6 @@ bool StringHelper::Contain(std::wstring str, std::wstring comp)
 
 //////////////////////////////////////////////////////////////////////////
 ///@brief 해당 문자열에서 comp 문자를 rep로 변경
-///@param str : 체크하려는 문자열
-///@param comp : 비교문자열
-///@param rep : 바꿀문자열
-//////////////////////////////////////////////////////////////////////////
 void StringHelper::Replace(std::string * str, std::string comp, std::string rep)
 {
 	std::string temp = *str;
@@ -112,11 +102,8 @@ void StringHelper::Replace(std::wstring* str, std::wstring comp, std::wstring re
 	*str = temp;
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 ///@brief string형을 wstring형으로 변경
-///@param value : 변환할 문자열
-///@return 변환 완료 문자열
-//////////////////////////////////////////////////////////////////////////
 std::wstring StringHelper::StringToWString(std::string value)
 {
 	std::wstring temp = L"";
@@ -125,11 +112,7 @@ std::wstring StringHelper::StringToWString(std::string value)
 	return temp;
 }
 
-//////////////////////////////////////////////////////////////////////////
 ///@brief wstring형을 string형으로 변경
-///@param value : 변환할 문자열
-///@return 변환 완료 문자열
-//////////////////////////////////////////////////////////////////////////
 std::string StringHelper::WStringToString(std::wstring value)
 {
 	std::string temp = "";
@@ -137,4 +120,3 @@ std::string StringHelper::WStringToString(std::wstring value)
 
 	return temp;
 }
-//////////////////////////////////////////////////////////////////////////

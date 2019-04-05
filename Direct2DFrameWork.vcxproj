@@ -88,6 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>../stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,55 +139,52 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CommonMacroFunction.h" />
-    <ClInclude Include="D2DRenderer.h" />
-    <ClInclude Include="Direct2DFrameWork.h" />
-    <ClInclude Include="GameNode.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Image.h" />
-    <ClInclude Include="ImageManager.h" />
-    <ClInclude Include="KeyManager.h" />
-    <ClInclude Include="MainGame.h" />
-    <ClInclude Include="MapToolScene.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SingletonBase.h" />
-    <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="Classes\Camera.h" />
+    <ClInclude Include="Classes\CommonMacroFunction.h" />
+    <ClInclude Include="Classes\D2DRenderer.h" />
+    <ClInclude Include="Classes\Direct2DFrameWork.h" />
+    <ClInclude Include="Classes\GameNode.h" />
+    <ClInclude Include="Classes\GameObject.h" />
+    <ClInclude Include="Classes\Image.h" />
+    <ClInclude Include="Classes\ImageManager.h" />
+    <ClInclude Include="Classes\KeyManager.h" />
+    <ClInclude Include="Classes\MainGame.h" />
+    <ClInclude Include="Classes\MapToolScene.h" />
+    <ClInclude Include="Classes\Resource.h" />
+    <ClInclude Include="Classes\SceneManager.h" />
+    <ClInclude Include="Classes\SingletonBase.h" />
+    <ClInclude Include="Classes\SoundManager.h" />
+    <ClInclude Include="Classes\StringHelper.h" />
+    <ClInclude Include="Classes\targetver.h" />
+    <ClInclude Include="Classes\testScene.h" />
+    <ClInclude Include="Classes\Tiles.h" />
+    <ClInclude Include="Classes\TimeManager.h" />
+    <ClInclude Include="Classes\TitleScene.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="testScene.h" />
-    <ClInclude Include="Tiles.h" />
-    <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CommonMacroFunction.cpp" />
-    <ClCompile Include="D2DRenderer + DrawFunc.cpp" />
-    <ClCompile Include="D2DRenderer.cpp" />
-    <ClCompile Include="Direct2DFrameWork.cpp" />
-    <ClCompile Include="GameNode.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Image.cpp" />
-    <ClCompile Include="ImageManager.cpp" />
-    <ClCompile Include="KeyManager.cpp" />
-    <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="MapToolScene.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="Classes\Camera.cpp" />
+    <ClCompile Include="Classes\CommonMacroFunction.cpp" />
+    <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp" />
+    <ClCompile Include="Classes\D2DRenderer.cpp" />
+    <ClCompile Include="Classes\Direct2DFrameWork.cpp" />
+    <ClCompile Include="Classes\GameNode.cpp" />
+    <ClCompile Include="Classes\GameObject.cpp" />
+    <ClCompile Include="Classes\Image.cpp" />
+    <ClCompile Include="Classes\ImageManager.cpp" />
+    <ClCompile Include="Classes\KeyManager.cpp" />
+    <ClCompile Include="Classes\MainGame.cpp" />
+    <ClCompile Include="Classes\MapToolScene.cpp" />
+    <ClCompile Include="Classes\SceneManager.cpp" />
+    <ClCompile Include="Classes\SoundManager.cpp" />
+    <ClCompile Include="Classes\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StringHelper.cpp" />
-    <ClCompile Include="testScene.cpp" />
-    <ClCompile Include="Tiles.cpp" />
-    <ClCompile Include="TimeManager.cpp" />
-    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="Classes\StringHelper.cpp" />
+    <ClCompile Include="Classes\testScene.cpp" />
+    <ClCompile Include="Classes\Tiles.cpp" />
+    <ClCompile Include="Classes\TimeManager.cpp" />
+    <ClCompile Include="Classes\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Direct2DFrameWork.rc" />

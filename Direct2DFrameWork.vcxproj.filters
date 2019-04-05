@@ -55,135 +55,144 @@
     <Filter Include="MainGame\LoadingScene">
       <UniqueIdentifier>{dc087090-cc06-4849-9777-258725436606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\Camera">
+      <UniqueIdentifier>{51000531-2b9e-40cb-ab20-5ccf4acdb34d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject">
+      <UniqueIdentifier>{79f270b2-2e40-4877-9d36-19aa428166b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\TestScene">
+      <UniqueIdentifier>{71cf4d03-2b6c-4311-81e4-2b40d6c44d19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="Classes\D2DRenderer.h">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Direct2DFrameWork.h">
+      <Filter>GameFrameWork\D2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Image.h">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\ImageManager.h">
+      <Filter>GameFrameWork\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\KeyManager.h">
+      <Filter>GameFrameWork\KEYMANAGER</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\SceneManager.h">
+      <Filter>GameFrameWork\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\SoundManager.h">
+      <Filter>GameFrameWork\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\TimeManager.h">
+      <Filter>GameFrameWork\TimeManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\CommonMacroFunction.h">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\StringHelper.h">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\SingletonBase.h">
+      <Filter>GameFrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\MapToolScene.h">
+      <Filter>MainGame\MapToolScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Tiles.h">
+      <Filter>MainGame\MapToolScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\TitleScene.h">
+      <Filter>MainGame\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameNode.h">
+      <Filter>WinMain</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\targetver.h">
       <Filter>리소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
+    <ClInclude Include="Classes\Resource.h">
       <Filter>리소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Direct2DFrameWork.h">
-      <Filter>리소스 파일</Filter>
+    <ClInclude Include="Classes\Camera.h">
+      <Filter>MainGame\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameObject.h">
+      <Filter>MainGame\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\testScene.h">
+      <Filter>MainGame\TestScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\MainGame.h">
+      <Filter>MainGame</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>WinMain</Filter>
     </ClInclude>
-    <ClInclude Include="MainGame.h">
-      <Filter>MainGame</Filter>
-    </ClInclude>
-    <ClInclude Include="GameNode.h">
-      <Filter>WinMain</Filter>
-    </ClInclude>
-    <ClInclude Include="D2DRenderer.h">
-      <Filter>GameFrameWork\D2D</Filter>
-    </ClInclude>
-    <ClInclude Include="SingletonBase.h">
-      <Filter>GameFrameWork</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonMacroFunction.h">
-      <Filter>GameFrameWork\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>GameFrameWork\Image</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageManager.h">
-      <Filter>GameFrameWork\Image</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyManager.h">
-      <Filter>GameFrameWork\KEYMANAGER</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>GameFrameWork\SceneManager</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeManager.h">
-      <Filter>GameFrameWork\TimeManager</Filter>
-    </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>GameFrameWork\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>GameFrameWork\SoundManager</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>MainGame\TitleScene</Filter>
-    </ClInclude>
-    <ClInclude Include="MapToolScene.h">
-      <Filter>MainGame\MapToolScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles.h">
-      <Filter>MainGame\MapToolScene</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="testScene.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>리소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="MainGame.cpp">
-      <Filter>MainGame</Filter>
-    </ClCompile>
-    <ClCompile Include="GameNode.cpp">
-      <Filter>WinMain</Filter>
-    </ClCompile>
-    <ClCompile Include="D2DRenderer.cpp">
+    <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
       <Filter>GameFrameWork\D2D</Filter>
     </ClCompile>
-    <ClCompile Include="D2DRenderer + DrawFunc.cpp">
+    <ClCompile Include="Classes\D2DRenderer.cpp">
       <Filter>GameFrameWork\D2D</Filter>
     </ClCompile>
-    <ClCompile Include="CommonMacroFunction.cpp">
-      <Filter>GameFrameWork\Util</Filter>
+    <ClCompile Include="Classes\Direct2DFrameWork.cpp">
+      <Filter>GameFrameWork\D2D</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp">
+    <ClCompile Include="Classes\Image.cpp">
       <Filter>GameFrameWork\Image</Filter>
     </ClCompile>
-    <ClCompile Include="ImageManager.cpp">
+    <ClCompile Include="Classes\ImageManager.cpp">
       <Filter>GameFrameWork\Image</Filter>
     </ClCompile>
-    <ClCompile Include="KeyManager.cpp">
+    <ClCompile Include="Classes\KeyManager.cpp">
       <Filter>GameFrameWork\KEYMANAGER</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="Classes\SceneManager.cpp">
       <Filter>GameFrameWork\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
-      <Filter>GameFrameWork\TimeManager</Filter>
-    </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
-      <Filter>GameFrameWork\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
+    <ClCompile Include="Classes\SoundManager.cpp">
       <Filter>GameFrameWork\SoundManager</Filter>
     </ClCompile>
-    <ClCompile Include="Direct2DFrameWork.cpp">
-      <Filter>GameFrameWork\D2D</Filter>
+    <ClCompile Include="Classes\TimeManager.cpp">
+      <Filter>GameFrameWork\TimeManager</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
+    <ClCompile Include="Classes\CommonMacroFunction.cpp">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\StringHelper.cpp">
+      <Filter>GameFrameWork\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\MapToolScene.cpp">
+      <Filter>MainGame\MapToolScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Tiles.cpp">
+      <Filter>MainGame\MapToolScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\TitleScene.cpp">
       <Filter>MainGame\TitleScene</Filter>
     </ClCompile>
-    <ClCompile Include="MapToolScene.cpp">
-      <Filter>MainGame\MapToolScene</Filter>
+    <ClCompile Include="Classes\GameNode.cpp">
+      <Filter>WinMain</Filter>
     </ClCompile>
-    <ClCompile Include="Tiles.cpp">
-      <Filter>MainGame\MapToolScene</Filter>
+    <ClCompile Include="Classes\stdafx.cpp">
+      <Filter>리소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Classes\Camera.cpp">
+      <Filter>MainGame\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Classes\GameObject.cpp">
+      <Filter>MainGame\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="testScene.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Classes\testScene.cpp">
+      <Filter>MainGame\TestScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\MainGame.cpp">
+      <Filter>MainGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

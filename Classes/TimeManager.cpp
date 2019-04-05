@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "TimeManager.h"
 
 #include <mmsystem.h>

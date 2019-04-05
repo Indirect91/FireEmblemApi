@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "Tiles.h"
 
 Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
