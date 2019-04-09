@@ -15,6 +15,7 @@ void TitleScene::Init()
 	
 	//▼각종 이닛
 	SOUNDMANAGER->play("타이틀BGM"); //타이틀 BGM 재생
+	SetCoverStatue::FadeIn;
 	selectionBox.x = ((WINSIZEX) / 2 - IMAGEMANAGER->FindImage("타이틀선택박스")->GetWidth() / 2); //픽박스 위치 초기화
 	selectionBox.y = 385;	//픽박스 위치 초기화
 	isMaptool = false;		//맵툴선택여부 false

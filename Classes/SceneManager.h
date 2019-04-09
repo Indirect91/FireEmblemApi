@@ -30,11 +30,12 @@ public:
 	void Update(void);
 	void Render(void);
 
-
+	//▼커버 알파값 자체 제어
+	float &RefcoverAlpha() { return coverAlpha; }
 	//▼커버상태 참조자반환, 커튼상태 제어
-	tagCoverStatue &RefAlphaStatue() { return coverStatue; }; 
+	tagCoverStatue &RefAlphaStatue() { return coverStatue; }
 	//▼커버속도 참조자 반환, 커튼속도 제어
-	float &RefCoverSpeed() { return coverSpeed; };
+	float &RefCoverSpeed() { return coverSpeed; }
 
 	//▼씬추가
 	class GameNode* AddScene(std::string sceneName,class GameNode* scene);

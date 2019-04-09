@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+﻿#include "../stdafx.h"
 #include "LoadingScene.h"
 #include "TitleScene.h"
 #include "MapToolScene.h"
@@ -6,11 +6,11 @@
 
 void LoadingScene::Init()
 {
-	//��ε�Ŭ���� ���Ҵ� ���ְ� �ʱ�ȭ
+	//▼로딩클래스 뉴할당 해주고 초기화
 	_loading = new Loading;
 	_loading->Init();
 
-	//���̹��� ���� �� �ε�
+	//▼이미지 사운드 씬 로딩
 	this->LoadingImage();
 	this->LoadingSound();
 	this->LoadScenes();
@@ -19,24 +19,25 @@ void LoadingScene::Init()
 
 void LoadingScene::Release()
 {
-	//�ε�Ŭ���� ���Ҵ� ������ ������ ����
+	//로딩클래스 뉴할당 해준적 있으니 해제
 	_loading->Release();
 	SAFE_DELETE(_loading);
 }
 
-//�������Ʈ �ѹ��� �ϳ��� ������ �ε���. �ε��� �����̴� �̹��� �߰����൵ �ǰ�, �ε����� ���൵ �ǰ�.
+//▼업데이트 한번에 하나의 아이템 로딩함. 로딩서 움직이는 이미지 추가해줘도 되고, 로딩씬서 해줘도 되고.
 void LoadingScene::Update()
 {
-	_loading->Update(); //�ε�Ŭ���� �ֵ� ������Ʈ
+	_loading->Update(); //로딩클래스 애들 업데이트
 
-	if (_loading->LoadingDone()) //���� ���ǹ��� Ȯ���ϴ� ���ÿ� �� �Ʒ� �ִ� �Լ������ �����
+	if (_loading->LoadingDone()) //이프 조건문을 확인하는 동시에 그 아래 있는 함수들까지 실행됨
 	{
-		//��ε��� ������ �̵��� ��
+		//▼로딩이 끝나고 이동할 씬
+		SCENEMANAGER->RefcoverAlpha() = 1.f;
 		SCENEMANAGER->LoadScene("TitleScene");
 	}
 }
 
-//���ۼ������� ȭ�鿡 �׷���. 
+//▼퍼센테이지 화면에 그려줌. 
 void LoadingScene::Render()
 {
 	float num = _loading->GetLoadItem().size();
@@ -49,14 +50,14 @@ void LoadingScene::Render()
 
 }
 
-//����� ����ϴ� �̹��� �ε����
+//▼원래 사용하던 이미지 로딩방법
 void LoadingScene::LoadingImage()
 {
-	//��������, �Ϲ� �̹��� �ε� ����
-	//_loading->LoadFrameImage("NPC-����", L"image/NPC/NPC-���� �Ҿƹ���_12��.bmp",12, 1);
-	//_loading->LoadImg("����Ʈ-��ǳ��", L"image/NPC/����Ʈ - ����.bmp");
+	//▼프레임, 일반 이미지 로딩 예시
+	//_loading->LoadFrameImage("NPC-상인", L"image/NPC/NPC-상인 할아버지_12장.bmp",12, 1);
+	//_loading->LoadImg("이펙트-말풍선", L"image/NPC/이펙트 - 하이.bmp");
 
-	//�������
+	//▼맵툴용 ٩(இ ⌓ இ๑)۶ 
 	_loading->LoadImg("MapToolBg1", L"IMAGE/MapToolScene/MapToolBg1.png");
 	_loading->LoadImg("MapToolBg2", L"IMAGE/MapToolScene/MapToolBg2.png");
 	_loading->LoadImg("MapToolTitle", L"IMAGE/MapToolScene/MaptoolTitle.png");
@@ -64,39 +65,51 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("MapToolMat2", L"IMAGE/MapToolScene/MaptoolMat2.png");
 	_loading->LoadImg("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
 	
-	//��Ÿ��Ʋ��
-	_loading->LoadImg("Ÿ��Ʋ��׶���", L"IMAGE/TitleScene/TitleBackground.png");
-	_loading->LoadImg("Ÿ��Ʋ���ùڽ�", L"IMAGE/TitleScene/TitlePick.png");
-	_loading->LoadImg("Ÿ��Ʋ�ؽ�Ʈ", L"IMAGE/TitleScene/TitleLogo.png");
-	_loading->LoadFrameImage("Ÿ��Ʋ�Ƚÿ�", L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
+	//▼타이틀용 ก็็็็็็็็็็็็็ʕ•͡ᴥ•ʔ ก้้้้้้้้้้้
+	_loading->LoadImg("타이틀백그라운드", L"IMAGE/TitleScene/TitleBackground.png");
+	_loading->LoadImg("타이틀선택박스", L"IMAGE/TitleScene/TitlePick.png");
+	_loading->LoadImg("타이틀텍스트", L"IMAGE/TitleScene/TitleLogo.png");
+	_loading->LoadFrameImage("타이틀팔시온", L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
 
+	/*
+	━━━━━┓ 
+	┓┓┓┓┓┃/ . ` (와장창)
+	┓┓┓┓┓ : .＼○ノ  
+	┓┓┓┓┓┃ ` / 
+	┓┓┓┓┓┃ `ノ) . `
+	┓┓┓┓┓┃ , 
+	┓┓┓┓┓┃
+	┓┓┓┓┓┃
+	┓┓┓┓┓┃
+	┓┓┓┓┓┃
+	┓┓┓┓┓┃
+	*/
 
-
-	//���۵��׽�Ʈ
-	for (int i = 0; i < 100; i++)
+	//▼로딩 작동테스트
+	for (int i = 0; i < 80; i++)
 	{
 		_loading->LoadImg("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
 	}
 }
 
-//����� ����ϴ� �ε����
+//▼원래 사용하던 로딩방법
 void LoadingScene::LoadingSound()
 {
-	//���׶��� ���� �ε� ����
-	//_loading->LoadSound("�ó׸�ƽ", "SOUND/Intro_Cinematic.ogg", true, true);
+	//▼백그라운드 사운드 로딩 예시
+	//_loading->LoadSound("시네마틱", "SOUND/Intro_Cinematic.ogg", true, true);
 
-	//��ȿ���� �ε� ����
-	//_loading->LoadSound("����", "SOUND/villager_save.ogg", false, false);
+	//▼효과음 로딩 예시
+	//_loading->LoadSound("구출", "SOUND/villager_save.ogg", false, false);
 
 
 
-	//�������
-	_loading->LoadSound("����BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
-	//��Ÿ��Ʋ��
-	_loading->LoadSound("Ÿ��ƲBGM", "SOUND/FE/TitleBgm.mp3", true, true);
+	//▼맵툴용
+	_loading->LoadSound("맵툴BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
+	//▼타이틀용
+	_loading->LoadSound("타이틀BGM", "SOUND/FE/TitleBgm.mp3", true, true);
 }
 
-//��ε����
+//▼로딩방법
 void LoadingScene::LoadScenes()
 {
 	_loading->LoadScene("TitleScene",new TitleScene);
