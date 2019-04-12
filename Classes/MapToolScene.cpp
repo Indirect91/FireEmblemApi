@@ -11,12 +11,13 @@ void MapToolScene::Init()
 	moveWindowRateX = 789.5;	//윈도우 이동시킬 초기값
 	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속
 	isMovingDone = false;
-
+	
 	
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
 	SOUNDMANAGER->pause("타이틀BGM");
 	SOUNDMANAGER->play("맵툴BGM");
 	SOUNDMANAGER->setFadeIn();
+	
 	
 	////▼고를 이미지 4장
 	//for (UINT i = 1; i < 5; i++)
@@ -31,19 +32,19 @@ void MapToolScene::Init()
 	//	colours.push_back(tempIndex);
 	//}
 
-
-	arrField = new Tiles[fieldX_Column * fieldY_Row];
+	CAMERA.SetCamera({0,0,815,688});
+	arrField = new Tiles[TILECOLX * TILEROWY];
 	
-	for (int i = 0; i < fieldY_Row; i++)
+	for (int i = 0; i < TILEROWY; i++)
 	{
-		for (int j = 0; j < fieldX_Column; j++)
+		for (int j = 0; j < TILECOLX; j++)
 		{
-			arrField[i * fieldY_Row + j].Init();
-			arrField[i * fieldY_Row + j].SetRc(RectMake(150+j * tileSize, 100+i * tileSize, tileSize, tileSize));
+			arrField[i * TILEROWY + j].Init(); //생성된 타일 초기화
+			arrField[i * TILEROWY + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
 		}
 	}
-	tempC = { 0 };
-	showArea = CAMERA.GetCameraRc();
+	tempC = { 0 }; //충돌에 쓸 임시렉트 0
+	
 }
 
 void MapToolScene::Release()
@@ -53,7 +54,7 @@ void MapToolScene::Release()
 
 void MapToolScene::Update()
 {
-	if(!isMovingDone) moveWindowFrame();
+	if (!isMovingDone) moveWindowFrame();
 	moveCamera();
 
 }
@@ -81,7 +82,7 @@ void MapToolScene::moveCamera()
 {
 	if (KEYMANAGER->IsStayKeyDown(VK_RIGHT) || KEYMANAGER->IsStayKeyDown('D'))
 	{
-		if (CAMERA.GetCameraRc().right < 975)
+		if (CAMERA.GetCameraRc().right < TILESIZE * TILECOLX - 570)
 		{
 			CAMERA.RefCameraRc().left += 5;
 			CAMERA.RefCameraRc().right += 5;
@@ -90,7 +91,7 @@ void MapToolScene::moveCamera()
 
 	if (KEYMANAGER->IsStayKeyDown(VK_LEFT) || KEYMANAGER->IsStayKeyDown('A'))
 	{
-		if (CAMERA.GetCameraRc().left > -20)
+		if (CAMERA.GetCameraRc().left > 0)
 		{
 			CAMERA.RefCameraRc().left -= 5;
 			CAMERA.RefCameraRc().right -= 5;
@@ -99,7 +100,7 @@ void MapToolScene::moveCamera()
 
 	if (KEYMANAGER->IsStayKeyDown(VK_DOWN) || KEYMANAGER->IsStayKeyDown('S'))
 	{
-		if (CAMERA.GetCameraRc().top < 490)
+		if (CAMERA.GetCameraRc().top < TILESIZE * TILEROWY)
 		{
 			CAMERA.RefCameraRc().top += 5;
 			CAMERA.RefCameraRc().bottom += 5;
@@ -108,44 +109,60 @@ void MapToolScene::moveCamera()
 
 	if (KEYMANAGER->IsStayKeyDown(VK_UP) || KEYMANAGER->IsStayKeyDown('W'))
 	{
-		if (CAMERA.GetCameraRc().top > -45)
+		if (CAMERA.GetCameraRc().top >0)
 		{
 			CAMERA.RefCameraRc().top -= 5;
 			CAMERA.RefCameraRc().bottom -= 5;
 		}
 	}
-	showArea = CAMERA.GetCameraRc();
-	showArea.left += 150;
-	showArea.right += 150;
-	showArea.top += 100;
-	showArea.bottom += 100;
+}
+
+RECT MapToolScene::reLocate(RECT _rc)
+{
+	_rc.left += 158;
+	_rc.right += 158;
+	_rc.top += 138;
+	_rc.bottom += 138;
+	_rc = RelativeCameraRect(_rc);
+	return _rc;
 }
 
 void MapToolScene::Render()
 {
+	
 	IMAGEMANAGER->FindImage("MapToolBg1")->Render(0, 0);
 
-	for (int i = 0; i < fieldX_Column * fieldY_Row; i++)
+	for (int i = 0; i < TILEROWY * TILECOLX; i++)
 	{
-		if (IntersectRect(&tempC, &arrField[i].GetRc(), &showArea))
+		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
-			arrField[i].Render();
+			
+			//RECT toDraw = arrField[i].GetPosition();
+			//toDraw.left += 158;
+			//toDraw.right += 158;
+			//toDraw.top += 138;
+			//toDraw.bottom += 138;
+			//toDraw = RelativeCameraRect(toDraw);
+			D2DRENDERER->DrawRectangle(reLocate(arrField[i].GetPosition()));
+
 		}
 	}
 
 	IMAGEMANAGER->FindImage("MapToolMat2")->Render(1200, 140);
-	IMAGEMANAGER->FindImage("MapToolMapbox")->Render(108, 60);
+	IMAGEMANAGER->FindImage("MapToolMapbox")->Render(108, 90);
 	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Center);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-00, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-2, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-4, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-6, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-8, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-10, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-12, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-14, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-16, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-18, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-00, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-2, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-4, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-6, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-8, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-10, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-12, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-14, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-16, 0);
+	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-18, 0);
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
+	D2DRENDERER->DrawRectangle(CAMERA.GetCameraRc());
+	D2DRENDERER->DrawRectangle({_ptMouse.x,_ptMouse.y,_ptMouse.x+2,_ptMouse.y+2 });
 }
 

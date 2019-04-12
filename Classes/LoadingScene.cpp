@@ -33,7 +33,7 @@ void LoadingScene::Update()
 	{
 		//▼로딩이 끝나고 이동할 씬
 		SCENEMANAGER->RefcoverAlpha() = 1.f;
-		SCENEMANAGER->LoadScene("TitleScene");
+		SCENEMANAGER->LoadScene("MapToolScene");
 	}
 }
 
@@ -53,56 +53,31 @@ void LoadingScene::Render()
 //▼원래 사용하던 이미지 로딩방법
 void LoadingScene::LoadingImage()
 {
-	//▼프레임, 일반 이미지 로딩 예시
-	//_loading->LoadFrameImage("NPC-상인", L"image/NPC/NPC-상인 할아버지_12장.bmp",12, 1);
-	//_loading->LoadImg("이펙트-말풍선", L"image/NPC/이펙트 - 하이.bmp");
+	//▼통합
+	_loading->LoadImg("Blue", L"IMAGE/ETC/BLUE.png");
+	_loading->LoadImg("Yellow", L"IMAGE/ETC/YELLOW.png");
+	_loading->LoadImg("Green", L"IMAGE/ETC/GREEN.png");
+	_loading->LoadImg("Red", L"IMAGE/ETC/RED.png");
 
-	//▼맵툴용 ٩(இ ⌓ இ๑)۶ 
-	_loading->LoadImg("MapToolBg1", L"IMAGE/MapToolScene/MapToolBg1.png");
-	_loading->LoadImg("MapToolBg2", L"IMAGE/MapToolScene/MapToolBg2.png");
-	_loading->LoadImg("MapToolTitle", L"IMAGE/MapToolScene/MaptoolTitle.png");
-	_loading->LoadImg("MapToolMapbox", L"IMAGE/MapToolScene/MaptoolMapbox.png");
-	_loading->LoadImg("MapToolMat2", L"IMAGE/MapToolScene/MaptoolMat2.png");
-	_loading->LoadImg("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
+	//▼맵툴용 
+	_loading->LoadImg("MapToolBg1",		L"IMAGE/MapToolScene/MapToolBg1.png");
+	_loading->LoadImg("MapToolBg2",		L"IMAGE/MapToolScene/MapToolBg2.png");
+	_loading->LoadImg("MapToolTitle",	L"IMAGE/MapToolScene/MaptoolTitle.png");
+	_loading->LoadImg("MapToolMapbox",	L"IMAGE/MapToolScene/MaptoolMapbox2.png");
+	_loading->LoadImg("MapToolMat2",	L"IMAGE/MapToolScene/MaptoolMat2.png");
+	_loading->LoadImg("oldpaper",		L"IMAGE/MapToolScene/oldpaper.png");
 	
-	//▼타이틀용 ก็็็็็็็็็็็็็ʕ•͡ᴥ•ʔ ก้้้้้้้้้้้
-	_loading->LoadImg("타이틀백그라운드", L"IMAGE/TitleScene/TitleBackground.png");
-	_loading->LoadImg("타이틀선택박스", L"IMAGE/TitleScene/TitlePick.png");
-	_loading->LoadImg("타이틀텍스트", L"IMAGE/TitleScene/TitleLogo.png");
-	_loading->LoadFrameImage("타이틀팔시온", L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
+	//▼타이틀용 
+	_loading->LoadImg("타이틀백그라운드",		L"IMAGE/TitleScene/TitleBackground.png");
+	_loading->LoadImg("타이틀선택박스",		L"IMAGE/TitleScene/TitlePick.png");
+	_loading->LoadImg("타이틀텍스트",			L"IMAGE/TitleScene/TitleLogo.png");
+	_loading->LoadFrameImage("타이틀팔시온",	L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
 
-	/*
-	━━━━━┓ 
-	┓┓┓┓┓┃/ . ` (와장창)
-	┓┓┓┓┓ : .＼○ノ  
-	┓┓┓┓┓┃ ` / 
-	┓┓┓┓┓┃ `ノ) . `
-	┓┓┓┓┓┃ , 
-	┓┓┓┓┓┃
-	┓┓┓┓┓┃
-	┓┓┓┓┓┃
-	┓┓┓┓┓┃
-	┓┓┓┓┓┃
-	*/
-
-	//▼로딩 작동테스트
-	for (int i = 0; i < 80; i++)
-	{
-		_loading->LoadImg("oldpaper", L"IMAGE/MapToolScene/oldpaper.png");
-	}
 }
 
 //▼원래 사용하던 로딩방법
 void LoadingScene::LoadingSound()
 {
-	//▼백그라운드 사운드 로딩 예시
-	//_loading->LoadSound("시네마틱", "SOUND/Intro_Cinematic.ogg", true, true);
-
-	//▼효과음 로딩 예시
-	//_loading->LoadSound("구출", "SOUND/villager_save.ogg", false, false);
-
-
-
 	//▼맵툴용
 	_loading->LoadSound("맵툴BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
 	//▼타이틀용

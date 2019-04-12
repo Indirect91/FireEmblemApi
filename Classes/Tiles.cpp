@@ -3,22 +3,35 @@
 
 Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 {
-	rc = { 0 };
+	status = TileStatus::none;
+	position = { 0 };
+	isOccupied = false;
+
 	object = "";
+	objFrame = {0};
+
 	terrain = "";
-	objX = 0;
-	objY = 0;
-	counter = 0;
+	terrainFrame = { 0 };
+
+	movingT = "";
+	movingtFrame = { 0 };
+
 }
 
 void Tiles::Init()
 {
-	rc = { 0 };
+	status = TileStatus::none;
+	position = { 0 };
+	isOccupied = false;
+
 	object = "";
+	objFrame = { 0 };
+
 	terrain = "";
-	objX = 0;
-	objY = 0;
-	counter = 0;
+	terrainFrame = { 0 };
+
+	movingT = "";
+	movingtFrame = { 0 };
 }
 
 void Tiles::Release()
@@ -28,33 +41,24 @@ void Tiles::Release()
 
 void Tiles::Update()
 {
-	//▼오브젝트를 들고있을때만 작동
-	if (object != "")
-	{
-		counter++;
-		if (counter % 5 == 0)
-		{
-			objX++;
-			if (objX > 4) objX = 0;
-		}
-	}
+
 }
 
 void Tiles::Render()
 {
+
 	//▼타일에 지형이 깔려있을땐 타일을 보여줌
 	if (terrain != "")
 	{
-		IMAGEMANAGER->FindImage(terrain)->Render(rc.left, rc.top);
+		IMAGEMANAGER->FindImage(terrain)->Render(position.left, position.top);
 		if (object != "")
 		{
 			IMAGEMANAGER->FindImage(object)->SetSize(IMAGEMANAGER->FindImage(object)->GetFrameSize());
-			IMAGEMANAGER->FindImage(object)->FrameRender(rc.left, rc.top, objX, objY);
+			IMAGEMANAGER->FindImage(object)->FrameRender(position.left, position.top, objFrame.x, objFrame.y);
 		}
 	}
-	else
-	{
-		D2DRENDERER->DrawRectangle(RelativeCameraRect(rc));
-	}
+
+	D2DRENDERER->DrawRectangle(RelativeCameraRect(position));
+
 }
 

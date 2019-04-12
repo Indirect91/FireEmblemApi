@@ -15,7 +15,7 @@ private:
 	RECT cRc;
 public:
 	const RECT &GetCameraRc() const{ return cRc; }
-	void SetCamera(RECT& _cRc) { cRc = _cRc; }
+	void SetCamera(RECT _cRc) { cRc = _cRc; }
 	RECT &RefCameraRc() { return cRc; }
 };
 

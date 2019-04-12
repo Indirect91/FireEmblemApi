@@ -89,3 +89,4 @@ extern HINSTANCE	_hInstance;
 extern HWND			_hWnd;
 extern POINT		_ptMouse;
 
+

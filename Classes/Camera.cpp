@@ -4,7 +4,7 @@
 
 Camera::Camera()
 {
-	cRc = { 0,0,700,500 };
+	cRc = { 0,0,WINSIZEX,WINSIZEY};
 }
 
 
