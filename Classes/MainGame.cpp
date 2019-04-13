@@ -44,6 +44,7 @@ void MainGame::Render()
 	
 	SCENEMANAGER->Render();
 	TIMEMANAGER->Render();
+	D2DRENDERER->DrawRectangle({ _ptMouse.x,_ptMouse.y,_ptMouse.x + 2,_ptMouse.y + 2 });
 
 	/********************************************************/
 	D2DRENDERER->EndRender();

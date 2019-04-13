@@ -3,7 +3,12 @@
 
 class MapToolScene : public GameNode
 {
-
+private:
+	struct moveDir //방향키 눌렸을때
+	{
+		POINT pos;
+		BOOL pressed;
+	};
 private:
 	float moveWindowRateX;	  //윈도우 이동시킬 수치
 	float moveWindowRateAccX; //윈도우 이동시킬 수치 가속
@@ -18,6 +23,8 @@ private:
 	RECT reLocate(RECT _rc);
 	RECT palletes[9];
 	
+	moveDir RightLeft;
+	moveDir UpDown;
 
 public:
 	virtual void Init();

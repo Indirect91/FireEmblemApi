@@ -33,7 +33,7 @@ void LoadingScene::Update()
 	{
 		//▼로딩이 끝나고 이동할 씬
 		SCENEMANAGER->RefcoverAlpha() = 1.f;
-		SCENEMANAGER->LoadScene("MapToolScene");
+		SCENEMANAGER->LoadScene("test");
 	}
 }
 

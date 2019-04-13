@@ -105,8 +105,12 @@ LRESULT WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	switch (iMessage)
 	{
 	case WM_MOUSEMOVE:
-		_ptMouse.x = LOWORD(lParam);
-		_ptMouse.y = HIWORD(lParam);
+		RECT windowRc; 
+		GetWindowRect(_hWnd,&windowRc);
+		RECT windowClnt;
+		GetClientRect(_hWnd, &windowClnt);
+		_ptMouse.x = (short)LOWORD(lParam) * (windowRc.right - windowRc.left) / (windowClnt.right - windowClnt.left);
+		_ptMouse.y = (short)HIWORD(lParam) * (windowRc.bottom - windowRc.top) / (windowClnt.bottom - windowClnt.top);
 		break;
 	case WM_KEYDOWN:
 		switch (wParam)

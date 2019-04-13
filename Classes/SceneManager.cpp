@@ -93,6 +93,7 @@ HRESULT SceneManager::LoadScene(std::string sceneName)
 	//여기까지 왔으면 문제가 없으니 씬을 변경처리 하자
 	find->second->Init();
 	{
+		SetWindowPos(_hWnd, 0, WINSTARTX, WINSTARTY, WINSIZEX, WINSIZEY, SWP_NOMOVE);
 		_currentScene = find->second;
 		return S_OK;
 	}
