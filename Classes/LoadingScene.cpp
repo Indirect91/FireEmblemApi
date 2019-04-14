@@ -34,6 +34,7 @@ void LoadingScene::Update()
 		//▼로딩이 끝나고 이동할 씬
 		SCENEMANAGER->RefcoverAlpha() = 1.f;
 		SCENEMANAGER->LoadScene("test");
+		//SCENEMANAGER->LoadScene("TitleScene");
 	}
 }
 
@@ -54,6 +55,7 @@ void LoadingScene::Render()
 void LoadingScene::LoadingImage()
 {
 	//▼통합
+	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");
 	_loading->LoadImg("Blue", L"IMAGE/ETC/BLUE.png");
 	_loading->LoadImg("Yellow", L"IMAGE/ETC/YELLOW.png");
 	_loading->LoadImg("Green", L"IMAGE/ETC/GREEN.png");

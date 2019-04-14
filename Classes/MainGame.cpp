@@ -17,6 +17,7 @@ void MainGame::Init()
 	SOUNDMANAGER->Init();
 	SCENEMANAGER->AddScene("LoadingScene", new LoadingScene);
 	SCENEMANAGER->LoadScene("LoadingScene");
+	ShowCursor(false);
 }
 
 void MainGame::Release()
@@ -44,7 +45,7 @@ void MainGame::Render()
 	
 	SCENEMANAGER->Render();
 	TIMEMANAGER->Render();
-	D2DRENDERER->DrawRectangle({ _ptMouse.x,_ptMouse.y,_ptMouse.x + 2,_ptMouse.y + 2 });
+	IMAGEMANAGER->FindImage("Cursor")->Render(_ptMouse.x,_ptMouse.y);
 
 	/********************************************************/
 	D2DRENDERER->EndRender();

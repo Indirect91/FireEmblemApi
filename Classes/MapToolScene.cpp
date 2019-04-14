@@ -65,6 +65,13 @@ void MapToolScene::Update()
 {
 	if (!isMovingDone) moveWindowFrame(); //윈도우 이동완료까지 이동
 	moveCamera(); //방향키 입력에 따른 화면 이동
+	RECT rc = { 158,138,158+815,138+688 };
+	if (PtInRect(&rc, _ptMouse))
+	{
+		IMAGEMANAGER->FindImage("Cursor")->SetAngle(228);
+	}
+	else
+		IMAGEMANAGER->FindImage("Cursor")->SetAngle(0);
 
 }
 
