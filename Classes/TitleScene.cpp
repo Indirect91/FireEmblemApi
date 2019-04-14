@@ -163,7 +163,7 @@ void TitleScene::Render()
 	IMAGEMANAGER->FindImage("타이틀백그라운드")->Render(0, 0); 
 	IMAGEMANAGER->FindImage("타이틀팔시온")->SetSize(IMAGEMANAGER->FindImage("타이틀팔시온")->GetFrameSize());
 	IMAGEMANAGER->FindImage("타이틀팔시온")->SetReverseY(true);
-	IMAGEMANAGER->FindImage("타이틀팔시온")->FrameRender(WINSIZEX/2,WINSIZEY/2+100,falchionframeX,0,Pivot::Center);
+	IMAGEMANAGER->FindImage("타이틀팔시온")->FrameRender(WINSIZEX/2,WINSIZEY/2+100,falchionframeX,0,Pivot::Centre);
 	IMAGEMANAGER->FindImage("타이틀텍스트")->Render(0,0);
 	IMAGEMANAGER->FindImage("타이틀선택박스")->Render(selectionBox.x, selectionBox.y);
 }

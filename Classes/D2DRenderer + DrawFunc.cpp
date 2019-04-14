@@ -260,7 +260,7 @@ void D2DRenderer::DrawRectangle( RECT  rc,  DefaultBrush  defaultBrush, float  s
 ************************************************************************************************/
 void D2DRenderer::DrawEllipse(POINTFLOAT origin, float radius, DefaultBrush defaultBrush, float strokeWidth)
 {
-	RECT rc = RectMakePivot(origin, {radius,radius}, Pivot::Center);
+	RECT rc = RectMakePivot(origin, {radius,radius}, Pivot::Centre);
 	POINTFLOAT pos = origin;
 
 	D2D1_ELLIPSE ellipse;
@@ -283,7 +283,7 @@ void D2DRenderer::DrawEllipse(POINTFLOAT origin, float radius, DefaultBrush defa
 void D2DRenderer::DrawEllipse( POINTFLOAT origin,  float  radius,  D2D1::ColorF::Enum  color,
 	 float  alpha,   float  strokeWidth)
 {
-	RECT rc = RectMakePivot(origin, { radius,radius }, Pivot::Center);
+	RECT rc = RectMakePivot(origin, { radius,radius }, Pivot::Centre);
 	POINTFLOAT pos = origin;
 
 	ID2D1SolidColorBrush* brush(nullptr);
@@ -336,7 +336,7 @@ void D2DRenderer::FillRectangle( RECT  rc,  DefaultBrush  defaultBrush)
 ************************************************************************************************/
 void D2DRenderer::FiilEllipse( POINTFLOAT  origin,  float  radius,  D2D1::ColorF::Enum  color, float  alpha)
 {
-	RECT rc = RectMakePivot(origin, {radius,radius}, Pivot::Center);
+	RECT rc = RectMakePivot(origin, {radius,radius}, Pivot::Centre);
 	POINTFLOAT pos = origin;
 
 	ID2D1SolidColorBrush* brush(nullptr);
@@ -361,7 +361,7 @@ void D2DRenderer::FiilEllipse( POINTFLOAT  origin,  float  radius,  D2D1::ColorF
 ************************************************************************************************/
 void D2DRenderer::FiilEllipse( POINTFLOAT origin,  float radius,  DefaultBrush  brush)
 {
-	RECT rc = RectMakePivot(origin, { radius ,radius }, Pivot::Center);
+	RECT rc = RectMakePivot(origin, { radius ,radius }, Pivot::Centre);
 	POINTFLOAT pos = origin;
 	
 	D2D1_ELLIPSE ellipse;

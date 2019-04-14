@@ -57,8 +57,6 @@ void Tiles::Render()
 			IMAGEMANAGER->FindImage(object)->FrameRender(position.left, position.top, objFrame.x, objFrame.y);
 		}
 	}
-
-	D2DRENDERER->DrawRectangle(RelativeCameraRect(position));
-
+	D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(position));
 }
 

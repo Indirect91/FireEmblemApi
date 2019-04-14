@@ -95,7 +95,7 @@ void TimeManager::Update(float lockFPS)
 
 void TimeManager::Render()
 {
-	D2DRENDERER->RenderText(5, 5, L"WorldTime : " + StringHelper::StringToWString(std::to_string(this->_worldTime)), 20, D2DRenderer::DefaultBrush::White);
-	D2DRENDERER->RenderText(5, 30, L"DeltaTime : " + StringHelper::StringToWString(std::to_string(this->_timeElapsed)), 20, D2DRenderer::DefaultBrush::White);
+	D2DRENDERER->RenderText(5, 5, L"실제 타임 : " + StringHelper::StringToWString(std::to_string(this->_worldTime)), 20, D2DRenderer::DefaultBrush::White);
+	D2DRENDERER->RenderText(5, 30, L"델타 타임 : " + StringHelper::StringToWString(std::to_string(this->_timeElapsed)), 20, D2DRenderer::DefaultBrush::White);
 	D2DRENDERER->RenderText(5, 55, L"FPS : " + StringHelper::StringToWString(std::to_string(this->_frameRate)), 20, D2DRenderer::DefaultBrush::White);
 }

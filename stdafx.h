@@ -44,7 +44,7 @@
 //▼공용 자료형
 enum class Pivot : int
 {
-	LeftTop, Center, Bottom, 
+	LeftTop, Centre, Bottom, 
 };
 
 //▼내가 생성한 헤더
@@ -80,8 +80,6 @@ enum class Pivot : int
 #define SAFE_DELETE(p)		{if(p) {delete (p); (p) = NULL;}}
 #define SAFE_DELETE_ARRAY(p)	{if(p) {delete[] (p); (p) = NULL;}}
 #define SAFE_RELEASE(p){if(p){(p)->Release();(p) = NULL;}}
-#define RelativeCameraRect(RECT) {(RECT).left - CAMERA.GetCameraRc().left, (RECT).top - CAMERA.GetCameraRc().top, (RECT).right - CAMERA.GetCameraRc().left, (RECT).bottom - CAMERA.GetCameraRc().top}
-#define RelativeCameraPoint(POINT) {(POINT).x - CAMERA.GetCameraRc().left, (POINT).y - CAMERA.GetCameraRc().top}
 #define SetCoverStatue SCENEMANAGER->RefAlphaStatue()=SceneManager::tagCoverStatue
 
 //▼전역 변수

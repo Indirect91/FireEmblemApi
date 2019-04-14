@@ -5,9 +5,15 @@
 Camera::Camera()
 {
 	cRc = { 0,0,WINSIZEX,WINSIZEY};
+	//GetClientRect(_hWnd, &clientRc);
 }
 
-
-Camera::~Camera()
+RECT Camera::RelativeCameraRect(RECT _toConvert)
 {
+	_toConvert.left -= cRc.left; 
+	_toConvert.top -= cRc.top;
+	_toConvert.right -= cRc.left;
+	_toConvert.bottom -= cRc.top;
+
+	return _toConvert;
 }

@@ -155,7 +155,7 @@ RECT MapToolScene::reLocate(RECT _rc)
 	_rc.right += 158;
 	_rc.top += 138;
 	_rc.bottom += 138;
-	_rc = RelativeCameraRect(_rc);
+	_rc = CAMERA.RelativeCameraRect(_rc);
 	return _rc;
 }
 
@@ -174,9 +174,9 @@ void MapToolScene::Render()
 			//toDraw.right += 158;
 			//toDraw.top += 138;
 			//toDraw.bottom += 138;
-			//toDraw = RelativeCameraRect(toDraw);
+			//toDraw = CAMERA.RelativeCameraRect(toDraw);
+			
 			D2DRENDERER->DrawRectangle(reLocate(arrField[i].GetPosition()));
-
 		}
 	}
 
@@ -195,7 +195,7 @@ void MapToolScene::Render()
 		IMAGEMANAGER->FindImage("Red")->SetSize({ 36,24 });
 		IMAGEMANAGER->FindImage("Red")->Render(RightLeft.pos.x, RightLeft.pos.y);
 	}
-	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Center);
+	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Centre);
 	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-00, 0);
 	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-2, 0);
 	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-4, 0);
@@ -207,7 +207,5 @@ void MapToolScene::Render()
 	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-16, 0);
 	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-18, 0);
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
-	D2DRENDERER->DrawRectangle(CAMERA.GetCameraRc());
-	
 }
 
