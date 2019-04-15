@@ -49,8 +49,8 @@ void testScene::Release()
 
 void testScene::Update()
 {
-	SetWindowPos(_hWnd, 0,WINSTARTX, WINSTARTY,WINSIZEX-200,WINSIZEY, 0);
-	D2DRENDERER->GetRenderTarget()->Resize({ WINSIZEX - 200,WINSIZEY });
+	//SetWindowPos(_hWnd, 0,WINSTARTX, WINSTARTY,WINSIZEX-200,WINSIZEY, 0);
+	//D2DRENDERER->GetRenderTarget()->Resize({ WINSIZEX - 200,WINSIZEY });
 	if (KEYMANAGER->IsOnceKeyDown(VK_RETURN))
 		SCENEMANAGER->LoadScene("TitleScene");
 
@@ -92,11 +92,21 @@ void testScene::Update()
 	if (KEYMANAGER->IsStayKeyDown(VK_RIGHT))
 	{
 		stat = state::up;
+		cherryVisible = true;
+		cherryX += 0.15f;
+		cherryLoc -= 2;
+		if (cherryX > 32)
+			cherryX = 32;
 	}
 
 	if (KEYMANAGER->IsStayKeyDown(VK_LEFT))
 	{
 		stat = state::down;
+		cherryVisible = true;
+		cherryX += 0.15f;
+		cherryLoc -= 2;
+		if (cherryX > 32)
+			cherryX = 32;
 	}
 
 	switch (stat)
@@ -130,56 +140,38 @@ void testScene::Update()
 
 void testScene::Render()
 {
-	for (auto a : testVec)
-	{
-		D2DRENDERER->DrawRectangle(a, D2DRenderer::DefaultBrush::Blue);
-		//	IMAGEMANAGER->FindImage("temp")->SkewRender(a.left, a.top, 10, 0);
-	}
-	//for (float i = 0; i < 25 * 25; i++)
+	//for (auto a : testVec)
 	//{
-	//	//for (int j = 0; j < 25; j++)
-	//	{
-	//		IMAGEMANAGER->FindImage("temp")->SkewRender(testVec[i].left, testVec[i].top, (i / 25.f), 0);
-	//	}
+	//	D2DRENDERER->DrawRectangle(a, D2DRenderer::DefaultBrush::Blue);
 	//}
+
 	line = 0.8;
 
 
-	for (int i = 0; i < 25; i++)
+	for (float i = 0; i < 25; i++)
 	{
-		for (int j = 0; j < 25; j++)
+		for (float j = 0; j < 25; j++)
 		{
-			//testVec.push_back(RectMake(j * (48 + j), i * (48 + i), 48 + j * 2, 48 + i * 2));
-			//testVec.push_back(RectMake(j * (48 + j), i * (48 + i), 48 + j * 2, 48 + i * 2));
-			//testVec.push_back(RectMake(j * 48, i * 48, 48, 48));
-			//IMAGEMANAGER->FindImage("temp")->SetSize(
-			//	{
-			//	(FLOAT)(GetWidth(testVec[i * 25 + j])) + (1 + testAdditional) * j,
-			//	(FLOAT)(GetHeight(testVec[i * 25 + j])) + (1 + testAdditional) * i 
-			//	}
-			//);
-			//IMAGEMANAGER->FindImage("temp")->SkewRenderStretch
-			//(
-			//	testVec[i * 25 + j].left + ((j-1) * (testAdditional)) ,
-			//	testVec[i * 25 + j].top + ((i-1) * testAdditional) ,
-			//	j*testAdditional,0 
-			//);
+
+
 			IMAGEMANAGER->FindImage("temp")->SetSize(
 				{
-					(FLOAT)(48 + (j * 2 * testAdditional) * ((FLOAT)i/8.f)),
-					(FLOAT)(48 + (i * 2 * testAdditional))
-					//(FLOAT)(48 + (i * 2 * (1+testAdditional)))
+					(FLOAT)(48 + (j * 2 * (testAdditional)) * ((FLOAT)(i)/25.f)),
+					(FLOAT)(48 + (i * 2 * (testAdditional)))
 				}
 			);
 			IMAGEMANAGER->FindImage("temp")->SkewRenderStretch
 			(
-				j* (48 + j* (testAdditional)* (FLOAT)i / 8.f),// +(i),
+				j* (48 + j* (testAdditional )* (FLOAT)(i) / 25.f),
 				i* (48 + i* (testAdditional)),
 				j * testAdditional, 0
 			);
 		}
 	}
-	//IMAGEMANAGER->FindImage("cherry")->SetSize(IMAGEMANAGER->FindImage("cherry")->GetFrameSize());
-	//if(cherryVisible)
-	//IMAGEMANAGER->FindImage("cherry")->FrameRender(cherryLoc, WINSIZEY / 2, (INT)cherryX, 0,Pivot::Centre);
+	if(KEYMANAGER->IsToggleKey('Q'))
+	{
+		IMAGEMANAGER->FindImage("cherry")->SetSize(IMAGEMANAGER->FindImage("cherry")->GetFrameSize());
+		if(cherryVisible)
+		IMAGEMANAGER->FindImage("cherry")->FrameRender(cherryLoc, WINSIZEY / 2, (INT)cherryX, 0,Pivot::Centre);
+	}
 }

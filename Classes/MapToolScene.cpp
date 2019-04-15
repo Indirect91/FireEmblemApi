@@ -13,7 +13,8 @@ void MapToolScene::Init()
 	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속
 	isMovingDone = false;
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
-	
+	moveAngle = 0;
+
 	//▼음악 초기화. 맵툴은 타이틀서부터밖에 못넘어온다
 	SOUNDMANAGER->pause("타이틀BGM");
 	SOUNDMANAGER->play("맵툴BGM");
@@ -114,6 +115,8 @@ void MapToolScene::moveCamera()
 		//▼좌우 네모박스 눌린여부 및 위치
 		RightLeft.pos = { 592,851 };
 		RightLeft.pressed = true;
+
+		moveAngle++;
 	}
 
 	//▼키입력에 따른 카메라 이동
@@ -127,6 +130,7 @@ void MapToolScene::moveCamera()
 		//▼좌우 네모박스 눌린여부 및 위치
 		RightLeft.pos = { 488,851 };
 		RightLeft.pressed = true;
+		moveAngle--;
 	}
 
 	//▼키입력에 따른 카메라 이동
@@ -203,16 +207,17 @@ void MapToolScene::Render()
 		IMAGEMANAGER->FindImage("Red")->Render(RightLeft.pos.x, RightLeft.pos.y);
 	}
 	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Centre);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-00, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-2, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-4, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-6, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-8, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-10, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-12, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-14, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-16, 0);
-	//IMAGEMANAGER->FindImage("oldpaper")->SkewRender(WINSIZEX / 2, WINSIZEY / 2,-18, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 18, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 16, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 14, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 12, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 10, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 8, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 6, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 4, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 2, 0);
+	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 0, 0);
+	D2DRENDERER->RenderText(300, 100,std::to_wstring( moveAngle),50);
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
 }
 

@@ -17,6 +17,7 @@ private:
 	UINT paperScrollX;		  //윈도우 이동에 따른 페이퍼 스크롤
 
 	//std::vector<class Tiles> vecField;    //
+	float moveAngle;
 	class Tiles *arrField;					//타일들 보유할 배열. 저장에 사용
 	RECT tempC;								//충돌에 사용할 임시 렉트 초기화
 	void moveCamera();
