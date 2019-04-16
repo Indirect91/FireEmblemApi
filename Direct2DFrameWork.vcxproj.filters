@@ -70,6 +70,27 @@
     <Filter Include="MainGame\Scene들\LoadingScene">
       <UniqueIdentifier>{dc087090-cc06-4849-9777-258725436606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\Scene들\WorldScene">
+      <UniqueIdentifier>{e1acfce8-f0ee-4cd6-ac2d-22639b53d2c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\Firstcene">
+      <UniqueIdentifier>{11a7f2da-c8bb-43b3-95c0-c87d476b01e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\SaveLoadScene">
+      <UniqueIdentifier>{42706399-aa28-4940-addc-73385f46a462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Player">
+      <UniqueIdentifier>{67237b0a-7a8e-4636-bab9-5933d5ac43c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\GameObj">
+      <UniqueIdentifier>{b0850705-ae6c-4ae4-bb95-136b9f9ef35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Character">
+      <UniqueIdentifier>{21c5a2a1-8505-4e29-b470-5345c7b4c83d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Occupation">
+      <UniqueIdentifier>{22c91632-1795-46cf-9ac5-5303085528a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\D2DRenderer.h">
@@ -126,9 +147,6 @@
     <ClInclude Include="Classes\Camera.h">
       <Filter>MainGame\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\GameObject.h">
-      <Filter>MainGame\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\testScene.h">
       <Filter>MainGame\Scene들\TestScene</Filter>
     </ClInclude>
@@ -143,6 +161,27 @@
     </ClInclude>
     <ClInclude Include="Classes\LoadingScene.h">
       <Filter>MainGame\Scene들\LoadingScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\FirstScene.h">
+      <Filter>MainGame\Scene들\Firstcene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\WorldScene.h">
+      <Filter>MainGame\Scene들\WorldScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\SaveloadScene.h">
+      <Filter>MainGame\Scene들\SaveLoadScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Player.h">
+      <Filter>MainGame\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameObject.h">
+      <Filter>MainGame\GameObject\GameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Character.h">
+      <Filter>MainGame\GameObject\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Occupation.h">
+      <Filter>MainGame\GameObject\Occupation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -197,9 +236,6 @@
     <ClCompile Include="Classes\Camera.cpp">
       <Filter>MainGame\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\GameObject.cpp">
-      <Filter>MainGame\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\testScene.cpp">
       <Filter>MainGame\Scene들\TestScene</Filter>
     </ClCompile>
@@ -211,6 +247,27 @@
     </ClCompile>
     <ClCompile Include="Classes\LoadingScene.cpp">
       <Filter>MainGame\Scene들\LoadingScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\FirstScene.cpp">
+      <Filter>MainGame\Scene들\Firstcene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\WorldScene.cpp">
+      <Filter>MainGame\Scene들\WorldScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\SaveloadScene.cpp">
+      <Filter>MainGame\Scene들\SaveLoadScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Player.cpp">
+      <Filter>MainGame\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GameObject.cpp">
+      <Filter>MainGame\GameObject\GameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Character.cpp">
+      <Filter>MainGame\GameObject\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Occupation.cpp">
+      <Filter>MainGame\GameObject\Occupation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

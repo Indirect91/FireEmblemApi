@@ -5,7 +5,7 @@
 Camera::Camera()
 {
 	cRc = { 0,0,WINSIZEX,WINSIZEY};
-	//GetClientRect(_hWnd, &clientRc);
+	//GetClientRect(_hWnd, &clientRc); 
 }
 
 RECT Camera::RelativeCameraRect(RECT _toConvert)

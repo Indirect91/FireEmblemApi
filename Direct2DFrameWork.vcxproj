@@ -140,9 +140,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\Camera.h" />
+    <ClInclude Include="Classes\Character.h" />
     <ClInclude Include="Classes\CommonMacroFunction.h" />
     <ClInclude Include="Classes\D2DRenderer.h" />
     <ClInclude Include="Classes\Direct2DFrameWork.h" />
+    <ClInclude Include="Classes\FirstScene.h" />
     <ClInclude Include="Classes\GameNode.h" />
     <ClInclude Include="Classes\GameObject.h" />
     <ClInclude Include="Classes\Image.h" />
@@ -152,7 +154,10 @@
     <ClInclude Include="Classes\LoadingScene.h" />
     <ClInclude Include="Classes\MainGame.h" />
     <ClInclude Include="Classes\MapToolScene.h" />
+    <ClInclude Include="Classes\Occupation.h" />
+    <ClInclude Include="Classes\Player.h" />
     <ClInclude Include="Classes\Resource.h" />
+    <ClInclude Include="Classes\SaveloadScene.h" />
     <ClInclude Include="Classes\SceneManager.h" />
     <ClInclude Include="Classes\SingletonBase.h" />
     <ClInclude Include="Classes\SoundManager.h" />
@@ -162,14 +167,17 @@
     <ClInclude Include="Classes\Tiles.h" />
     <ClInclude Include="Classes\TimeManager.h" />
     <ClInclude Include="Classes\TitleScene.h" />
+    <ClInclude Include="Classes\WorldScene.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\Camera.cpp" />
+    <ClCompile Include="Classes\Character.cpp" />
     <ClCompile Include="Classes\CommonMacroFunction.cpp" />
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp" />
     <ClCompile Include="Classes\D2DRenderer.cpp" />
     <ClCompile Include="Classes\Direct2DFrameWork.cpp" />
+    <ClCompile Include="Classes\FirstScene.cpp" />
     <ClCompile Include="Classes\GameNode.cpp" />
     <ClCompile Include="Classes\GameObject.cpp" />
     <ClCompile Include="Classes\Image.cpp" />
@@ -179,6 +187,9 @@
     <ClCompile Include="Classes\LoadingScene.cpp" />
     <ClCompile Include="Classes\MainGame.cpp" />
     <ClCompile Include="Classes\MapToolScene.cpp" />
+    <ClCompile Include="Classes\Occupation.cpp" />
+    <ClCompile Include="Classes\Player.cpp" />
+    <ClCompile Include="Classes\SaveloadScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />
     <ClCompile Include="Classes\SoundManager.cpp" />
     <ClCompile Include="Classes\stdafx.cpp">
@@ -189,6 +200,7 @@
     <ClCompile Include="Classes\Tiles.cpp" />
     <ClCompile Include="Classes\TimeManager.cpp" />
     <ClCompile Include="Classes\TitleScene.cpp" />
+    <ClCompile Include="Classes\WorldScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Direct2DFrameWork.rc" />

@@ -9,7 +9,7 @@ class TitleScene : public GameNode
 	};
 	
 	BOOL isMaptool;		//맵툴이 픽된 여부
-	BOOL isIngame;		//인게임이 픽된 여부
+	BOOL isPlayPressed;	//플레이버튼 눌렸는지 여부
 	BOOL isDone;		//윈도우 재배치 끝났는지 여부
 	BOOL ascending;		//픽하는 빨간네모 알파값 상승중인지
 	UINT Tcounter;		//그냥 카운터

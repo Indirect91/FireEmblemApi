@@ -10,7 +10,7 @@ void MapToolScene::Init()
 	SCENEMANAGER->RefCoverSpeed() = 0.035f;
 	SetCoverStatue::FadeIn;
 	moveWindowRateX = 789.5;	//윈도우 이동시킬 초기값
-	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속
+	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속                 
 	isMovingDone = false;
 	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
 	moveAngle = 0;

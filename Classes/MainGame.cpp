@@ -4,7 +4,7 @@
 
 MainGame::MainGame()
 {
-	srand(GetTickCount()); //랜덤초기화
+	srand(GetTickCount64()); //랜덤초기화
 }
 
 
@@ -17,7 +17,7 @@ void MainGame::Init()
 	SOUNDMANAGER->Init();
 	SCENEMANAGER->AddScene("LoadingScene", new LoadingScene);
 	SCENEMANAGER->LoadScene("LoadingScene");
-	ShowCursor(false);
+	//ShowCursor(false); 나중에 최후에 다시 주석을 풀도록 하자
 }
 
 void MainGame::Release()

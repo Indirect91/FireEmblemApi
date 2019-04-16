@@ -3,6 +3,9 @@
 #include "TitleScene.h"
 #include "MapToolScene.h"
 #include "testScene.h"
+#include "WorldScene.h"
+#include "FirstScene.h"
+#include "SaveloadScene.h"
 
 void LoadingScene::Init()
 {
@@ -75,6 +78,23 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("타이틀텍스트",			L"IMAGE/TitleScene/TitleLogo.png");
 	_loading->LoadFrameImage("타이틀팔시온",	L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
 
+	//▼캐릭터 프레임이미지
+	_loading->LoadFrameImage("캐릭터Chrome", L"IMAGE/Characters/Chrome.png", 12, 128);
+	_loading->LoadFrameImage("캐릭터Virion", L"IMAGE/Characters/Virion.png", 12, 144);
+	_loading->LoadFrameImage("캐릭터Anna", L"IMAGE/Characters/Anna.png", 12, 144);
+	_loading->LoadFrameImage("캐릭터Tharja", L"IMAGE/Characters/Tharja.png", 12, 128);
+	_loading->LoadFrameImage("캐릭터Olivia", L"IMAGE/Characters/Olivia.png", 12, 128);
+	_loading->LoadFrameImage("캐릭터Lissa", L"IMAGE/Characters/Lissa.png", 12, 128);
+
+	
+	//▼캐릭터 초상화
+	_loading->LoadImg("초상화Chrome", L"IMAGE/Portraits/Chrome.png");
+	_loading->LoadImg("초상화Virion", L"IMAGE/Portraits/Virion.png");
+	_loading->LoadImg("초상화Anna", L"IMAGE/Portraits/Anna.png");
+	_loading->LoadImg("초상화Tharja", L"IMAGE/Portraits/Tharja.png");
+	_loading->LoadImg("초상화Olivia", L"IMAGE/Portraits/Olivia.png");
+	_loading->LoadImg("초상화Lissa", L"IMAGE/Portraits/Lissa.png");
+
 }
 
 //▼원래 사용하던 로딩방법
@@ -92,4 +112,7 @@ void LoadingScene::LoadScenes()
 	_loading->LoadScene("TitleScene",new TitleScene);
 	_loading->LoadScene("MapToolScene", new MapToolScene);
 	_loading->LoadScene("test", new testScene);
+	_loading->LoadScene("WorldScene", new WorldScene);
+	_loading->LoadScene("FirstScene", new FirstScene);
+	_loading->LoadScene("SaveloadScene", new SaveloadScene);
 }
