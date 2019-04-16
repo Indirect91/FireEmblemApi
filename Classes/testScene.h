@@ -9,6 +9,7 @@ public:
 	float original;
 	float line;
 	float cherryX = 0;
+	RECT virion;
 	int cherryLoc;
 	std::vector<RECT> testVec;
 	bool cherryVisible;

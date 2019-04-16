@@ -61,9 +61,6 @@
     <Filter Include="MainGame\Scene들\TitleScene">
       <UniqueIdentifier>{1ed2e2af-6694-4e1c-b606-daeacdf11c95}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\Scene들\WorldMapScene">
-      <UniqueIdentifier>{b0a4dcee-31ef-471a-b07e-9615c006bf62}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\Scene들\MapToolScene">
       <UniqueIdentifier>{71519b39-b20a-4de9-89b3-282ce729956f}</UniqueIdentifier>
     </Filter>
@@ -87,9 +84,6 @@
     </Filter>
     <Filter Include="MainGame\GameObject\Character">
       <UniqueIdentifier>{21c5a2a1-8505-4e29-b470-5345c7b4c83d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\GameObject\Occupation">
-      <UniqueIdentifier>{22c91632-1795-46cf-9ac5-5303085528a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -180,9 +174,6 @@
     <ClInclude Include="Classes\Character.h">
       <Filter>MainGame\GameObject\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Occupation.h">
-      <Filter>MainGame\GameObject\Occupation</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
@@ -265,9 +256,6 @@
     </ClCompile>
     <ClCompile Include="Classes\Character.cpp">
       <Filter>MainGame\GameObject\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\Occupation.cpp">
-      <Filter>MainGame\GameObject\Occupation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

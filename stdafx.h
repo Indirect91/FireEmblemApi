@@ -58,6 +58,7 @@ enum class Pivot : int
 #include "Classes/TimeManager.h"
 #include "Classes/SoundManager.h"
 #include "Classes/Camera.h"
+#include "Classes/Occupation.h"
 
 //°ÂΩÃ±€≈Ê ∞Ÿ¿ŒΩ∫≈œΩ∫
 #define D2DRENDERER D2DRenderer::Get()

@@ -4,7 +4,9 @@
 
 FirstScene::FirstScene()
 {
-
+	arrField = nullptr;
+	chrome = {48*5,48*5,48*5+TILESIZE,48*5+TILESIZE};
+	virion = { 48 * 10,48 * 5,48 * 10 + TILESIZE,48 * 5 + TILESIZE };
 }
 
 void FirstScene::Init()
@@ -48,7 +50,12 @@ void FirstScene::Render()
 		{
 			D2DRENDERER->DrawRectangle((arrField[i].GetPosition()),D2DRenderer::DefaultBrush::White,2);
 			IMAGEMANAGER->FindImage("캐릭터Chrome")->SetSize({ 48, 48 });
-			IMAGEMANAGER->FindImage("캐릭터Chrome")->FrameRender(10, 10, 0, 0);
+			IMAGEMANAGER->FindImage("캐릭터Chrome")->SetReverseX(true);
+			IMAGEMANAGER->FindImage("캐릭터Chrome")->FrameRender(chrome.left, chrome.top, 0, 0);
+
+			IMAGEMANAGER->FindImage("캐릭터Virion")->SetSize({ 48, 48 });
+			IMAGEMANAGER->FindImage("캐릭터Virion")->FrameRender(virion.left, virion.top, 0, 0);
+
 		}
 	}
 }

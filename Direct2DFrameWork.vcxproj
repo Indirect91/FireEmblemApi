@@ -154,7 +154,6 @@
     <ClInclude Include="Classes\LoadingScene.h" />
     <ClInclude Include="Classes\MainGame.h" />
     <ClInclude Include="Classes\MapToolScene.h" />
-    <ClInclude Include="Classes\Occupation.h" />
     <ClInclude Include="Classes\Player.h" />
     <ClInclude Include="Classes\Resource.h" />
     <ClInclude Include="Classes\SaveloadScene.h" />
@@ -187,7 +186,6 @@
     <ClCompile Include="Classes\LoadingScene.cpp" />
     <ClCompile Include="Classes\MainGame.cpp" />
     <ClCompile Include="Classes\MapToolScene.cpp" />
-    <ClCompile Include="Classes\Occupation.cpp" />
     <ClCompile Include="Classes\Player.cpp" />
     <ClCompile Include="Classes\SaveloadScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />

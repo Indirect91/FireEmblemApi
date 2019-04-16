@@ -156,16 +156,25 @@ void testScene::Render()
 
 			IMAGEMANAGER->FindImage("temp")->SetSize(
 				{
-					(FLOAT)(48 + (j * 2 * (testAdditional)) * ((FLOAT)(i)/25.f)),
+					(FLOAT)(48 + (j * 2 * (testAdditional)) * ((FLOAT)(i) / 25.f)),
 					(FLOAT)(48 + (i * 2 * (testAdditional)))
-				}
-			);
+				});
+
+
 			IMAGEMANAGER->FindImage("temp")->SkewRenderStretch
 			(
 				j* (48 + j* (testAdditional )* (FLOAT)(i) / 25.f),
 				i* (48 + i* (testAdditional)),
 				j * testAdditional, 0
 			);
+			if (i == 5 && j == 5)
+			{
+				IMAGEMANAGER->FindImage("캐릭터Virion")->SetSize({ 48, 48 });
+				IMAGEMANAGER->FindImage("캐릭터Virion")->FrameRender
+				(j * (48 + j * (testAdditional) * (FLOAT)(i) / 25.f) + ((FLOAT)(48 + (j * 2 * (testAdditional)) * ((FLOAT)(i) / 25.f))/2), 
+					i * (48 + i * (testAdditional)) + ((FLOAT)(48 + (i * 2 * (testAdditional)))/2),
+					0, 0,Pivot::Centre);
+			}
 		}
 	}
 	if(KEYMANAGER->IsToggleKey('Q'))

@@ -4,8 +4,8 @@ class FirstScene : public GameNode
 {
 private:
 	class Tiles* arrField;					//타일들 보유할 배열. 저장에 사용
-
 	RECT chrome;
+	RECT virion;
 
 
 

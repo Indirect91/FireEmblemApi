@@ -16,7 +16,7 @@ public:
 	void SetPosition(const RECT &_position) { this->position = _position; }
 	void SetIndex(const RECT& _index) { this->position = _index; }
 
-	GameObject() {};
+	GameObject();
 	~GameObject() {};
 };
 
