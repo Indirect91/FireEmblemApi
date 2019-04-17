@@ -36,8 +36,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	wndClass.cbClsExtra = 0;										//클래스 여분 메모리
 	wndClass.cbWndExtra = 0;										//윈도우 여분 메모리
 	wndClass.hbrBackground = (HBRUSH)GetStockObject(LTGRAY_BRUSH);	//백그라운드
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);					//마우스 커서
-	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);				//아이콘
+	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);					//커서가 너무 커서
+	wndClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_FE));	//아이콘
 	wndClass.hInstance = hInstance;									//인스턴스
 	wndClass.lpfnWndProc = (WNDPROC)WndProc;						//윈도우 프로시져
 	wndClass.lpszClassName = WINNAME;								//클래스 이름
