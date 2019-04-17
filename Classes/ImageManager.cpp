@@ -117,7 +117,7 @@ ID2D1Bitmap * ImageManager::CreateD2DBitmapFromFile(const std::wstring & file)
 #endif
 	//컨버트된 데이터를 기반으로 실제 Direct2D용 비트맵을 생성
 	ID2D1Bitmap* ipResult = nullptr;
-	hr = D2DRenderer::Get()->GetRenderTarget()->CreateBitmapFromWicBitmap
+	hr = D2DRenderer::Getinstance()->GetRenderTarget()->CreateBitmapFromWicBitmap
 	(
 		convertedSrcBmp,
 		nullptr,

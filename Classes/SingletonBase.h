@@ -10,7 +10,7 @@ protected:
 
 	virtual friend class SingletonBase<T>;
 public:
-	static T* Get(void);
+	static T* Getinstance(void);
 	static void Delete(void);
 };
 
@@ -18,7 +18,7 @@ template <typename T>
 T* SingletonBase<T>::mInstance = nullptr;
 
 template <typename T>
-T* SingletonBase<T>::Get(void)
+T* SingletonBase<T>::Getinstance(void)
 {
 	if (SingletonBase<T>::mInstance == nullptr)
 		SingletonBase<T>::mInstance = new T;

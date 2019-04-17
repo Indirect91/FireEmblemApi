@@ -71,7 +71,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//MSG : 운영체제에서 발행하는 메세지 정보를 저장하기 위한 구조체
 	MSG message;
 
-	TimeManager::Get()->Start();
+	TimeManager::Getinstance()->Start();
 	_mainGame->Init();
 
 	while (true)

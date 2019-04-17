@@ -139,8 +139,8 @@ inline float GetDistance(float x1, float y1, float x2, float y2)
 //▼ 두 점 사이 거리 구함. 포인트버전
 inline float GetDistance(POINT _first,POINT _second)
 {
-	float x = _second.x - _first.x;
-	float y = _second.y - _first.y;
+	float x = static_cast<float>(_second.x) - static_cast<float>(_first.x);
+	float y = static_cast<float>(_second.y) - static_cast<float>(_first.y);
 
 	float distance = sqrtf((x * x) + (y * y));
 

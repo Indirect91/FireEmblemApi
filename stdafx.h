@@ -41,15 +41,15 @@
 #pragma comment(lib, "WindowsCodecs.lib")
 #include <wincodec.h>
 
-//▼공용 자료형
+//▼내가 생성한 공용 자료형
 enum class Pivot : UINT
 {
-	LeftTop, Centre, Bottom, 
+	LeftTop, Centre, Bottom,
 };
 
 enum class ObjType : UINT
 {
-	Tile, Character, UI, ObjSize
+	Tile, Character, ITEM, UI, ObjSize
 };
 
 //▼내가 생성한 헤더
@@ -65,15 +65,17 @@ enum class ObjType : UINT
 #include "Classes/Camera.h"
 #include "Classes/DataCentre.h"
 
+
+
 //▼싱글톤 겟인스턴스
-#define D2DRENDERER D2DRenderer::Get()
-#define IMAGEMANAGER ImageManager::Get()
-#define KEYMANAGER KeyManager::Get()
-#define SCENEMANAGER SceneManager::Get()
-#define TIMEMANAGER TimeManager::Get()
-#define SOUNDMANAGER SoundManager::Get()
-#define CAMERA Camera::Get()
-#define DATACENTRE DataCentre::Get()
+#define D2DRENDERER D2DRenderer::Getinstance()
+#define IMAGEMANAGER ImageManager::Getinstance()
+#define KEYMANAGER KeyManager::Getinstance()
+#define SCENEMANAGER SceneManager::Getinstance()
+#define TIMEMANAGER TimeManager::Getinstance()
+#define SOUNDMANAGER SoundManager::Getinstance()
+#define CAMERA Camera::Getinstance()
+#define DATACENTRE DataCentre::Getinstance()
 
 //▼윈도우
 #define WINNAME			L"신한영 WinApi+D2D"
@@ -93,5 +95,4 @@ enum class ObjType : UINT
 extern HINSTANCE	_hInstance;
 extern HWND			_hWnd;
 extern POINT		_ptMouse;
-
 

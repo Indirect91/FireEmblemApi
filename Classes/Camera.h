@@ -2,7 +2,7 @@
 class Camera
 {
 public:
-	static Camera& Get() //沥利 教臂沛
+	static Camera& Getinstance() //沥利 教臂沛
 	{
 		static Camera instance;
 		return instance;
