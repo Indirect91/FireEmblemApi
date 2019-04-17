@@ -25,12 +25,13 @@ private:
 	UINT luck;			//행운력. 회피율 및 크리티컬
 	UINT move;			//이동력. 턴당 이동 가능한 타일 수
 
+	  
+public:
 	void Init() override;
 	void Release()override;
 	void Update()override;
 	void Render()override;
-	  
-public:
+
 	Character();
 	~Character() {};
 };

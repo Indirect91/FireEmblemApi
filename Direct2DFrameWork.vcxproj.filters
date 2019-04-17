@@ -85,6 +85,12 @@
     <Filter Include="MainGame\GameObject\Character">
       <UniqueIdentifier>{21c5a2a1-8505-4e29-b470-5345c7b4c83d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFrameWork\DataCentre">
+      <UniqueIdentifier>{3f526f7c-d133-4163-92a6-40a82ccedd34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\item">
+      <UniqueIdentifier>{ebecd264-5dc4-42e8-9352-29c252ed71c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\D2DRenderer.h">
@@ -174,6 +180,12 @@
     <ClInclude Include="Classes\Character.h">
       <Filter>MainGame\GameObject\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\DataCentre.h">
+      <Filter>GameFrameWork\DataCentre</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Item.h">
+      <Filter>MainGame\GameObject\item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
@@ -257,6 +269,12 @@
     <ClCompile Include="Classes\Character.cpp">
       <Filter>MainGame\GameObject\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\DataCentre.cpp">
+      <Filter>GameFrameWork\DataCentre</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Item.cpp">
+      <Filter>MainGame\GameObject\item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Direct2DFrameWork.rc">
@@ -268,6 +286,9 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Direct2DFrameWork.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="small3.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

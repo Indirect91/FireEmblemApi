@@ -1,18 +1,23 @@
 #include "../stdafx.h"
 #include "FirstScene.h"
 #include "Tiles.h"
+#include "Player.h"
+#include "Character.h"
 
 FirstScene::FirstScene()
 {
 	arrField = nullptr;
 	chrome = {48*5,48*5,48*5+TILESIZE,48*5+TILESIZE};
 	virion = { 48 * 10,48 * 5,48 * 10 + TILESIZE,48 * 5 + TILESIZE };
+	//player = nullptr;
+	
 }
 
 void FirstScene::Init()
 {
 	CAMERA.SetCamera({ 0,0,WINSIZEX,WINSIZEY });
 
+	//player = new Player;
 	arrField = new Tiles[TILECOLX * TILEROWY];
 
 	for (int i = 0; i < TILEROWY; i++)
@@ -23,6 +28,8 @@ void FirstScene::Init()
 			arrField[i * TILEROWY + j].SetPosition(RectMake(j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE));
 		}
 	}
+	
+
 }
 
 void FirstScene::Release()

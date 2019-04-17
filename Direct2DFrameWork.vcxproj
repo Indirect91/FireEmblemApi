@@ -143,12 +143,14 @@
     <ClInclude Include="Classes\Character.h" />
     <ClInclude Include="Classes\CommonMacroFunction.h" />
     <ClInclude Include="Classes\D2DRenderer.h" />
+    <ClInclude Include="Classes\DataCentre.h" />
     <ClInclude Include="Classes\Direct2DFrameWork.h" />
     <ClInclude Include="Classes\FirstScene.h" />
     <ClInclude Include="Classes\GameNode.h" />
     <ClInclude Include="Classes\GameObject.h" />
     <ClInclude Include="Classes\Image.h" />
     <ClInclude Include="Classes\ImageManager.h" />
+    <ClInclude Include="Classes\Item.h" />
     <ClInclude Include="Classes\KeyManager.h" />
     <ClInclude Include="Classes\Loading.h" />
     <ClInclude Include="Classes\LoadingScene.h" />
@@ -175,12 +177,14 @@
     <ClCompile Include="Classes\CommonMacroFunction.cpp" />
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp" />
     <ClCompile Include="Classes\D2DRenderer.cpp" />
+    <ClCompile Include="Classes\DataCentre.cpp" />
     <ClCompile Include="Classes\Direct2DFrameWork.cpp" />
     <ClCompile Include="Classes\FirstScene.cpp" />
     <ClCompile Include="Classes\GameNode.cpp" />
     <ClCompile Include="Classes\GameObject.cpp" />
     <ClCompile Include="Classes\Image.cpp" />
     <ClCompile Include="Classes\ImageManager.cpp" />
+    <ClCompile Include="Classes\Item.cpp" />
     <ClCompile Include="Classes\KeyManager.cpp" />
     <ClCompile Include="Classes\Loading.cpp" />
     <ClCompile Include="Classes\LoadingScene.cpp" />
@@ -206,6 +210,7 @@
   <ItemGroup>
     <Image Include="Direct2DFrameWork.ico" />
     <Image Include="small.ico" />
+    <Image Include="small3.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

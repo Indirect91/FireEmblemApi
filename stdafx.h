@@ -42,9 +42,14 @@
 #include <wincodec.h>
 
 //▼공용 자료형
-enum class Pivot : int
+enum class Pivot : UINT
 {
 	LeftTop, Centre, Bottom, 
+};
+
+enum class ObjType : UINT
+{
+	Tile, Character, UI, ObjSize
 };
 
 //▼내가 생성한 헤더
@@ -58,7 +63,7 @@ enum class Pivot : int
 #include "Classes/TimeManager.h"
 #include "Classes/SoundManager.h"
 #include "Classes/Camera.h"
-#include "Classes/Occupation.h"
+#include "Classes/DataCentre.h"
 
 //▼싱글톤 겟인스턴스
 #define D2DRENDERER D2DRenderer::Get()
@@ -68,6 +73,7 @@ enum class Pivot : int
 #define TIMEMANAGER TimeManager::Get()
 #define SOUNDMANAGER SoundManager::Get()
 #define CAMERA Camera::Get()
+#define DATACENTRE DataCentre::Get()
 
 //▼윈도우
 #define WINNAME			L"신한영 WinApi+D2D"
