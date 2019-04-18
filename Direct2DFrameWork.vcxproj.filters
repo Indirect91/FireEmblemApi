@@ -76,12 +76,6 @@
     <Filter Include="MainGame\Scene들\SaveLoadScene">
       <UniqueIdentifier>{42706399-aa28-4940-addc-73385f46a462}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\GameObject\Player">
-      <UniqueIdentifier>{67237b0a-7a8e-4636-bab9-5933d5ac43c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\GameObject\GameObj">
-      <UniqueIdentifier>{b0850705-ae6c-4ae4-bb95-136b9f9ef35a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\GameObject\Character">
       <UniqueIdentifier>{21c5a2a1-8505-4e29-b470-5345c7b4c83d}</UniqueIdentifier>
     </Filter>
@@ -90,6 +84,24 @@
     </Filter>
     <Filter Include="MainGame\GameObject\item">
       <UniqueIdentifier>{ebecd264-5dc4-42e8-9352-29c252ed71c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Pathfinder">
+      <UniqueIdentifier>{5e6729bf-8654-4c87-b9bc-5913bce2fdee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Lords">
+      <UniqueIdentifier>{d923cefe-1e84-4101-a13e-d51d289cd4ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Lords\Player">
+      <UniqueIdentifier>{67237b0a-7a8e-4636-bab9-5933d5ac43c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Lords\Enemy">
+      <UniqueIdentifier>{5fd7c874-8e79-4d94-9c28-d28985237745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\UI">
+      <UniqueIdentifier>{6cf87550-3d41-4c3e-988f-fc1ad3b03a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\Gold">
+      <UniqueIdentifier>{b6b1dfdf-120a-4917-85eb-f211ab06ac52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,10 +184,7 @@
       <Filter>MainGame\Scene들\SaveLoadScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Player.h">
-      <Filter>MainGame\GameObject\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\GameObject.h">
-      <Filter>MainGame\GameObject\GameObj</Filter>
+      <Filter>MainGame\GameObject\Lords\Player</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Character.h">
       <Filter>MainGame\GameObject\Character</Filter>
@@ -185,6 +194,24 @@
     </ClInclude>
     <ClInclude Include="Classes\Item.h">
       <Filter>MainGame\GameObject\item</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Pathfinder.h">
+      <Filter>MainGame\Pathfinder</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Enemy.h">
+      <Filter>MainGame\GameObject\Lords\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Lords.h">
+      <Filter>MainGame\GameObject\Lords</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameObject.h">
+      <Filter>MainGame\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\UserInteface.h">
+      <Filter>MainGame\GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Gold.h">
+      <Filter>MainGame\GameObject\Gold</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,10 +288,7 @@
       <Filter>MainGame\Scene들\SaveLoadScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Player.cpp">
-      <Filter>MainGame\GameObject\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\GameObject.cpp">
-      <Filter>MainGame\GameObject\GameObj</Filter>
+      <Filter>MainGame\GameObject\Lords\Player</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Character.cpp">
       <Filter>MainGame\GameObject\Character</Filter>
@@ -274,6 +298,24 @@
     </ClCompile>
     <ClCompile Include="Classes\Item.cpp">
       <Filter>MainGame\GameObject\item</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Pathfinder.cpp">
+      <Filter>MainGame\Pathfinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Enemy.cpp">
+      <Filter>MainGame\GameObject\Lords\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Lords.cpp">
+      <Filter>MainGame\GameObject\Lords</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GameObject.cpp">
+      <Filter>MainGame\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\UserInteface.cpp">
+      <Filter>MainGame\GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Gold.cpp">
+      <Filter>MainGame\GameObject\Gold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

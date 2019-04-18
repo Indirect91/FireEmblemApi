@@ -49,7 +49,7 @@ enum class Pivot : UINT
 
 enum class ObjType : UINT
 {
-	Tile, Character, ITEM, UI, ObjSize
+	Tile, PlayerArmy, PlayerItem, EnemyArmy, UI, Gold, ObjSize
 };
 
 //▼내가 생성한 헤더

@@ -1,16 +1,12 @@
 #pragma once
-#include "GameObject.h"
-class Player final : public GameObject //플레이어 더 상속받지 못하게 파이널 박아넣음
+#include "Lords.h"
+class Player final : public Lords //플레이어 더 상속받지 못하게 파이널 박아넣음
 {
 private:
 
-	//플레이어가 존재한다면 있어야 할 것?
-	
-	//플레이어가 보유중인 캐릭터 목록
-	//플레이어 인벤토리
-	//보유 골드
-	//스토리 진행상황
-
+	GameObject* playerGold; //골드는 게임 내에 플레이어만 들고있는다
+	std::map<std::string, GameObject*> &inven = DATACENTRE.GetObjects(ObjType::PlayerItem); //인벤토리 목록은 게임 내에 플레이어만 가지고 있는다
+	std::map<std::string, GameObject*> &playerTroop = DATACENTRE.GetObjects(ObjType::PlayerArmy); //플레이어 부대
 public:
 
 	void Init() override;
@@ -18,7 +14,7 @@ public:
 	void Update()override;
 	void Render()override;
 
-	Player() {};
+	Player();
 	~Player() {};
 };
 

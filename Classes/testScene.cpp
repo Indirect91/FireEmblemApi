@@ -11,8 +11,6 @@ testScene::testScene()
 	line = 1;
 	cherryVisible = false;
 	cherryLoc = WINSIZEX / 2+100;
-
-
 }
 
 

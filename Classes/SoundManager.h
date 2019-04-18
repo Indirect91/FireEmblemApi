@@ -50,7 +50,7 @@ public:
 	bool isPauseSound(std::string keyName);
 
 	//▼다음 재생부터 적용되는 볼륨 제어
-	float &refTotalVolume() { return totalVolume; } //0.0f(Min) ~ 1.0f(Max)
+	float & refTotalVolume() { return totalVolume; } //0.0f(Min) ~ 1.0f(Max)
 	//▼현재 재생중인거까지 바꾸어버리는 소리 제어
 	void setTotalVolume(float volume); //0.0f(Min) ~ 1.0f(Max)
 	

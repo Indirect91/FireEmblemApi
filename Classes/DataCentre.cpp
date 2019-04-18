@@ -1,15 +1,16 @@
 #include "../stdafx.h"
 #include "DataCentre.h"
 #include "GameObject.h"
+#include "Character.h"
 
 DataCentre::DataCentre()
 {
 	//▼오브젝트의 종류만큼 오브젝트 컨테이너 만듦
 	for (UINT i = 0; i < static_cast<UINT>(ObjType::ObjSize); i++)
 	{
-		//objContainer[(ObjType)i] = std::map<std::string, GameObject*>();
 		objContainer.insert(std::make_pair((ObjType)i, std::map<std::string, GameObject*>()));
 	}
+	AddObj(ObjType::Gold, "playerGold", new GameObject);
 }
 
 //▼오브젝트 컨테이너 속에 모든걸 이닛시킴
@@ -95,5 +96,24 @@ GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 std::map<std::string, GameObject*>& DataCentre::GetObjects(ObjType _type)
 {
 	return objContainer[_type]; //타입이 일치하는 맵 반환
+}
+
+BOOL DataCentre::SavetoFile()
+{
+
+	return false;
+}
+
+BOOL DataCentre::LoadFromFile()
+{
+	std::string 만약스트링있다면;
+	GameObject* 임시객체 = new GameObject;
+	
+	dynamic_cast<Character*> (임시객체)->SetImg(만약스트링있다면);
+	AddObj(ObjType::PlayerArmy, 만약스트링있다면 , 임시객체);
+
+
+	//▼만약 모든 위 샇하하하하하
+	return false;
 }
 

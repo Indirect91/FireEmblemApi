@@ -8,6 +8,11 @@ protected:
 	POINT index;	//실제 포지션이 아닌 인덱스로 이동하기도 한다
 public:
 
+	void Init() override;
+	void Release()override;
+	void Update()override;
+	void Render()override;
+
 	//▼겟터. 참조자로 반환하되 변경되지않게 상수화.
 	const RECT & GetPosition()const { return this->position; }
 	const POINT& GetIndex()const { return this->index; }
