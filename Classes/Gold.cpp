@@ -18,7 +18,3 @@ void Gold::Render()
 {
 }
 
-Gold::Gold()
-{
-	money = 10000;
-}

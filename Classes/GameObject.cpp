@@ -1,5 +1,6 @@
 #include "../stdafx.h"
 #include "GameObject.h"
+#include "Tiles.h"
 
 GameObject::GameObject()
 {

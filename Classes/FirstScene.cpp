@@ -28,6 +28,7 @@ void FirstScene::Init()
 		{
 			arrField[i * TILEROWY + j].Init(); //생성된 타일 초기화
 			arrField[i * TILEROWY + j].SetPosition(RectMake(j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE));
+			DATACENTRE.AddObj(ObjType::Tile, std::to_string(i * TILECOLX + j), (GameObject*)(&arrField[i * TILECOLX + j]));
 		}
 	}
 	
@@ -64,17 +65,12 @@ void FirstScene::Render()
 		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
 			D2DRENDERER->DrawRectangle((arrField[i].GetPosition()),D2DRenderer::DefaultBrush::White,2);
-			//IMAGEMANAGER->FindImage("캐릭터Chrome")->SetSize({ 48, 48 });
-			//IMAGEMANAGER->FindImage("캐릭터Chrome")->SetReverseX(true);
-			//IMAGEMANAGER->FindImage("캐릭터Chrome")->FrameRender(48*6, 48*6, 0, 0);
-			//
-			//IMAGEMANAGER->FindImage("캐릭터Virion")->SetSize({ 48, 48 });
-			//IMAGEMANAGER->FindImage("캐릭터Virion")->FrameRender(48 * 12, 48 * 12, 0, 0);
-			
-
 		}
 	}
-
+	DATACENTRE.Render();
+	
 	player->Render();
+	
+	enemy->Render();
 }
 

@@ -24,7 +24,10 @@ void Player::Release()
 
 void Player::Update()
 {
-
+	for (auto& character : playerTroop)
+	{
+		dynamic_cast<Character*>(character.second)->Update();
+	}
 }
 
 void Player::Render()

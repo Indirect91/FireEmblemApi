@@ -19,8 +19,8 @@ public:
 
 	//▼셋터. 상수화시켜서 변동되지않게 된 참조자로 받아 변수에 세팅해줌.
 	void SetPosition(const RECT &_position) { this->position = _position; }
-	void SetIndex(const RECT& _index) { this->position = _index; }
-
+	void SetIndex(const POINT& _index) { this->index = _index; }
+	void SetPositionViaIndex() { position = RectMake(index.x*48, index.y* 48,48,48); }
 	GameObject();
 	~GameObject() {};
 };

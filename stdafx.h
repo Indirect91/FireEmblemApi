@@ -44,7 +44,7 @@
 //▼내가 생성한 공용 자료형
 enum class Pivot : UINT
 {
-	LeftTop, Centre, Bottom,
+	LeftTop, Centre, Bottom
 };
 
 enum class ObjType : UINT
@@ -61,9 +61,9 @@ enum class ObjType : UINT
 #include "Classes/KeyManager.h"
 #include "Classes/SceneManager.h"
 #include "Classes/TimeManager.h"
+#include "Classes/DataCentre.h"
 #include "Classes/SoundManager.h"
 #include "Classes/Camera.h"
-#include "Classes/DataCentre.h"
 
 
 

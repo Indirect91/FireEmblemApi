@@ -107,18 +107,14 @@ BOOL DataCentre::SavetoFile()
 BOOL DataCentre::LoadFromFile()
 {
 	std::string stringImgTest; //임시 스트링
-
-
-
 	stringImgTest = "Chrome"; //거기에 크롬 대입
 	GameObject* addTest = new Character; //임시 객체 생성
 	
 	dynamic_cast<Character*> (addTest)->SetImg(stringImgTest); //캐릭터 생성 테스트
-	dynamic_cast<Character*> (addTest)->SetPosition(RectMake(48 * 6, 48 * 6, 48, 48));
+	dynamic_cast<Character*> (addTest)->SetIndex({ 3,4 });
+	dynamic_cast<Character*> (addTest)->SetPositionViaIndex();
 	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
 
-
-	
 	return false;
 }
 
