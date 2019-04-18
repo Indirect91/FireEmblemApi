@@ -9,8 +9,7 @@ Character::Character()
 	portaitImg = nullptr; 
 	frameImg = nullptr;
 	isActionTaken = false;
-	frameX = 0;
-	frameY = 0;
+	frame = { 0 };
 
 	attack = 0;
 	defence = 0;
@@ -51,10 +50,13 @@ void Character::SetFrame(POINT _frame)
 
 void Character::SetImg(std::string _CharName)
 {
+	
+	portaitImg = IMAGEMANAGER->FindImage("초상화"+_CharName);
+	frameImg = IMAGEMANAGER->FindImage("캐릭터" + _CharName);
 
 }
 
 void Character::Render()
 {
-
+	frameImg->FrameRender(this->position.left, this->position.top, 0, 0);
 }

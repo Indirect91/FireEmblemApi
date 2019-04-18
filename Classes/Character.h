@@ -17,8 +17,7 @@ private:
 	Image * portaitImg; //모든 캐릭터는 초상화 이미지를 가진다
 	Image* frameImg;	//모든 캐릭터는 프레임 이미지를 가진다
 	BOOL isActionTaken;	//모든 캐릭터는 턴당 행동을 가진다
-	UINT frameX;		//프레임 이미지의 X
-	UINT frameY;		//프레임 이미지의 Y
+	POINT frame;		//모든 캐릭터는 프레임을 가진다
 
 	UINT attack;		//공격력
 	UINT defence;		//방어력
@@ -48,6 +47,9 @@ public:
 	void SetAdditionalLuck(UINT _luck) { AdditionalLuck = _luck; }
 	void SetAdditionalMove(UINT _move) { AdditionalMove = _move; }
 
+	const BOOL &GetIsActionTaken() const { return isActionTaken; }
+	const Occupation &GetOccupation() const { return classes; }
+	const POINT &GetFrame() const { return frame; }
 
 
 	Character();

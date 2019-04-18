@@ -18,6 +18,7 @@ void MainGame::Init()
 	SCENEMANAGER->AddScene("LoadingScene", new LoadingScene);
 	SCENEMANAGER->LoadScene("LoadingScene");
 	//ShowCursor(false); 나중에 최후에 다시 주석을 풀도록 하자
+	// 풉  ㅋ 풉  ㅋ 
 }
 
 void MainGame::Release()

@@ -2,6 +2,7 @@
 #include "DataCentre.h"
 #include "GameObject.h"
 #include "Character.h"
+#include "Gold.h"
 
 DataCentre::DataCentre()
 {
@@ -10,7 +11,7 @@ DataCentre::DataCentre()
 	{
 		objContainer.insert(std::make_pair((ObjType)i, std::map<std::string, GameObject*>()));
 	}
-	AddObj(ObjType::Gold, "playerGold", new GameObject);
+	AddObj(ObjType::Gold, "playerGold", new Gold);
 }
 
 //▼오브젝트 컨테이너 속에 모든걸 이닛시킴
@@ -68,7 +69,6 @@ void DataCentre::Render()
 void DataCentre::AddObj(ObjType _type, std::string _name, GameObject* _obj)
 {	//▼assert는 거짓조건이 들어오면 터지다는것과, 맵에는 키값당 하나만 존재한다는 사실을 이용한 안전검사
 	assert(objContainer[_type].count(_name) < 1);
-	//objContainer[_type][_name] = _obj; 
 	objContainer[_type].insert(std::make_pair(_name, _obj)); //방금 받아온거 넣어줌
 }
 
@@ -106,14 +106,19 @@ BOOL DataCentre::SavetoFile()
 
 BOOL DataCentre::LoadFromFile()
 {
-	std::string 만약스트링있다면;
-	GameObject* 임시객체 = new GameObject;
+	std::string stringImgTest; //임시 스트링
+
+
+
+	stringImgTest = "Chrome"; //거기에 크롬 대입
+	GameObject* addTest = new Character; //임시 객체 생성
 	
-	dynamic_cast<Character*> (임시객체)->SetImg(만약스트링있다면);
-	AddObj(ObjType::PlayerArmy, 만약스트링있다면 , 임시객체);
+	dynamic_cast<Character*> (addTest)->SetImg(stringImgTest); //캐릭터 생성 테스트
+	dynamic_cast<Character*> (addTest)->SetPosition(RectMake(48 * 6, 48 * 6, 48, 48));
+	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
 
 
-	//▼만약 모든 위 샇하하하하하
+	
 	return false;
 }
 
