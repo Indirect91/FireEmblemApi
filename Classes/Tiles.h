@@ -17,7 +17,7 @@ public:
 	};
 
 private:
-	//RECT rc;			//상속된 포지션과 중복
+
 	TileStatus status;	//타일 파란색 빨간색
 	BOOL isOccupied;	//누군가가 서있는지 여부
 
@@ -30,6 +30,7 @@ private:
 	std::string movingT;//타일이 들고있는 움직이는 타일
 	POINT movingtFrame;	//움직이는 타일 프레임렌더용
 	
+	BOOL checked;		//타일이 검사되었는지 여부
 
 public:
 	//▼오버라이드된 함수들
@@ -50,8 +51,10 @@ public:
 	const std::string & GetMovingT() const { return movingT; }
 	const POINT & GetMovingtFrame() const { return movingtFrame; }
 
-	//▼셋터. 상수화시켜서 변동되지않게 된 참조자로 받아 변수에 세팅해줌.
-	void SetStatus(TileStatus &_status) { this->status = _status; }
+	const BOOL& GetIsChecked() const { return checked; }
+
+	//▼셋터. 인자 상수화시켜 받아옴
+	void SetStatus(TileStatus _status) { this->status = _status; }
 
 	void SetObj(const std::string &_object) { this->object = _object; }
 	void SetObjFrame(const POINT _objFrame) { this->objFrame = _objFrame; }
@@ -62,6 +65,7 @@ public:
 	void SetMovingT(const std::string &_movingT) { this->terrain = _movingT; }
 	void SetMovingtFrame(const POINT _movingtFrame) { this->movingtFrame = _movingtFrame; }
 
+	void SetIsChecked(const BOOL _checked) { this->checked; }
 
 	Tiles();
 	~Tiles() {};

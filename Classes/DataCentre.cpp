@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Gold.h"
 
+
 DataCentre::DataCentre()
 {
 	//▼오브젝트의 종류만큼 오브젝트 컨테이너 만듦
@@ -98,13 +99,13 @@ std::map<std::string, GameObject*>& DataCentre::GetObjects(ObjType _type)
 	return objContainer[_type]; //타입이 일치하는 맵 반환
 }
 
-BOOL DataCentre::SavetoFile()
+HRESULT DataCentre::SavetoFile()
 {
 
-	return false;
+	return S_OK;
 }
 
-BOOL DataCentre::LoadFromFile()
+HRESULT DataCentre::LoadFromFile()
 {
 	std::string stringImgTest; //임시 스트링
 	stringImgTest = "Chrome"; //거기에 크롬 대입
@@ -115,6 +116,15 @@ BOOL DataCentre::LoadFromFile()
 	dynamic_cast<Character*> (addTest)->SetPositionViaIndex();
 	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
 
-	return false;
+	std::string stringImgTest2; //임시 스트링
+	stringImgTest2 = "Anna"; //거기에 안나 대입
+	GameObject* addTest2 = new Character; //임시 객체 생성
+
+	dynamic_cast<Character*> (addTest2)->SetImg(stringImgTest2); //캐릭터 생성 테스트
+	dynamic_cast<Character*> (addTest2)->SetIndex({ 6,6 });
+	dynamic_cast<Character*> (addTest2)->SetPositionViaIndex();
+	AddObj(ObjType::PlayerArmy, stringImgTest2, addTest2); //방금 만들어진 정보를 추가함
+
+	return S_OK;
 }
 

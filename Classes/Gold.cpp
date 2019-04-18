@@ -1,7 +1,6 @@
 #include "../stdafx.h"
 #include "Gold.h"
 
-
 void Gold::Init()
 {
 }

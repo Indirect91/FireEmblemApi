@@ -1,9 +1,9 @@
 #pragma once
 #include "GameObject.h"
+
 class Item : public GameObject
 {
 private:
-	UINT gold;
 
 
 public:

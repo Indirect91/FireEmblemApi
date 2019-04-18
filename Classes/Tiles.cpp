@@ -16,6 +16,7 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	movingT = "";
 	movingtFrame = { 0 };
 
+	checked = false;
 }
 
 void Tiles::Init()

@@ -7,6 +7,9 @@ private:
 	class Player* player;
 	class Enemy* enemy;
 
+	Image* bg;
+	Image* bg2;
+
 
 public:
 	virtual void Init() override;

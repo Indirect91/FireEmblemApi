@@ -48,8 +48,8 @@ void MapToolScene::Init()
 	{
 		for (int j = 0; j < TILECOLX; j++)
 		{
-			arrField[i * TILEROWY + j].Init(); //생성된 타일 초기화
-			arrField[i * TILEROWY + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
+			arrField[i * TILECOLX + j].Init(); //생성된 타일 초기화
+			arrField[i * TILECOLX + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
 		}
 	}
 	tempC = { 0 }; //충돌에 쓸 임시렉트 0
@@ -107,7 +107,7 @@ void MapToolScene::moveCamera()
 	//▼키입력에 따른 카메라 이동
 	if (KEYMANAGER->IsStayKeyDown(VK_RIGHT) || KEYMANAGER->IsStayKeyDown('D'))
 	{
-		if (CAMERA.GetCameraRc().right < TILESIZE * TILECOLX - 570)
+		if (CAMERA.GetCameraRc().right < TILESIZE * TILECOLX+2)
 		{
 			CAMERA.RefCameraRc().left += 5;
 			CAMERA.RefCameraRc().right += 5;
@@ -136,7 +136,7 @@ void MapToolScene::moveCamera()
 	//▼키입력에 따른 카메라 이동
 	if (KEYMANAGER->IsStayKeyDown(VK_DOWN) || KEYMANAGER->IsStayKeyDown('S'))
 	{
-		if (CAMERA.GetCameraRc().top < TILESIZE * TILEROWY - 680)
+		if (CAMERA.GetCameraRc().bottom < TILESIZE * TILEROWY+2)
 		{
 			CAMERA.RefCameraRc().top += 5;
 			CAMERA.RefCameraRc().bottom += 5;

@@ -16,7 +16,8 @@ FirstScene::FirstScene()
 void FirstScene::Init()
 {
 	CAMERA.SetCamera({ 0,0,WINSIZEX,WINSIZEY });
-
+	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
+	bg2 = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp2.png");
 	player = new Player;
 	enemy = new Enemy;
 
@@ -60,6 +61,8 @@ void FirstScene::SaveToFile()
 
 void FirstScene::Render()
 {
+	bg->Render(0, 0);
+	bg2->Render(288, 0);
 	for (int i = 0; i < TILEROWY * TILECOLX; i++)
 	{
 		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))

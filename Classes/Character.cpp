@@ -27,10 +27,14 @@ Character::Character()
 	mouseOn = false;
 }
 
-void Character::營敝()
+void Character::營敝(POINT _index)
 {
 	this->index;
-	營敝();
+	//TODO
+	TODO dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_index.y * TILEROWY + _index.x)))->SetStatus(Tiles::TileStatus::blue);
+	TODO dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_index.y * TILEROWY + _index.x)))->SetStatus(Tiles::TileStatus::blue);
+
+	//營敝();
 }
 
 void Character::Init()
@@ -51,7 +55,7 @@ void Character::Update()
 		
 		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 		{
-			營敝();
+			營敝(index);
 		}
 	}
 	else

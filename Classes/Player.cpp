@@ -7,14 +7,12 @@ Player::Player()
 {
 	DATACENTRE.LoadFromFile();
 	playerGold = DATACENTRE.GetCertainObject(ObjType::Gold, "playerGold");
-
 }
 
 
 void Player::Init()
 {
 	for (auto& units : playerTroop) units.second->Init();
-
 }
 
 void Player::Release()

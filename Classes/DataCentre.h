@@ -58,8 +58,8 @@ public:
 
 
 	//▼세이브로드관련
-	BOOL SavetoFile();
-	BOOL LoadFromFile();
+	HRESULT SavetoFile();
+	HRESULT LoadFromFile();
 
 
 };

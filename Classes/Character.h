@@ -38,7 +38,7 @@ private:
 
 	class Item *item;					//보유중인 아이템
 	BOOL mouseOn;
-	void 재귀();
+	void 재귀(POINT _index);
 	  
 public:
 	void Init() override;
