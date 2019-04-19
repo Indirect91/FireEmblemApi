@@ -56,11 +56,8 @@ public:
 	void SetPlayerArmy(std::map<std::string, class GameObject*> _changedArmy) { playerArmy = _changedArmy; }
 	void SetPlayerItem(std::map<std::string, class GameObject*> _changedInven) { playerItem = _changedInven; }
 
-
 	//▼세이브로드관련
 	HRESULT SavetoFile();
 	HRESULT LoadFromFile();
-
-
 };
 

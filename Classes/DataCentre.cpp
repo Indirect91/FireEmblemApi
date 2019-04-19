@@ -117,16 +117,13 @@ HRESULT DataCentre::LoadFromFile()
 	std::string stringImgTest; //임시 스트링
 	stringImgTest = "Chrome"; //거기에 크롬 대입
 	GameObject* addTest = new Character; //임시 객체 생성
-	dynamic_cast<Character*> (addTest)->SetInitialChar(Occupation::Infantary, { 0,0 }, stringImgTest, { 3,4 });
+	dynamic_cast<Character*> (addTest)->SetInitialChar(Occupation::Infantary, { 4,70 }, stringImgTest, { 3,4 });
 	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
 
 	std::string stringImgTest2; //임시 스트링
 	stringImgTest2 = "Anna"; //거기에 안나 대입
 	GameObject* addTest2 = new Character; //임시 객체 생성
-	dynamic_cast<Character*> (addTest2)->SetOccupation(Occupation::Infantary);
-	dynamic_cast<Character*> (addTest2)->SetImg(stringImgTest2); //캐릭터 생성 테스트
-	dynamic_cast<Character*> (addTest2)->SetIndex({ 6,6 });
-	dynamic_cast<Character*> (addTest2)->SetPositionViaIndex();
+	dynamic_cast<Character*> (addTest2)->SetInitialChar(Occupation::Infantary, { 0,0 }, stringImgTest2, { 6,6 });
 	AddObj(ObjType::PlayerArmy, stringImgTest2, addTest2); //방금 만들어진 정보를 추가함
 
 	return S_OK;

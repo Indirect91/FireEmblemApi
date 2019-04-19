@@ -12,11 +12,16 @@ enum class Occupation
 class Character : public GameObject
 {
 private:
-	Occupation classes;			//모든 캐릭터는 직업이 있다
-	Image * portaitImg;			//모든 캐릭터는 초상화 이미지를 가진다
-	Image* frameImg;			//모든 캐릭터는 프레임 이미지를 가진다
+	Occupation classes;			//직업
+	Image* frameImg;			//프레임 이미지
+	Image * portraitImg;		//초상화 이미지
+	FLOAT portraitAlpha;			//초상화 알파값
+
 	BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
 	POINT frame;				//모든 캐릭터는 프레임을 가진다
+	UINT frameLoop;				//프레임 추가어치
+	UINT frameCounter;			//업데이트별 프레임 제어자
+	INT frameInterval;			//프레임 도는 빈도
 
 	INT classHp;				//직업별 체력
 	UINT classAttack;			//직업별 공격력
@@ -37,8 +42,8 @@ private:
 	INT AdditionalMove;			//버프, 디버프, 혹은 아이템의 영향을 받는 스텟
 
 	class Item *item;			//보유중인 아이템
-	BOOL mouseOn;				//마우스가 캐릭터 위에 있을떄
-
+	BOOL isClicked;				//마우스가 캐릭터를 누른 상태일때
+	BOOL isMouseOn;							//마우스가 올라와있을때
 	BOOL isChecking;						//이동범위 눌려있었던지
 	INT moveRangeCalculator;				//이동범위 계산용
 	std::vector<class Tiles*> blueTiles;	//이동범위 계산용2
@@ -47,8 +52,9 @@ private:
 private:
 
 	void ShowMoveRange();
-	void DisableRange();
+	void DisableMoveRange();
 	void MakeItBlue(POINT _pos, UINT _move);
+	void AdjustFrame();
 	  
 public:
 	void Init() override;

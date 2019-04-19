@@ -86,6 +86,13 @@ void FirstScene::Render()
 				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Red, 0.2f);
 			}
 		}
+
+		if (PtInRect(&arrField[i].GetPosition(), _ptMouse))
+		{
+			IMAGEMANAGER->FindImage("SelectedTile")->SetSize({ TILESIZE, TILESIZE });
+			IMAGEMANAGER->FindImage("SelectedTile")->Render(arrField[i].GetPosition().left, arrField[i].GetPosition().top);
+		}
+
 	}
 	DATACENTRE.Render();
 	

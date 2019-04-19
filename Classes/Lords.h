@@ -13,7 +13,8 @@ public:
 	void SetTurnEnd() { myTurn = false; }
 	void SetTurnStart() { myTurn = true; }
 	void SetTurnStatue(BOOL _turn) { myTurn = _turn; }
-	BOOL GetTurnStatus() { return myTurn; }
+	
+	const BOOL &GetTurnStatus() const { return myTurn; }
 	
 	Lords();
 	~Lords() {};
