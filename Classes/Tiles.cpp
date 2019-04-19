@@ -8,7 +8,7 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	isOccupied = false;
 
 	object = "";
-	objFrame = {0};
+	objFrame = { 0 };
 
 	terrain = "";
 	terrainFrame = { 0 };
@@ -17,7 +17,29 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	movingtFrame = { 0 };
 
 	checked = false;
+	//checkDuplicate = false;
+	blueNum = 0;
 }
+
+void Tiles::SetBlueNum(INT _blue)
+{
+	assert(_blue >= 0);
+	blueNum = _blue;
+}
+
+void Tiles::IncreaseBlueNum()
+{
+	blueNum++;
+}
+
+void Tiles::DecreaseBlueNum()
+{
+
+	blueNum--;
+	assert(blueNum >= 0);
+}
+
+
 
 void Tiles::Init()
 {
@@ -52,12 +74,18 @@ void Tiles::Render()
 	if (terrain != "")
 	{
 		IMAGEMANAGER->FindImage(terrain)->Render(position.left, position.top);
-		if (object != "")
-		{
-			IMAGEMANAGER->FindImage(object)->SetSize(IMAGEMANAGER->FindImage(object)->GetFrameSize());
-			IMAGEMANAGER->FindImage(object)->FrameRender(position.left, position.top, objFrame.x, objFrame.y);
-		}
+		//TODO : 오브젝트 이름 맞추기
+		//if (object != "")
+		//{
+		//	IMAGEMANAGER->FindImage(object)->SetSize(IMAGEMANAGER->FindImage(object)->GetFrameSize());
+		//	IMAGEMANAGER->FindImage(object)->FrameRender(position.left, position.top, objFrame.x, objFrame.y);
+		//}
 	}
 	D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(position));
+
+	//std::wstring asd= std::to_wstring(index.x);
+	//asd += L", ";
+	//asd += std::to_wstring(index.y);
+	//D2DRENDERER->RenderText(position.left, position.top, asd, 10);
 }
 

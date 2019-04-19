@@ -30,7 +30,9 @@ private:
 	std::string movingT;//타일이 들고있는 움직이는 타일
 	POINT movingtFrame;	//움직이는 타일 프레임렌더용
 	
-	BOOL checked;		//타일이 검사되었는지 여부
+	BOOL checked;			//타일이 검사되었는지 여부
+	//BOOL checkDuplicate;	//추후 적 범위 전부 합칠때 사용
+	INT blueNum;			//타일의 범위 중복 판단시 사용
 
 public:
 	//▼오버라이드된 함수들
@@ -56,16 +58,20 @@ public:
 	//▼셋터. 인자 상수화시켜 받아옴
 	void SetStatus(TileStatus _status) { this->status = _status; }
 
-	void SetObj(const std::string &_object) { this->object = _object; }
+	void SetObj(const std::string _object) { this->object = _object; }
 	void SetObjFrame(const POINT _objFrame) { this->objFrame = _objFrame; }
 
-	void SetTerrain(const std::string &_terrain) { this->terrain = _terrain; }
+	void SetTerrain(const std::string _terrain) { this->terrain = _terrain; }
 	void SetTerrainFrame(const POINT _terrainFrame) { this->terrainFrame = _terrainFrame; }
 
-	void SetMovingT(const std::string &_movingT) { this->terrain = _movingT; }
+	void SetMovingT(const std::string _movingT) { this->terrain = _movingT; }
 	void SetMovingtFrame(const POINT _movingtFrame) { this->movingtFrame = _movingtFrame; }
 
 	void SetIsChecked(const BOOL _checked) { this->checked; }
+	void SetBlueNum(INT _blue);
+	void IncreaseBlueNum();
+	void DecreaseBlueNum();
+	BOOL isBlue() { return blueNum; }
 
 	Tiles();
 	~Tiles() {};

@@ -23,13 +23,18 @@ void FirstScene::Init()
 
 	arrField = new Tiles[TILECOLX * TILEROWY];
 
-	for (int i = 0; i < TILEROWY; i++)
+	for (int j = 0; j < TILEROWY; j++)
 	{
-		for (int j = 0; j < TILECOLX; j++)
+		for (int i = 0; i < TILECOLX; i++)
 		{
-			arrField[i * TILEROWY + j].Init(); //생성된 타일 초기화
-			arrField[i * TILEROWY + j].SetPosition(RectMake(j * TILESIZE, i * TILESIZE, TILESIZE, TILESIZE));
-			DATACENTRE.AddObj(ObjType::Tile, std::to_string(i * TILECOLX + j), (GameObject*)(&arrField[i * TILECOLX + j]));
+			arrField[j * TILECOLX + i].Init(); //생성된 타일 초기화
+			arrField[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
+			arrField[j * TILECOLX + i].SetIndex({ i,j });
+			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
+			{
+				arrField[j * TILECOLX + i].SetObj("tmp");
+			}
+			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), (GameObject*)(&arrField[j * TILECOLX + i]));
 		}
 	}
 	
@@ -39,13 +44,17 @@ void FirstScene::Init()
 void FirstScene::Release()
 {
 	//현재 씬에서 뉴할당 받은 애들 역순으로 제거
+
+	DATACENTRE.GetObjects(ObjType::Tile).clear();
 	SAFE_DELETE_ARRAY(arrField);
+
 	SAFE_DELETE(enemy);
 	SAFE_DELETE(player);
 }
 
 void FirstScene::Update()
 {
+
 	if (player->GetTurnStatus()) player->Update();
 	else if (enemy->GetTurnStatus()) enemy->Update();
 	
@@ -68,6 +77,14 @@ void FirstScene::Render()
 		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
 			D2DRENDERER->DrawRectangle((arrField[i].GetPosition()),D2DRenderer::DefaultBrush::White,2);
+			if (arrField[i].isBlue())
+			{
+				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Blue, 0.3f);
+			}
+			else if (arrField[i].GetObj() != "")
+			{
+				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Red, 0.2f);
+			}
 		}
 	}
 	DATACENTRE.Render();

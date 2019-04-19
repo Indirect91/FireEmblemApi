@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Character.h"
 #include "Gold.h"
+#include "Tiles.h"
 
 
 DataCentre::DataCentre()
@@ -59,10 +60,16 @@ void DataCentre::Render()
 {
 	for (const auto& allObj : objContainer) //오브젝트 컨테이너를 전부 돈다. allObj는 현재 ObjCtr형식
 	{
-		for (const auto& certainObj : allObj.second) //certainObj는 현재 map<std::string, class GameObject*> 형식
+		if (allObj.first == ObjType::Tile)
 		{
-			certainObj.second->Render(); //certainObj의 second는 gameObject포인터임. 그것들 랜더
+			for (const auto& certainObj : allObj.second) //certainObj는 현재 map<std::string, class GameObject*> 형식
+			{
+				dynamic_cast<Tiles*>(certainObj.second)->Render(); //certainObj의 second는 gameObject포인터임. 그것들 랜더
+			}
 		}
+
+
+		
 	}
 }
 
@@ -110,16 +117,13 @@ HRESULT DataCentre::LoadFromFile()
 	std::string stringImgTest; //임시 스트링
 	stringImgTest = "Chrome"; //거기에 크롬 대입
 	GameObject* addTest = new Character; //임시 객체 생성
-	
-	dynamic_cast<Character*> (addTest)->SetImg(stringImgTest); //캐릭터 생성 테스트
-	dynamic_cast<Character*> (addTest)->SetIndex({ 3,4 });
-	dynamic_cast<Character*> (addTest)->SetPositionViaIndex();
+	dynamic_cast<Character*> (addTest)->SetInitialChar(Occupation::Infantary, { 0,0 }, stringImgTest, { 3,4 });
 	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
 
 	std::string stringImgTest2; //임시 스트링
 	stringImgTest2 = "Anna"; //거기에 안나 대입
 	GameObject* addTest2 = new Character; //임시 객체 생성
-
+	dynamic_cast<Character*> (addTest2)->SetOccupation(Occupation::Infantary);
 	dynamic_cast<Character*> (addTest2)->SetImg(stringImgTest2); //캐릭터 생성 테스트
 	dynamic_cast<Character*> (addTest2)->SetIndex({ 6,6 });
 	dynamic_cast<Character*> (addTest2)->SetPositionViaIndex();

@@ -7,7 +7,7 @@
 Character::Character()
 {
 	classes = Occupation::Infantary; //일단은 모든 캐릭은 보병으로 출고
-	portaitImg = nullptr; 
+	portaitImg = nullptr;
 	frameImg = nullptr;
 	isActionTaken = false;
 	frame = { 0 };
@@ -19,27 +19,27 @@ Character::Character()
 	classMove = 0;
 
 	AdditionalHp = 0;
-	AdditionalAttack = 0;		
-	AdditionalDefence = 0;	
-	AdditionalLuck = 0;		
-	AdditionalMove = 0;	
+	AdditionalAttack = 0;
+	AdditionalDefence = 0;
+	AdditionalLuck = 0;
+	AdditionalMove = 0;
+
+	baseHp = 0;		
+	baseAttack = 0;
+	baseDefence = 0;
+	baseLuck = 0;
+	baseMove = 0;
 
 	mouseOn = false;
+	moveRangeCalculator = 0;
+	isChecking = false;
 }
 
-void Character::재귀(POINT _index)
-{
-	this->index;
-	//TODO
-	TODO dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_index.y * TILEROWY + _index.x)))->SetStatus(Tiles::TileStatus::blue);
-	TODO dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_index.y * TILEROWY + _index.x)))->SetStatus(Tiles::TileStatus::blue);
 
-	//재귀();
-}
 
 void Character::Init()
 {
-
+	SetOccupation(Occupation::Infantary);
 }
 
 void Character::Release()
@@ -52,15 +52,69 @@ void Character::Update()
 	if (PtInRect(&position, _ptMouse))
 	{
 		mouseOn = true;
-		
+
 		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 		{
-			재귀(index);
+			if (this->isChecking ==false)
+			{
+				isChecking = true;
+				ShowMoveRange();
+			}
+			else
+			{
+				this->isChecking = false;
+				DisableRange();
+			}
 		}
 	}
 	else
 		mouseOn = false;
+
+	SetPositionViaIndex();
 }
+
+
+void Character::ShowMoveRange()
+{
+	moveRangeCalculator = AdditionalMove + classMove + baseMove +2;
+	assert(moveRangeCalculator > -1);
+
+	MakeItBlue(index, moveRangeCalculator);
+}
+void Character::DisableRange()
+{
+	for (auto &blueTile : blueTiles)
+	{
+		blueTile->SetIsChecked(false);
+		blueTile->DecreaseBlueNum();
+	}
+	blueTiles.clear();
+}
+void Character::MakeItBlue(POINT _pos, UINT _move)
+{
+	if (((0 <= _pos.x) && (_pos.x < TILECOLX)) && (0 <= _pos.y) && (_pos.y < TILEROWY))
+	{
+		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x)));
+		BOOL recursionContinue = true;
+		recursionContinue &= checkTarget->GetIsChecked() == false;
+		recursionContinue &= checkTarget->GetObj() == "";
+		recursionContinue &= _move > 1;
+
+		if (recursionContinue)
+		{
+			checkTarget->IncreaseBlueNum();
+			checkTarget->SetIsChecked(true);
+			blueTiles.push_back(checkTarget); //나중에 파란처리 되어있는 
+
+			MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);
+			MakeItBlue({ _pos.x - 1,_pos.y }, _move - 1);
+			MakeItBlue({ _pos.x,_pos.y + 1 }, _move - 1);
+			MakeItBlue({ _pos.x + 1,_pos.y }, _move - 1);
+		}
+	}
+}
+
+
 
 void Character::SetOccupation(Occupation _job)
 {
@@ -100,8 +154,18 @@ void Character::SetOccupation(Occupation _job)
 
 void Character::SetImg(std::string _CharName)
 {
-	portaitImg = IMAGEMANAGER->FindImage("초상화"+_CharName);
+	portaitImg = IMAGEMANAGER->FindImage("초상화" + _CharName);
 	frameImg = IMAGEMANAGER->FindImage("캐릭터" + _CharName);
+}
+
+//▼인자값 받아온거 알아서 세팅
+void Character::SetInitialChar(Occupation _job, POINT _frame, std::string _charName, POINT _index)
+{
+	SetOccupation(_job);
+	SetFrame(_frame);
+	SetImg(_charName);
+	SetIndex(_index);
+	SetPositionViaIndex();
 }
 
 void Character::Render()
@@ -109,9 +173,8 @@ void Character::Render()
 	frameImg->SetSize({ TILESIZE, TILESIZE });
 	if (mouseOn)
 	{
-		D2DRENDERER->FillRectangle(position, D2DRenderer::DefaultBrush::Green);
 		IMAGEMANAGER->FindImage("SelectedTile")->SetSize({ TILESIZE, TILESIZE });
 		IMAGEMANAGER->FindImage("SelectedTile")->Render(position.left, position.top);
 	}
-	frameImg->FrameRender(this->position.left, this->position.top, 0, 0);
+	frameImg->FrameRender(this->position.left, this->position.top, frame.x, frame.y);
 }
