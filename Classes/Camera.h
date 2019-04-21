@@ -2,7 +2,7 @@
 class Camera
 {
 public:
-	static Camera& Getinstance() //Á¤Àû ½Ì±ÛÅæ
+	static Camera& Getinstance() //¸¶ÀÌ¾î½Ä Á¤Àû ½Ì±ÛÅæ
 	{
 		static Camera instance;
 		return instance;

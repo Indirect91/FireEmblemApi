@@ -6,15 +6,15 @@ class Lords : public GameObject
 {
 protected: //군주로부터 파생된 자식들만 부대를 가진다
 
-	BOOL myTurn; //모든 군주들은 본인의 턴을 가진다.
+	BOOL turnFlag; //모든 군주들은 본인의 턴을 가진다.
 
 public:
 
-	void SetTurnEnd() { myTurn = false; }
-	void SetTurnStart() { myTurn = true; }
-	void SetTurnStatue(BOOL _turn) { myTurn = _turn; }
+	void SetTurnEnd() { turnFlag = false; }
+	void SetTurnStart() { turnFlag = true; }
+	void SetTurnStatue(BOOL _turn) { turnFlag = _turn; }
 	
-	const BOOL &GetTurnStatus() const { return myTurn; }
+	const BOOL &GetTurnStatus() const { return turnFlag; }
 	
 	Lords();
 	~Lords() {};

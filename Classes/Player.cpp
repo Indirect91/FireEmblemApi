@@ -12,12 +12,16 @@ Player::Player()
 
 void Player::Init()
 {
+	//플레이어의 부대는 데이터센터서 알아서 참조자로 들어가있다
+	//플레이어의 아이템은 데이터센터서 알아서 참조자로 들어가있다
+
 	for (auto& units : playerTroop) units.second->Init();
 }
 
 void Player::Release()
 {
-	//플레이어에서 뉴할당 해준거 없음
+	//플레이어에서 들고있는 부대,아이템은 외부 데이터를 참조자로 들고있기에 뉴할당을 하지 않았음.
+
 }
 
 void Player::Update()

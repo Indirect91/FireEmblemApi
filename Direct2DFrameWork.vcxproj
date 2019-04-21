@@ -139,6 +139,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\Battle01.h" />
+    <ClInclude Include="Classes\BattleScenes.h" />
     <ClInclude Include="Classes\Camera.h" />
     <ClInclude Include="Classes\Character.h" />
     <ClInclude Include="Classes\CommonMacroFunction.h" />
@@ -146,7 +148,7 @@
     <ClInclude Include="Classes\DataCentre.h" />
     <ClInclude Include="Classes\Direct2DFrameWork.h" />
     <ClInclude Include="Classes\Enemy.h" />
-    <ClInclude Include="Classes\FirstScene.h" />
+    <ClInclude Include="Classes\ESCMenu.h" />
     <ClInclude Include="Classes\GameNode.h" />
     <ClInclude Include="Classes\GameObject.h" />
     <ClInclude Include="Classes\Gold.h" />
@@ -172,11 +174,14 @@
     <ClInclude Include="Classes\Tiles.h" />
     <ClInclude Include="Classes\TimeManager.h" />
     <ClInclude Include="Classes\TitleScene.h" />
+    <ClInclude Include="Classes\TurnManager.h" />
     <ClInclude Include="Classes\UserInteface.h" />
     <ClInclude Include="Classes\WorldScene.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Classes\Battle01.cpp" />
+    <ClCompile Include="Classes\BattleScenes.cpp" />
     <ClCompile Include="Classes\Camera.cpp" />
     <ClCompile Include="Classes\Character.cpp" />
     <ClCompile Include="Classes\CommonMacroFunction.cpp" />
@@ -185,7 +190,7 @@
     <ClCompile Include="Classes\DataCentre.cpp" />
     <ClCompile Include="Classes\Direct2DFrameWork.cpp" />
     <ClCompile Include="Classes\Enemy.cpp" />
-    <ClCompile Include="Classes\FirstScene.cpp" />
+    <ClCompile Include="Classes\ESCMenu.cpp" />
     <ClCompile Include="Classes\GameNode.cpp" />
     <ClCompile Include="Classes\GameObject.cpp" />
     <ClCompile Include="Classes\Gold.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="Classes\Tiles.cpp" />
     <ClCompile Include="Classes\TimeManager.cpp" />
     <ClCompile Include="Classes\TitleScene.cpp" />
+    <ClCompile Include="Classes\TurnManager.cpp" />
     <ClCompile Include="Classes\UserInteface.cpp" />
     <ClCompile Include="Classes\WorldScene.cpp" />
   </ItemGroup>

@@ -70,9 +70,6 @@
     <Filter Include="MainGame\Scene들\WorldScene">
       <UniqueIdentifier>{e1acfce8-f0ee-4cd6-ac2d-22639b53d2c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\Scene들\Firstcene">
-      <UniqueIdentifier>{11a7f2da-c8bb-43b3-95c0-c87d476b01e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\Scene들\SaveLoadScene">
       <UniqueIdentifier>{42706399-aa28-4940-addc-73385f46a462}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,18 @@
     </Filter>
     <Filter Include="MainGame\GameObject\Gold">
       <UniqueIdentifier>{b6b1dfdf-120a-4917-85eb-f211ab06ac52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\BattleScenes">
+      <UniqueIdentifier>{1814d26f-27b8-43ae-a972-db7d8e71a64f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\Scene들\BattleScenes\Battle01">
+      <UniqueIdentifier>{11a7f2da-c8bb-43b3-95c0-c87d476b01e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\UI\TurnManager">
+      <UniqueIdentifier>{4b8ac1e9-2230-4baf-8091-ce629f9d476e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\UI\ESCMenu">
+      <UniqueIdentifier>{dc3f4138-9e28-43bd-8cdc-770a39cbcb79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,9 +183,6 @@
     <ClInclude Include="Classes\LoadingScene.h">
       <Filter>MainGame\Scene들\LoadingScene</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\FirstScene.h">
-      <Filter>MainGame\Scene들\Firstcene</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\WorldScene.h">
       <Filter>MainGame\Scene들\WorldScene</Filter>
     </ClInclude>
@@ -212,6 +218,18 @@
     </ClInclude>
     <ClInclude Include="Classes\Gold.h">
       <Filter>MainGame\GameObject\Gold</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\TurnManager.h">
+      <Filter>MainGame\GameObject\UI\TurnManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\BattleScenes.h">
+      <Filter>MainGame\Scene들\BattleScenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Battle01.h">
+      <Filter>MainGame\Scene들\BattleScenes\Battle01</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\ESCMenu.h">
+      <Filter>MainGame\GameObject\UI\ESCMenu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,9 +296,6 @@
     <ClCompile Include="Classes\LoadingScene.cpp">
       <Filter>MainGame\Scene들\LoadingScene</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\FirstScene.cpp">
-      <Filter>MainGame\Scene들\Firstcene</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\WorldScene.cpp">
       <Filter>MainGame\Scene들\WorldScene</Filter>
     </ClCompile>
@@ -316,6 +331,18 @@
     </ClCompile>
     <ClCompile Include="Classes\Gold.cpp">
       <Filter>MainGame\GameObject\Gold</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\TurnManager.cpp">
+      <Filter>MainGame\GameObject\UI\TurnManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\BattleScenes.cpp">
+      <Filter>MainGame\Scene들\BattleScenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Battle01.cpp">
+      <Filter>MainGame\Scene들\BattleScenes\Battle01</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\ESCMenu.cpp">
+      <Filter>MainGame\GameObject\UI\ESCMenu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

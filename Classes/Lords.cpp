@@ -3,6 +3,6 @@
 
 Lords::Lords()
 {
-	myTurn = false;
+	turnFlag = false;
 }
 

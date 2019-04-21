@@ -1,14 +1,11 @@
 #pragma once
-#include "GameNode.h"
-class FirstScene : public GameNode
+#include "BattleScenes.h"
+class Battle01 : public BattleScenes
 {
 private:
-	class Tiles* arrField;					//타일들 보유할 배열. 저장에 사용
-	class Player* player;
-	class Enemy* enemy;
 
-	Image* bg;
-	Image* bg2;
+	Image* bg = nullptr;
+	Image* bg2 = nullptr;
 
 
 public:
@@ -22,7 +19,7 @@ public:
 	void LoadFromFile();
 	void SaveToFile();
 
-	FirstScene();
-	~FirstScene() {};
+	Battle01();
+	~Battle01() {};
 };
 

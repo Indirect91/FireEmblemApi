@@ -1,25 +1,30 @@
 #include "../stdafx.h"
-#include "FirstScene.h"
+#include "Battle01.h"
 #include "Tiles.h"
 #include "Character.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "TurnManager.h"
+#include "ESCMenu.h"
 
-FirstScene::FirstScene()
+Battle01::Battle01()
 {
-	player = nullptr;
-	arrField = nullptr;
-	enemy = nullptr;
-	
+	bg = nullptr;
+	bg2 = nullptr;
 }
 
-void FirstScene::Init()
+void Battle01::Init()
 {
+	escMenu = new ESCMenu;
+	DATACENTRE.AddObj(ObjType::UI, "TurnManager", dynamic_cast<GameObject*>(escMenu));
+	turnManager = new TurnManager;
+	DATACENTRE.AddObj(ObjType::UI, "TurnManager", dynamic_cast<GameObject*>(turnManager));
+	player = new Player;
+	enemy = new Enemy;
+
 	CAMERA.SetCamera({ 0,0,WINSIZEX,WINSIZEY });
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
 	bg2 = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp2.png");
-	player = new Player;
-	enemy = new Enemy;
 
 	arrField = new Tiles[TILECOLX * TILEROWY];
 
@@ -37,38 +42,40 @@ void FirstScene::Init()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), (GameObject*)(&arrField[j * TILECOLX + i]));
 		}
 	}
-	
-	player->SetTurnStart();
+	player->SetTurnStart(); //수정필요
 }
 
-void FirstScene::Release()
+void Battle01::Release()
 {
 	//현재 씬에서 뉴할당 받은 애들 역순으로 제거
 
 	DATACENTRE.GetObjects(ObjType::Tile).clear();
-	SAFE_DELETE_ARRAY(arrField);
+	DATACENTRE.GetObjects(ObjType::UI).clear();
 
+
+	SAFE_DELETE_ARRAY(arrField);
 	SAFE_DELETE(enemy);
 	SAFE_DELETE(player);
+	SAFE_DELETE(turnManager);
+	SAFE_DELETE(escMenu);
 }
 
-void FirstScene::Update()
+void Battle01::Update()
 {
-
 	if (player->GetTurnStatus()) player->Update();
 	else if (enemy->GetTurnStatus()) enemy->Update();
 	
 }
-void FirstScene::LoadFromFile()
+void Battle01::LoadFromFile()
 {
 }
 
-void FirstScene::SaveToFile()
+void Battle01::SaveToFile()
 {
 }
 
 
-void FirstScene::Render()
+void Battle01::Render()
 {
 	bg->Render(0, 0);
 	bg2->Render(288, 0);
@@ -96,8 +103,8 @@ void FirstScene::Render()
 	}
 	DATACENTRE.Render();
 	
-	player->Render();
 	
+	player->Render();
 	enemy->Render();
 }
 
