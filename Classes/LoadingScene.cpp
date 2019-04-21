@@ -96,8 +96,8 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("초상화Olivia", L"IMAGE/Portraits/Olivia.png");
 	_loading->LoadImg("초상화Lissa", L"IMAGE/Portraits/Lissa.png");
 
-	//임시
-	_loading->LoadImg("SelectedTile", L"IMAGE/Tiles/SelectedTile.png");
+	//UI용
+	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png",4,1);
 }
 
 //▼원래 사용하던 로딩방법

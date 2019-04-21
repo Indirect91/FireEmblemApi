@@ -67,10 +67,12 @@ void DataCentre::Render()
 				dynamic_cast<Tiles*>(certainObj.second)->Render(); //certainObj의 second는 gameObject포인터임. 그것들 랜더
 			}
 		}
-
-
-		
 	}
+}
+
+void DataCentre::ClearObjects(ObjType _toClear)
+{
+	objContainer[_toClear].clear();
 }
 
 //▼오브젝트 추가

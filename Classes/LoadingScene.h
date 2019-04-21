@@ -19,7 +19,7 @@ public:
 	void LoadingSound(); //사운드 로드하는 곳
 	void LoadScenes();	 //씬들 모아서 로딩하는곳
 
-	LoadingScene() {}
+	LoadingScene() { _loading = nullptr; per = 0; }
 	~LoadingScene() {}
 };
 

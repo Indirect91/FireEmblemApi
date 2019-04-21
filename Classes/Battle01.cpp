@@ -15,10 +15,10 @@ Battle01::Battle01()
 
 void Battle01::Init()
 {
-	escMenu = new ESCMenu;
-	DATACENTRE.AddObj(ObjType::UI, "TurnManager", dynamic_cast<GameObject*>(escMenu));
-	turnManager = new TurnManager;
-	DATACENTRE.AddObj(ObjType::UI, "TurnManager", dynamic_cast<GameObject*>(turnManager));
+	escMenu = new ESCMenu; //ESC UI를 뉴할당받음
+	DATACENTRE.AddObj(ObjType::UI, "escMenu", dynamic_cast<GameObject*>(escMenu)); //쓸 수 있게 등록함
+	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
+	DATACENTRE.AddObj(ObjType::UI, "TurnManager", dynamic_cast<GameObject*>(turnManager)); //쓸 수 있게 등록함
 	player = new Player;
 	enemy = new Enemy;
 
@@ -47,12 +47,12 @@ void Battle01::Init()
 
 void Battle01::Release()
 {
-	//현재 씬에서 뉴할당 받은 애들 역순으로 제거
 
 	DATACENTRE.GetObjects(ObjType::Tile).clear();
 	DATACENTRE.GetObjects(ObjType::UI).clear();
 
 
+	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거
 	SAFE_DELETE_ARRAY(arrField);
 	SAFE_DELETE(enemy);
 	SAFE_DELETE(player);
@@ -62,9 +62,20 @@ void Battle01::Release()
 
 void Battle01::Update()
 {
-	if (player->GetTurnStatus()) player->Update();
-	else if (enemy->GetTurnStatus()) enemy->Update();
-	
+	CursorFrameManage();
+
+	switch (currentState)
+	{
+	case BattleScenes::ingameStatus::UI:
+		
+		break;
+	case BattleScenes::ingameStatus::PlayerTurn:
+		player->Update();
+		break;
+	case BattleScenes::ingameStatus::EnemyTurn:
+		enemy->Update();
+		break;
+	}
 }
 void Battle01::LoadFromFile()
 {
@@ -96,8 +107,8 @@ void Battle01::Render()
 
 		if (PtInRect(&arrField[i].GetPosition(), _ptMouse))
 		{
-			IMAGEMANAGER->FindImage("SelectedTile")->SetSize({ TILESIZE, TILESIZE });
-			IMAGEMANAGER->FindImage("SelectedTile")->Render(arrField[i].GetPosition().left, arrField[i].GetPosition().top);
+			IMAGEMANAGER->FindImage("타일커서")->SetSize({ TILESIZE, TILESIZE });
+			IMAGEMANAGER->FindImage("타일커서")->FrameRender(arrField[i].GetPosition().left, arrField[i].GetPosition().top,cursorFrame,0);
 		}
 
 	}

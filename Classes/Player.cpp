@@ -6,7 +6,6 @@
 Player::Player()
 {
 	DATACENTRE.LoadFromFile();
-	playerGold = DATACENTRE.GetCertainObject(ObjType::Gold, "playerGold");
 }
 
 
@@ -15,7 +14,7 @@ void Player::Init()
 	//플레이어의 부대는 데이터센터서 알아서 참조자로 들어가있다
 	//플레이어의 아이템은 데이터센터서 알아서 참조자로 들어가있다
 
-	for (auto& units : playerTroop) units.second->Init();
+	DATACENTRE.LoadFromFile();
 }
 
 void Player::Release()
@@ -66,7 +65,6 @@ void Player::Update()
 			}
 		}
 	}
-
 
 	for (auto& character : playerTroop)
 	{
