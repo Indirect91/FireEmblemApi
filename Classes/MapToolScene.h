@@ -18,7 +18,7 @@ private:
 
 	//std::vector<class Tiles> vecField;    //
 	float moveAngle;
-	class Tiles *arrField;					//타일들 보유할 배열. 저장에 사용
+	class Tiles *field;					//타일들 보유할 배열. 저장에 사용
 	RECT tempC;								//충돌에 사용할 임시 렉트 초기화
 	void moveCamera();
 	RECT reLocate(RECT _rc);

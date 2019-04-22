@@ -7,7 +7,7 @@ private:
 	UINT cursorCounter;						//커서 프레임올릴 카운터
 	BOOL isCursorVisible;
 
-	void CursorFrameManage();				//커서 프레임 돌릴 함수
+	void CursorFrameManage();				//커서 프레임 돌릴 함수 
 
 public:
 	void Init() override;
@@ -15,9 +15,10 @@ public:
 	void Update()override;
 	void Render()override;
 
+
 	UINT &GetCursorFrame() { return cursorFrame; }
 	BOOL &GetIsCursorVisible() { return isCursorVisible; }
-
+	
 	void SetCursorVisibility(FLOAT _isCursorVisible) { isCursorVisible = _isCursorVisible; }
 
 	Cursor();

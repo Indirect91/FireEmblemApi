@@ -54,7 +54,7 @@ private:
 
 	void ShowMoveRange();
 	void DisableMoveRange();
-	BOOL MakeItBlue(POINT _pos, UINT _move);
+	void MakeItBlue(POINT _pos, UINT _move);
 	void AdjustFrame();
 	  
 public:

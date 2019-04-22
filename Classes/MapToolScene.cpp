@@ -42,14 +42,14 @@ void MapToolScene::Init()
 
 	//▼카메라 및 타일들 초기화
 	CAMERA.SetCamera({0,0,815,688});
-	arrField = new Tiles[TILECOLX * TILEROWY];
+	field = new Tiles[TILECOLX * TILEROWY];
 	
 	for (int i = 0; i < TILEROWY; i++)
 	{
 		for (int j = 0; j < TILECOLX; j++)
 		{
-			arrField[i * TILECOLX + j].Init(); //생성된 타일 초기화
-			arrField[i * TILECOLX + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
+			field[i * TILECOLX + j].Init(); //생성된 타일 초기화
+			field[i * TILECOLX + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
 		}
 	}
 	tempC = { 0 }; //충돌에 쓸 임시렉트 0
@@ -59,7 +59,7 @@ void MapToolScene::Init()
 void MapToolScene::Release()
 {
 	//맵툴서 뉴할당받은건 타일들
-	SAFE_DELETE_ARRAY(arrField);
+	SAFE_DELETE_ARRAY(field);
 }
 
 void MapToolScene::Update()
@@ -177,7 +177,7 @@ void MapToolScene::Render()
 
 	for (int i = 0; i < TILEROWY * TILECOLX; i++)
 	{
-		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))
+		if (IntersectRect(&tempC, &field[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
 			
 			//RECT toDraw = arrField[i].GetPosition();
@@ -187,7 +187,7 @@ void MapToolScene::Render()
 			//toDraw.bottom += 138;
 			//toDraw = CAMERA.RelativeCameraRect(toDraw);
 			
-			D2DRENDERER->DrawRectangle(reLocate(arrField[i].GetPosition()));
+			D2DRENDERER->DrawRectangle(reLocate(field[i].GetPosition()));
 		}
 	}
 

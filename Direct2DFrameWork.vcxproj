@@ -173,6 +173,7 @@
     <ClInclude Include="Classes\StringHelper.h" />
     <ClInclude Include="Classes\targetver.h" />
     <ClInclude Include="Classes\testScene.h" />
+    <ClInclude Include="Classes\TileManager.h" />
     <ClInclude Include="Classes\Tiles.h" />
     <ClInclude Include="Classes\TimeManager.h" />
     <ClInclude Include="Classes\TitleScene.h" />
@@ -217,6 +218,7 @@
     </ClCompile>
     <ClCompile Include="Classes\StringHelper.cpp" />
     <ClCompile Include="Classes\testScene.cpp" />
+    <ClCompile Include="Classes\TileManager.cpp" />
     <ClCompile Include="Classes\Tiles.cpp" />
     <ClCompile Include="Classes\TimeManager.cpp" />
     <ClCompile Include="Classes\TitleScene.cpp" />

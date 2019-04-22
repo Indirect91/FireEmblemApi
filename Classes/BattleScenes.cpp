@@ -7,11 +7,11 @@ BattleScenes::BattleScenes()
 	previousState = ingameStatus::StartPlacement;
 	escMenu = nullptr;
 	turnManager = nullptr;
+	tileManager = nullptr;
 	player = nullptr;
 	enemy = nullptr;
 	startPlacement = nullptr;
 	cursor = nullptr;
-
 }
 
 void BattleScenes::ESCManage()

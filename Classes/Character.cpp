@@ -148,7 +148,7 @@ void Character::DisableMoveRange()
 }
 
 //▼타일 보이게 색칠하는 재귀함수
-BOOL Character::MakeItBlue(POINT _pos, UINT _move)
+void Character::MakeItBlue(POINT _pos, UINT _move)
 {
 	if (((0 <= _pos.x) && (_pos.x < TILECOLX)) && (0 <= _pos.y) && (_pos.y < TILEROWY))
 	{
@@ -198,8 +198,6 @@ void Character::AdjustFrame()
 		if (portraitAlpha <= 0) portraitAlpha = 0;
 	}
 }
-
-
 
 void Character::SetOccupation(Occupation _job)
 {
