@@ -38,7 +38,7 @@ Character::Character()
 
 	isClicked = false;
 	moveRangeCalculator = 0;
-	isChecking = false;
+	isCalculated = false;
 	isMouseOn = false;
 }
 
@@ -77,13 +77,13 @@ void Character::Init()
 
 	isClicked = false;
 	moveRangeCalculator = 0;
-	isChecking = false;
+	isCalculated = false;
 	isMouseOn = false;
 }
 
 void Character::Release()
 {
-	//아이템 릴리스 우짬
+	//아이템은 외부서 얻은걸 그냥 참조자나 포인터로 들고있는 방식이라 뉴할당을 여기서 안했음
 }
 
 void Character::Update()
@@ -91,34 +91,44 @@ void Character::Update()
 	if (PtInRect(&position, _ptMouse))
 	{
 		isMouseOn = true;
+		
 		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 		{
 			isClicked = true;
-
-			//if (this->isChecking ==false)
-			//{
-			//	isChecking = true;
 			ShowMoveRange();
-			//}
-			//else
-			//{
-			//	this->isChecking = false;
-			//	DisableMoveRange();
-			//}
-		}
-		else if (KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
-		{
-			isClicked = false;
-			DisableMoveRange();
+			for (auto &toThicken: blueTiles)
+			{
+				toThicken->SetBlueAlpha(0.8);
+			}
 		}
 	}
-	else isMouseOn = false;
+	else if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
+	{
+		isClicked = false;
+		DisableMoveRange();
+	}
+	else
+	{
+		isMouseOn = false;
+	}
 
-	AdjustFrame();
+
+	if (isMouseOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
+	{
+		ShowMoveRange(); //범위 계산해서 보여줌
+		isCalculated = true; //한번 계산했다고 알림
+	}
+	else if (!isMouseOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
+	{
+		isCalculated = false;
+		DisableMoveRange();
+	}
+
+	
 	SetPositionViaIndex(); //추후 변경 필요
 }
 
-
+//▼이동 범위 보이게 함
 void Character::ShowMoveRange()
 {
 	moveRangeCalculator = AdditionalMove + classMove + baseMove +2;
@@ -129,13 +139,16 @@ void Character::ShowMoveRange()
 	for (auto& blueTile : blueTiles)
 	{blueTile->SetIsChecked(false);}
 }
+//▼이동 범위 안보이게 함
 void Character::DisableMoveRange()
 {
 	for (auto &blueTile : blueTiles)
 	{blueTile->DecreaseBlueNum();}
 	blueTiles.clear();
 }
-void Character::MakeItBlue(POINT _pos, UINT _move)
+
+//▼타일 보이게 색칠하는 재귀함수
+BOOL Character::MakeItBlue(POINT _pos, UINT _move)
 {
 	if (((0 <= _pos.x) && (_pos.x < TILECOLX)) && (0 <= _pos.y) && (_pos.y < TILEROWY))
 	{
@@ -149,6 +162,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 		{
 			checkTarget->IncreaseBlueNum();
 			checkTarget->SetIsChecked(true);
+			checkTarget->SetBlueAlpha(0.2f);
 			blueTiles.push_back(checkTarget); //나중에 파란처리 되어있는 
 
 			MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);
@@ -241,6 +255,7 @@ void Character::SetInitialChar(Occupation _job, POINT _frame, std::string _charN
 
 void Character::Render()
 {
+	AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
 	frameImg->SetSize({ TILESIZE, TILESIZE });
 	frameImg->FrameRender(this->position.left, this->position.top, frame.x + frameLoop, frame.y);
 

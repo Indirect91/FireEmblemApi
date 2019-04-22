@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "TurnManager.h"
 #include "ESCMenu.h"
+#include "Cursor.h"
 
 Battle01::Battle01()
 {
@@ -15,6 +16,7 @@ Battle01::Battle01()
 
 void Battle01::Init()
 {
+	
 	escMenu = new ESCMenu; //ESC UI를 뉴할당받음
 	DATACENTRE.AddObj(ObjType::UI, "escMenu", dynamic_cast<GameObject*>(escMenu)); //쓸 수 있게 등록함
 	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
@@ -42,6 +44,8 @@ void Battle01::Init()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), (GameObject*)(&arrField[j * TILECOLX + i]));
 		}
 	}
+	cursor = new Cursor; 
+	//cursor->Init() // 위치 수정 필요
 	player->SetTurnStart(); //수정필요
 }
 
@@ -62,12 +66,16 @@ void Battle01::Release()
 
 void Battle01::Update()
 {
-	CursorFrameManage();
-
+	ESCManage(); //ESC 메뉴를 눌렀을시 메뉴 나오는부분
+	
+	//▼게임의 상태에 따라 업데이트 대상이 달라짐
 	switch (currentState)
 	{
-	case BattleScenes::ingameStatus::UI:
-		
+	case BattleScenes::ingameStatus::TurnChanging:
+		turnManager->Update();
+		break;
+	case BattleScenes::ingameStatus::ESCMenu:
+		escMenu->Update();
 		break;
 	case BattleScenes::ingameStatus::PlayerTurn:
 		player->Update();
@@ -77,14 +85,6 @@ void Battle01::Update()
 		break;
 	}
 }
-void Battle01::LoadFromFile()
-{
-}
-
-void Battle01::SaveToFile()
-{
-}
-
 
 void Battle01::Render()
 {
@@ -95,24 +95,26 @@ void Battle01::Render()
 		if (IntersectRect(&tempC, &arrField[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
 			D2DRENDERER->DrawRectangle((arrField[i].GetPosition()),D2DRenderer::DefaultBrush::White,2);
-			if (arrField[i].isBlue())
+			if (arrField[i].GetIsBlue())
 			{
-				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Blue, 0.3f);
+				//D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Blue, arrField[i].GetBlueAlpha());
+				//IMAGEMANAGER->FindImage("Blue")->SetAlpha(0.6f);
+				IMAGEMANAGER->FindImage("Blue")->SetSize({ 48,48 });
+				IMAGEMANAGER->FindImage("Blue")->Render(arrField[i].GetPosition().left, arrField[i].GetPosition().top);
 			}
 			else if (arrField[i].GetObj() != "")
 			{
-				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Red, 0.2f);
+				D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Red, arrField[i].GetBlueAlpha());
 			}
 		}
-
 		if (PtInRect(&arrField[i].GetPosition(), _ptMouse))
 		{
+			//cursor->Render();
 			IMAGEMANAGER->FindImage("타일커서")->SetSize({ TILESIZE, TILESIZE });
-			IMAGEMANAGER->FindImage("타일커서")->FrameRender(arrField[i].GetPosition().left, arrField[i].GetPosition().top,cursorFrame,0);
+			IMAGEMANAGER->FindImage("타일커서")->FrameRender(arrField[i].GetPosition().left, arrField[i].GetPosition().top, cursor->GetCursorFrame(), 0);
 		}
-
 	}
-	DATACENTRE.Render();
+	//DATACENTRE.Render();
 	
 	
 	player->Render();

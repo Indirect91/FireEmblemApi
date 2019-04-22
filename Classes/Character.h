@@ -15,7 +15,7 @@ private:
 	Occupation classes;			//직업
 	Image* frameImg;			//프레임 이미지
 	Image * portraitImg;		//초상화 이미지
-	FLOAT portraitAlpha;			//초상화 알파값
+	FLOAT portraitAlpha;		//초상화 알파값
 
 	BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
 	POINT frame;				//모든 캐릭터는 프레임을 가진다
@@ -45,6 +45,7 @@ private:
 	BOOL isClicked;				//마우스가 캐릭터를 누른 상태일때
 	BOOL isMouseOn;							//마우스가 올라와있을때
 	BOOL isChecking;						//이동범위 눌려있었던지
+	BOOL isCalculated;						//이동범위 계산 한번 했는지 체크용
 	INT moveRangeCalculator;				//이동범위 계산용
 	std::vector<class Tiles*> blueTiles;	//이동범위 계산용2
 
@@ -53,7 +54,7 @@ private:
 
 	void ShowMoveRange();
 	void DisableMoveRange();
-	void MakeItBlue(POINT _pos, UINT _move);
+	BOOL MakeItBlue(POINT _pos, UINT _move);
 	void AdjustFrame();
 	  
 public:

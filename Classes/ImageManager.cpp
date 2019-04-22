@@ -39,6 +39,7 @@ Image * ImageManager::AddImage(const std::string& key, const std::wstring& file)
 		Image::TagLoadedImageInfo loadInfo(key, file);
 		image = new Image(bitmap, loadInfo);
 		mImageList.insert(make_pair(key, image));
+		image->ResetRenderOption();
 		return image;
 	}
 	else
@@ -61,6 +62,7 @@ Image * ImageManager::AddFrameImage(const std::string& key, const std::wstring& 
 		Image::TagLoadedImageInfo loadInfo(key, file);
 		image = new Image(bitmap, loadInfo, maxFrameX, maxFrameY);
 		this->mImageList.insert(make_pair(key, image));
+		image->ResetRenderOption();
 		return image;
 	}
 

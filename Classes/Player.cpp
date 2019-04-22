@@ -13,7 +13,7 @@ void Player::Init()
 {
 	//플레이어의 부대는 데이터센터서 알아서 참조자로 들어가있다
 	//플레이어의 아이템은 데이터센터서 알아서 참조자로 들어가있다
-
+	//플레이어의 골드는 데이터 센터서 알아서 참조자로 들어가있다
 	DATACENTRE.LoadFromFile();
 }
 
@@ -27,43 +27,45 @@ void Player::Update()
 {
 	if (KEYMANAGER->IsOnceKeyDown(VK_RIGHT))
 	{
-		for (auto& character : playerTroop)
-		{
-			if (character.first == "Chrome")
-			{
-				dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x+1, dynamic_cast<Character*>(character.second)->GetIndex().y });
-			}
-		}
+		//for (auto& character : playerTroop)
+		//{
+		//	if (character.first == "Chrome")
+		//	{
+		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x+1, dynamic_cast<Character*>(character.second)->GetIndex().y });
+		//	}
+		//}
+
 	}
 	else if (KEYMANAGER->IsOnceKeyDown(VK_LEFT))
 	{
-		for (auto& character : playerTroop)
-		{
-			if (character.first == "Chrome")
-			{
-				dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x - 1, dynamic_cast<Character*>(character.second)->GetIndex().y });
-			}
-		}
+		//for (auto& character : playerTroop)
+		//{
+		//	if (character.first == "Chrome")
+		//	{
+		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x - 1, dynamic_cast<Character*>(character.second)->GetIndex().y });
+		//	}
+		//}
 	}
 	else if (KEYMANAGER->IsOnceKeyDown(VK_UP))
 	{
-		for (auto& character : playerTroop)
-		{
-			if (character.first == "Chrome")
-			{
-				dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x, dynamic_cast<Character*>(character.second)->GetIndex().y-1 });
-			}
-		}
+		//for (auto& character : playerTroop)
+		//{
+		//	if (character.first == "Chrome")
+		//	{
+		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x, dynamic_cast<Character*>(character.second)->GetIndex().y-1 });
+		//	}
+		//}
 	}
 	else if (KEYMANAGER->IsOnceKeyDown(VK_DOWN))
 	{
-		for (auto& character : playerTroop)
-		{
-			if (character.first == "Chrome")
-			{
-				dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x , dynamic_cast<Character*>(character.second)->GetIndex().y +1 });
-			}
-		}
+		//for (auto& character : playerTroop)
+		//{
+		//	if (character.first == "Chrome")
+		//	{
+		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x , dynamic_cast<Character*>(character.second)->GetIndex().y +1 });
+		//	}
+		//}
+		SetCursorPos(_ptMouse.x, _ptMouse.y+5);
 	}
 
 	for (auto& character : playerTroop)

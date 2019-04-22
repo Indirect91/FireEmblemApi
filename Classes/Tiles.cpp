@@ -5,7 +5,6 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 {
 	status = TileStatus::none;
 	position = { 0 };
-	isOccupied = false;
 
 	object = "";
 	objFrame = { 0 };
@@ -17,19 +16,15 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	movingtFrame = { 0 };
 
 	checked = false;
-	//checkDuplicate = false;
 	blueNum = 0;
+	blueAlpha = 0;
+	blueClicked = false;
 }
 
 void Tiles::SetBlueNum(INT _blue)
 {
 	assert(_blue >= 0);
 	blueNum = _blue;
-}
-
-void Tiles::IncreaseBlueNum()
-{
-	blueNum++;
 }
 
 void Tiles::DecreaseBlueNum()
@@ -45,7 +40,6 @@ void Tiles::Init()
 {
 	status = TileStatus::none;
 	position = { 0 };
-	isOccupied = false;
 
 	object = "";
 	objFrame = { 0 };
@@ -55,6 +49,11 @@ void Tiles::Init()
 
 	movingT = "";
 	movingtFrame = { 0 };
+
+	checked = false;
+	blueNum = 0;
+	blueAlpha = 0;
+	blueClicked = false;
 }
 
 void Tiles::Release()
@@ -64,7 +63,10 @@ void Tiles::Release()
 
 void Tiles::Update()
 {
-
+	if (movingT != "")
+	{
+		//TODO: 프레임 돌리는 업데이트 진행
+	}
 }
 
 void Tiles::Render()

@@ -114,12 +114,12 @@ LRESULT WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 
 		break;
 	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_ESCAPE:
-			PostMessage(hWnd, WM_DESTROY, 0, 0);
-			break;
-		}
+		//switch (wParam) //ESC옵션을 위해 일단 비활성화
+		//{
+		//case VK_ESCAPE:
+		//	PostMessage(hWnd, WM_DESTROY, 0, 0);
+		//	break;
+		//}
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);

@@ -96,7 +96,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -144,6 +144,7 @@
     <ClInclude Include="Classes\Camera.h" />
     <ClInclude Include="Classes\Character.h" />
     <ClInclude Include="Classes\CommonMacroFunction.h" />
+    <ClInclude Include="Classes\Cursor.h" />
     <ClInclude Include="Classes\D2DRenderer.h" />
     <ClInclude Include="Classes\DataCentre.h" />
     <ClInclude Include="Classes\Direct2DFrameWork.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Classes\SceneManager.h" />
     <ClInclude Include="Classes\SingletonBase.h" />
     <ClInclude Include="Classes\SoundManager.h" />
+    <ClInclude Include="Classes\StartPlacement.h" />
     <ClInclude Include="Classes\StringHelper.h" />
     <ClInclude Include="Classes\targetver.h" />
     <ClInclude Include="Classes\testScene.h" />
@@ -185,6 +187,7 @@
     <ClCompile Include="Classes\Camera.cpp" />
     <ClCompile Include="Classes\Character.cpp" />
     <ClCompile Include="Classes\CommonMacroFunction.cpp" />
+    <ClCompile Include="Classes\Cursor.cpp" />
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp" />
     <ClCompile Include="Classes\D2DRenderer.cpp" />
     <ClCompile Include="Classes\DataCentre.cpp" />
@@ -208,6 +211,7 @@
     <ClCompile Include="Classes\SaveloadScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />
     <ClCompile Include="Classes\SoundManager.cpp" />
+    <ClCompile Include="Classes\StartPlacement.cpp" />
     <ClCompile Include="Classes\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>

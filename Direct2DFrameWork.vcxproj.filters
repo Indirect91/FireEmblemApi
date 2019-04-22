@@ -112,6 +112,12 @@
     <Filter Include="MainGame\GameObject\UI\ESCMenu">
       <UniqueIdentifier>{dc3f4138-9e28-43bd-8cdc-770a39cbcb79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\GameObject\UI\StartUnitPlacement">
+      <UniqueIdentifier>{4e4ffdff-7454-4d87-a3b8-48ebaab91048}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\GameObject\UI\Cursor">
+      <UniqueIdentifier>{dbb61f1a-e0ad-4481-91b9-35843ed417fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\D2DRenderer.h">
@@ -231,6 +237,12 @@
     <ClInclude Include="Classes\ESCMenu.h">
       <Filter>MainGame\GameObject\UI\ESCMenu</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\StartPlacement.h">
+      <Filter>MainGame\GameObject\UI\StartUnitPlacement</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Cursor.h">
+      <Filter>MainGame\GameObject\UI\Cursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
@@ -343,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="Classes\ESCMenu.cpp">
       <Filter>MainGame\GameObject\UI\ESCMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\StartPlacement.cpp">
+      <Filter>MainGame\GameObject\UI\StartUnitPlacement</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Cursor.cpp">
+      <Filter>MainGame\GameObject\UI\Cursor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
