@@ -5,8 +5,6 @@ class WorldScene : public GameNode
 private:
 
 
-
-
 public:
 	virtual void Init() override;
 	virtual void Release()override;
@@ -15,6 +13,6 @@ public:
 
 
 	WorldScene();
-	~WorldScene();
+	~WorldScene() {};
 };
 

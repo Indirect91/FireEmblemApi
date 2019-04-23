@@ -13,11 +13,12 @@ Cursor::Cursor()
 
 void Cursor::Init()
 {
-	for (auto& getFirst : DATACENTRE.GetObjects(ObjType::CurrentPlayerArmy))
+	for (auto& getFirst : DATACENTRE.RefObjects(ObjType::CurrentPlayerArmy))
 	{
 		this->index = getFirst.second->GetIndex();
 		break;
 	}
+	this->index = {50,50};
 	cursorFrame = 0;				//커서가
 	cursorCounter = 0;				//커서 프레임올릴 카운터
 	isCursorVisible = false;

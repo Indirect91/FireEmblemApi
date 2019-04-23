@@ -27,11 +27,11 @@ public:
 
 
 	//▼게임 오브젝트 관련
-	void ClearObjects(ObjType _toClear);
-	void AddObj(ObjType _type, std::string _name, class GameObject* _obj);
-	void RemoveObj(ObjType _type, std::string _name, GameObject* _obj);
-	GameObject* GetCertainObject(ObjType _type, std::string _name);
-	std::map<std::string, GameObject*> & GetObjects(ObjType _type);
+	void ClearObjects(ObjType _toClear); //타입을 지정해준 컨테이너를 비움
+	void AddObj(ObjType _type, std::string _name, class GameObject* _obj); //지정해준 컨테이너에 이름주고 등록
+	void RemoveObj(ObjType _type, std::string _name, GameObject* _obj); //지정된 컨테이너 속, 이름의 대상을 지움
+	GameObject* GetCertainObject(ObjType _type, std::string _name); //지정된 컨테이너에 이름주고 반환받음
+	std::map<std::string, GameObject*> & RefObjects(ObjType _type); //지정된 컨테이너 전부를 반환받음
 
 	//▼세이브로드관련
 	HRESULT SavetoFile();

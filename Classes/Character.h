@@ -41,10 +41,9 @@ private:
 	UINT AdditionalLuck;		//버프, 디버프, 혹은 아이템의 영향을 받는 스텟
 	INT AdditionalMove;			//버프, 디버프, 혹은 아이템의 영향을 받는 스텟
 
-	class Item *item;			//보유중인 아이템
-	BOOL isClicked;				//마우스가 캐릭터를 누른 상태일때
+	class Item *item;						//보유중인 아이템
+	BOOL isClicked;							//마우스가 캐릭터를 누른 상태일때
 	BOOL isMouseOn;							//마우스가 올라와있을때
-	BOOL isChecking;						//이동범위 눌려있었던지
 	BOOL isCalculated;						//이동범위 계산 한번 했는지 체크용
 	INT moveRangeCalculator;				//이동범위 계산용
 	std::vector<class Tiles*> blueTiles;	//이동범위 계산용2

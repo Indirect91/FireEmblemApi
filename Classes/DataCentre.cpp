@@ -103,7 +103,7 @@ GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 	return objContainer[_type][_name]; //타입,이름이 일치하는 오브젝트 반환
 }
 
-std::map<std::string, GameObject*>& DataCentre::GetObjects(ObjType _type)
+std::map<std::string, GameObject*>& DataCentre::RefObjects(ObjType _type)
 {
 	return objContainer[_type]; //타입이 일치하는 맵 반환
 }

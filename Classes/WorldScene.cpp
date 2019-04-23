@@ -6,11 +6,6 @@ WorldScene::WorldScene()
 {
 }
 
-
-WorldScene::~WorldScene()
-{
-}
-
 void WorldScene::Init()
 {
 }

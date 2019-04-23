@@ -7,6 +7,7 @@ SceneManager::SceneManager()
 	coverAlpha = 1;
 	coverStatue = tagCoverStatue::FadeIn;
 	coverSpeed = 0.02f;
+	_currentScene = nullptr;
 }
 
 SceneManager::~SceneManager()

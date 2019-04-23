@@ -15,6 +15,7 @@ void Player::Init()
 	//플레이어의 아이템은 데이터센터서 알아서 참조자로 들어가있다
 	//플레이어의 골드는 데이터 센터서 알아서 참조자로 들어가있다
 	DATACENTRE.LoadFromFile();
+	toMove = { 0,0,800,WINSIZEY };
 }
 
 void Player::Release()
@@ -25,7 +26,8 @@ void Player::Release()
 
 void Player::Update()
 {
-	if (KEYMANAGER->IsOnceKeyDown(VK_RIGHT))
+	
+	if (KEYMANAGER->IsStayKeyDown(VK_RIGHT))
 	{
 		//for (auto& character : playerTroop)
 		//{
@@ -34,9 +36,12 @@ void Player::Update()
 		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x+1, dynamic_cast<Character*>(character.second)->GetIndex().y });
 		//	}
 		//}
+		toMove.left += 5;
+		toMove.right += 5;
+
 
 	}
-	else if (KEYMANAGER->IsOnceKeyDown(VK_LEFT))
+	else if (KEYMANAGER->IsStayKeyDown(VK_LEFT))
 	{
 		//for (auto& character : playerTroop)
 		//{
@@ -45,8 +50,12 @@ void Player::Update()
 		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x - 1, dynamic_cast<Character*>(character.second)->GetIndex().y });
 		//	}
 		//}
+
+		toMove.left -= 5;
+		toMove.right -= 5;
+
 	}
-	else if (KEYMANAGER->IsOnceKeyDown(VK_UP))
+	if (KEYMANAGER->IsStayKeyDown(VK_UP))
 	{
 		//for (auto& character : playerTroop)
 		//{
@@ -55,8 +64,11 @@ void Player::Update()
 		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x, dynamic_cast<Character*>(character.second)->GetIndex().y-1 });
 		//	}
 		//}
+
+		toMove.top -= 5;
+		toMove.bottom -= 5;
 	}
-	else if (KEYMANAGER->IsOnceKeyDown(VK_DOWN))
+	else if (KEYMANAGER->IsStayKeyDown(VK_DOWN))
 	{
 		//for (auto& character : playerTroop)
 		//{
@@ -65,13 +77,17 @@ void Player::Update()
 		//		dynamic_cast<Character*>(character.second)->SetIndex({ dynamic_cast<Character*>(character.second)->GetIndex().x , dynamic_cast<Character*>(character.second)->GetIndex().y +1 });
 		//	}
 		//}
-		SetCursorPos(_ptMouse.x, _ptMouse.y+5);
+
+		toMove.top += 5;
+		toMove.bottom += 5;
 	}
 
 	for (auto& character : playerTroop)
 	{
 		dynamic_cast<Character*>(character.second)->Update();
 	}
+
+	CAMERA.SetCamera(toMove);
 }
 
 void Player::Render()

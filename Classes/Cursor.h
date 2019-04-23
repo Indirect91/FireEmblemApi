@@ -19,7 +19,7 @@ public:
 	UINT &GetCursorFrame() { return cursorFrame; }
 	BOOL &GetIsCursorVisible() { return isCursorVisible; }
 	
-	void SetCursorVisibility(FLOAT _isCursorVisible) { isCursorVisible = _isCursorVisible; }
+	void SetCursorVisibility(BOOL _isCursorVisible) { isCursorVisible = _isCursorVisible; }
 
 	Cursor();
 	~Cursor() {};

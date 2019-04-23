@@ -20,7 +20,6 @@ protected:
 	class TurnManager* turnManager;			//모든 전투씬은 턴 매니져를 가진다
 	class ESCMenu* escMenu;					//모든 전투씬은 ESC메뉴를 가진다
 	class StartPlacement* startPlacement;	//모든 전투씬은 시작 UI를 가진다
-	//class Tiles* arrField = nullptr;		//모든 전투씬은 타일을 가진다
 	class Player* player = nullptr;			//모든 전투씬은 플레이어를 가진다
 	class Enemy* enemy = nullptr;			//모든 전투씬은 적을 가진다
 	class Cursor* cursor = nullptr;			//모든 씬은 커서를 가진다

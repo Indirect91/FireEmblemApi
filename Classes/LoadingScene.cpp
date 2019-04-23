@@ -37,8 +37,8 @@ void LoadingScene::Update()
 		//▼로딩이 끝나고 이동할 씬
 		SCENEMANAGER->RefcoverAlpha() = 1.f;
 		//SCENEMANAGER->LoadScene("test");
-		//SCENEMANAGER->LoadScene("FirstScene");
-		SCENEMANAGER->LoadScene("TitleScene");
+		SCENEMANAGER->LoadScene("Battle01");
+		//SCENEMANAGER->LoadScene("TitleScene");
 	}
 }
 
@@ -116,6 +116,6 @@ void LoadingScene::LoadScenes()
 	_loading->LoadScene("MapToolScene", new MapToolScene);
 	_loading->LoadScene("test", new testScene);
 	_loading->LoadScene("WorldScene", new WorldScene);
-	_loading->LoadScene("FirstScene", new Battle01);
+	_loading->LoadScene("Battle01", new Battle01);
 	_loading->LoadScene("SaveloadScene", new SaveloadScene);
 }
