@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "TurnManager.h"
 #include "TileManager.h"
+#include "StartPlacement.h"
 #include "ESCMenu.h"
 #include "Cursor.h"
 
@@ -25,9 +26,7 @@ void Battle01::Init()
 	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
 	DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
 
-	//▼플레이어를 만들고 이닛시킴
-	player = new Player;
-	//player->Init();
+
 
 	//▼에너미를 만들고 이닛시킴
 	enemy = new Enemy;
@@ -40,6 +39,10 @@ void Battle01::Init()
 	cursor = new Cursor;
 	cursor->Init(); // 위치 수정 필요
 	DATACENTRE.AddObj(ObjType::UI, "Cursor", cursor);
+
+	//▼플레이어를 만들고 이닛시킴
+	player = new Player;
+	//player->Init();
 
 	//▼타일매니져를 만들고 이닛을 시킴
 	tileManager = new TileManager;
@@ -57,13 +60,6 @@ void Battle01::Release()
 {
 	//▼현재 씬을 닫으려 하니, 현재 씬에서 등록했던 컨테이너 내용들 비움
 	DATACENTRE.RefObjects(ObjType::UI).clear();
-
-
-
-
-
-
-
 
 	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거
 
@@ -100,11 +96,14 @@ void Battle01::Update()
 {
 	ESCManage(); //ESC 메뉴를 눌렀을시 메뉴 나오는부분
 	cursor->Update();
-	tileManager->Update(); //TODO : 카메라 클리핑 여기서 실시
+	tileManager->Update();
 	
 	//▼게임의 상태에 따라 업데이트 대상이 달라짐
 	switch (currentState)
 	{
+	case BattleScenes::ingameStatus::StartPlacement:
+		startPlacement->Update();
+		break;
 	case BattleScenes::ingameStatus::TurnChanging:
 		turnManager->Update();
 		break;
@@ -130,7 +129,4 @@ void Battle01::Render()
 	player->Render();
 	enemy->Render();
 	cursor->Render();
-	D2DRENDERER->RenderText(50, 200, std::to_wstring(CAMERA.GetCameraRc().left), 20);
-	D2DRENDERER->RenderText(50, 240, std::to_wstring(CAMERA.GetCameraRc().top), 20);
 }
-

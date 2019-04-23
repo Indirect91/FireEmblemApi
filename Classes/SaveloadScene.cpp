@@ -27,7 +27,7 @@ void SaveloadScene::Update()
 	if (KEYMANAGER->IsOnceKeyDown(VK_RETURN))
 	{
 
-		SCENEMANAGER->LoadScene("FirstScene");
+		SCENEMANAGER->LoadScene("Battle01");
 	}
 	else if (KEYMANAGER->IsOnceKeyDown('Q'))
 	{

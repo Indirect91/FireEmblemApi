@@ -1,19 +1,20 @@
 #pragma once
 #include "GameObject.h"
-#define TILESIZE 48
-#define TILEROWY 48
-#define TILECOLX 60
+
+constexpr UINT TILESIZE = 48; //타일 하나의 사이즈
+constexpr UINT TILEROWY = 20; //타일 Y 갯수
+constexpr auto TILECOLX = 32; //타일 X 갯수, constexpr 자동추론 테스트
 
 class Tiles : public GameObject
 {
 public:
 	enum class TileStatus
 	{
-		none,			//아무일도 없음
-		red,			//공격 범위 타일
-		blue,			//이동 범위 타일
-		enemyOccupied,
-		playerOccupied
+		none,				//아무 상태도 아님
+		red,				//공격 범위 타일 표시중
+		blue,				//이동 범위 타일 표시중
+		enemyOccupied,		//적이 점거중 표시
+		playerOccupied		//아군이 점거중 표시
 	};
 
 private:

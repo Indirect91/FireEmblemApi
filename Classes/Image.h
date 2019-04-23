@@ -1,7 +1,8 @@
 #pragma once
-class Image final
+class Image final //상속 못하게 파이널 박아둠
 {
 public:
+	//▼이미지 정보
 	struct TagLoadedImageInfo
 	{
 		std::string key;
@@ -43,7 +44,9 @@ private:
 	Image operator = (const Image& image) {}
 public:
 	void Render( int x,  int y,  Pivot pivot = Pivot::LeftTop);
+	void RelativeRender(int x, int y, Pivot pivot = Pivot::LeftTop);
 	void FrameRender( int x,  int y,  int frameX,  int frameY,  Pivot pivot = Pivot::LeftTop);
+	void RelativeFrameRender(int x, int y, int frameX, int frameY, Pivot pivot = Pivot::LeftTop);
 	void SkewRenderRotate(int x, int y, float angleX, float angleY, Pivot pivot = Pivot::LeftTop);
 	void SkewRenderStretch(int x, int y, float angleX, float angleY, Pivot pivot = Pivot::LeftTop);
 

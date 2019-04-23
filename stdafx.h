@@ -47,19 +47,6 @@ enum class Pivot : UINT
 	LeftTop, Centre, Bottom
 };
 
-enum class ObjType : UINT
-{
-	Tile, 
-	PlayerArmy, 
-	CurrentPlayerArmy, 
-	PlayerItem, 
-	EnemyArmy, 
-	CurrentEnemyArmy, 
-	UI, 
-	Gold, 
-	ObjSize
-};
-
 //▼내가 생성한 헤더
 #include "Classes/GameNode.h"
 #include "Classes/CommonMacroFunction.h"

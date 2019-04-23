@@ -29,9 +29,9 @@ void Tiles::SetBlueNum(INT _blue)
 
 void Tiles::DecreaseBlueNum()
 {
-
 	blueNum--;
 	assert(blueNum >= 0);
+	if (blueNum == 0) blueAlpha = 0;
 }
 
 
@@ -84,10 +84,5 @@ void Tiles::Render()
 		//}
 	}
 	D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(position));
-
-	//std::wstring asd= std::to_wstring(index.x);
-	//asd += L", ";
-	//asd += std::to_wstring(index.y);
-	//D2DRENDERER->RenderText(position.left, position.top, asd, 10);
 }
 

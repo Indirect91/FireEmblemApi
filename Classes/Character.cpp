@@ -6,6 +6,7 @@
 
 Character::Character()
 {
+	isInCamera = false;
 	classes = Occupation::Infantary; //일단은 모든 캐릭은 보병으로 출고
 	portraitImg = nullptr;
 	portraitAlpha = 0.f;
@@ -45,6 +46,7 @@ Character::Character()
 
 void Character::Init()
 {
+	isInCamera = false;
 	classes = Occupation::Infantary;
 	portraitImg = nullptr;
 	portraitAlpha = 0.f;
@@ -88,44 +90,62 @@ void Character::Release()
 
 void Character::Update()
 {
-	if (PtInRect(&position, _ptMouse))
+	CheckInCamera();
+	if (isInCamera) //카메라에 잡혀있을때만 업데이트
 	{
-		isMouseOn = true;
-		
-		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
+		if (PtInRect(&CAMERA.RelativeCameraRect(position), _ptMouse))
 		{
-			isClicked = true;
-			ShowMoveRange();
-			for (auto &toThicken: blueTiles)
+			isMouseOn = true;
+
+			if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 			{
-				toThicken->SetBlueAlpha(0.8);
+				isClicked = true;
+				ShowMoveRange();
+				for (auto& toThicken : blueTiles)
+				{
+					toThicken->SetBlueAlpha(0.8f);
+				}
 			}
 		}
-	}
-	else if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
-	{
-		isClicked = false;
-		DisableMoveRange();
-	}
-	else
-	{
-		isMouseOn = false;
-	}
+		else if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
+		{
+			isClicked = false;
+			DisableMoveRange();
+		}
+		else
+		{
+			isMouseOn = false;
+		}
 
 
-	if (isMouseOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
-	{
-		ShowMoveRange(); //범위 계산해서 보여줌
-		isCalculated = true; //한번 계산했다고 알림
-	}
-	else if (!isMouseOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
-	{
-		isCalculated = false;
-		DisableMoveRange();
-	}
+		if (isMouseOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
+		{
+			ShowMoveRange(); //범위 계산해서 보여줌
+			isCalculated = true; //한번 계산했다고 알림
+		}
+		else if (!isMouseOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
+		{
+			isCalculated = false;
+			DisableMoveRange();
+		}
 
-	
-	SetPositionViaIndex(); //추후 변경 필요
+
+		SetPositionViaIndex(); //추후 변경 필요
+	}
+}
+
+//▼카메라 속에 캐릭터가 있는지 체크하는 함수
+void Character::CheckInCamera()
+{
+	isInCamera = false;
+	for (auto& toCheck : DATACENTRE.RefObjects(ObjType::ClippedTile))
+	{
+		if (toCheck.first == std::to_string(index.y * TILECOLX + index.x))
+		{
+			isInCamera = true;
+			break;
+		}
+	}
 }
 
 //▼이동 범위 보이게 함
@@ -143,7 +163,9 @@ void Character::ShowMoveRange()
 void Character::DisableMoveRange()
 {
 	for (auto &blueTile : blueTiles)
-	{blueTile->DecreaseBlueNum();}
+	{
+		blueTile->DecreaseBlueNum();
+	}
 	blueTiles.clear();
 }
 
@@ -162,7 +184,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 		{
 			checkTarget->IncreaseBlueNum();
 			checkTarget->SetIsChecked(true);
-			checkTarget->SetBlueAlpha(0.2f);
+			if(checkTarget->GetBlueAlpha()<0.5f) checkTarget->SetBlueAlpha(0.2f);
 			blueTiles.push_back(checkTarget); //나중에 파란처리 되어있는 
 
 			MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);
@@ -253,11 +275,14 @@ void Character::SetInitialChar(Occupation _job, POINT _frame, std::string _charN
 
 void Character::Render()
 {
-	AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
-	frameImg->SetSize({ TILESIZE, TILESIZE });
-	frameImg->FrameRender(this->position.left, this->position.top, frame.x + frameLoop, frame.y);
+	if (isInCamera)
+	{
+		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
+		frameImg->SetSize({ TILESIZE, TILESIZE });
+		frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);
 
-	portraitImg->SetAlpha(portraitAlpha);
-	if(index.x ==6 && index.y == 6) portraitImg-> Render(700, 300);
-	else portraitImg->Render(700, 100);
+		portraitImg->SetAlpha(portraitAlpha);
+		if (index.x == 6 && index.y == 6) portraitImg->Render(900, 300);
+		else portraitImg->Render(900, 100);
+	}
 }

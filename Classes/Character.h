@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+//▼직업
 enum class Occupation
 {
 	Infantary,
@@ -12,6 +13,7 @@ enum class Occupation
 class Character : public GameObject
 {
 private:
+	BOOL isInCamera;			//카메라 안에 있어야만 업데이트/랜더됨
 	Occupation classes;			//직업
 	Image* frameImg;			//프레임 이미지
 	Image * portraitImg;		//초상화 이미지
@@ -48,11 +50,10 @@ private:
 	INT moveRangeCalculator;				//이동범위 계산용
 	std::vector<class Tiles*> blueTiles;	//이동범위 계산용2
 
-
 private:
-
-	void ShowMoveRange();
-	void DisableMoveRange();
+	void CheckInCamera(); //카메라 속에 캐릭이 있는지 체크
+	void ShowMoveRange(); //본인 주변 이동범위 표시
+	void DisableMoveRange(); //본인 주변 범위 끄기
 	void MakeItBlue(POINT _pos, UINT _move);
 	void AdjustFrame();
 	  

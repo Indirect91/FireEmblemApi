@@ -1,17 +1,17 @@
 #include "../stdafx.h"
 #include "TileManager.h"
 #include "Tiles.h"
-#include "Cursor.h"
 
+//▼타일 매니져는 태초에 생성될떈 그냥 초기화값만 가진다
 TileManager::TileManager()
 {
 	field = nullptr;
-	cursor = nullptr;
 	clippedIndex = { 0 };
 	clippedX = 0;
 	clippedY = 0;
 }
 
+//▼타일매니져 이닛을 해야 비로소 뉴할당이 일어난다.
 void TileManager::Init()
 {
 	field = new Tiles[TILECOLX * TILEROWY];
@@ -31,33 +31,16 @@ void TileManager::Init()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
-
-	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor")); //UI서 만든 커서 등록
-
-	clippedTiles.clear();
 }
 
+//▼업데이트는 보통 클리핑을 실시함.
 void TileManager::Update()
-{
-	clippedTiles.clear(); //업데이트 돌 때마다 일단 클리핑 된 타일 목록을 비움
-	ClipTiles();
-	
-
-	for (int i = 0; i < TILEROWY * TILECOLX; i++)
-	{
-		if (PtInRect(&field[i].GetPosition(), _ptMouse))
-		{
-			cursor->SetCursorVisibility(true);
-			cursor->SetIndex(field[i].GetIndex());
-			break;
-		}
-		else
-		{
-			cursor->SetCursorVisibility(false);
-		}
-	}
+{	
+	ClipTiles(); //타일 클리핑 범위를 계산함
+	UpdateClippedTiles(); //범위에 따라 담고 해당타일 업뎃시킴
 }
 
+//▼릴리즈땐 사용한거 전부 비움
 void TileManager::Release()
 {
 	DATACENTRE.ClearObjects(ObjType::Tile); //데이터 센터서 사용하던 타일 싹 다 비움
@@ -66,36 +49,24 @@ void TileManager::Release()
 	SAFE_DELETE_ARRAY(field);
 }
 
+//▼카메라에 들어온 타일들만 굴림
 void TileManager::Render()
 {
-	//for (int i = 0; i < TILEROWY * TILECOLX; i++)
-	//{
-	//	if (IntersectRect(&tempC, &field[i].GetPosition(), &CAMERA.GetCameraRc()))
-	//	{
-	//		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect((field[i].GetPosition())), D2DRenderer::DefaultBrush::White, 2);
-	//		
-	//		if (field[i].GetIsBlue())
-	//		{
-	//			//D2DRENDERER->FillRectangle(arrField[i].GetPosition(), D2D1::ColorF::Blue, arrField[i].GetBlueAlpha());
-	//			IMAGEMANAGER->FindImage("Blue")->SetAlpha(field[i].GetBlueAlpha());
-	//			IMAGEMANAGER->FindImage("Blue")->SetSize({ 48,48 });
-	//			IMAGEMANAGER->FindImage("Blue")->Render(field[i].GetPosition().left, field[i].GetPosition().top);
-	//		}
-	//		else if (field[i].GetObj() != "")
-	//		{
-	//			D2DRENDERER->FillRectangle(field[i].GetPosition(), D2D1::ColorF::Red, field[i].GetBlueAlpha());
-	//		}
-	//	}
-	//}
-
-	for (auto& toRender : clippedTiles)
+	for (auto& toRender : clippedTiles) //클리핑된 타일들만 돌면서
 	{
-		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toRender->GetPosition()), D2DRenderer::DefaultBrush::White, 1);
+		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
+		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::White, 2);
+		if (toExamen->GetIsBlue()) //파란타일일경우
+		{
+			IMAGEMANAGER->FindImage("Blue")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Blue")->SetSize({ 48,48 }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Blue")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		else if (toExamen->GetObj() != "")
+		{
+			D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
+		}
 	}
-
-	D2DRENDERER->RenderText(10, 200, std::to_wstring(clippedX),20);
-	D2DRENDERER->RenderText(10, 240, std::to_wstring(clippedY),20);
-
 
 	D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
 
@@ -103,8 +74,10 @@ void TileManager::Render()
 
 void TileManager::ClipTiles()
 {
-	clippedX = 0;
-	clippedY = 0;
+	clippedTiles.clear(); //일단 클리핑 된 타일 목록을 비움
+	clippedX = 0; //인덱스 초기화 해줌
+	clippedY = 0; //마찬가지
+
 	for (int i = 0; i < TILEROWY * TILECOLX; i++) //일단 모든 타일을 돌면서,
 	{
 		if (IntersectRect(&tempC, &CAMERA.GetCameraRc(), &field[i].GetPosition())) //첫번째로 카메라와 부딫힌 렉트를 찾아냄
@@ -113,41 +86,41 @@ void TileManager::ClipTiles()
 			clippedIndex = field[i].GetIndex();			//부딫힌 타일의 인덱스를 저장함
 			RECT tempCam = CAMERA.GetCameraRc();		//카메라도 마찬가지로 임시로 편하게 복사해둠
 
-			//if (tempCam.left < toCalculate.left)		//카메라의 좌측이 첫째 타일의 좌측보다 작을때, 즉 카메라가 좌측 끝일때
-			//{
-			//	clippedX = ceil(static_cast<float>(tempCam.right - toCalculate.left) / static_cast<float>(TILESIZE));
-			//}
 			if (tempCam.right > TILECOLX * TILESIZE) //카메라의 우측이 모든 타일 가로갯수보다 클때. 즉 카메라가 우측끝일때
 			{
 				clippedX = ceil(static_cast<float>((TILECOLX * TILESIZE) - toCalculate.left) / static_cast<float>(TILESIZE));
 			}
-			else //카메라가 중간 조건일때
+			else //우측 끝인 조건이 아닐땐
 			{
 				clippedX = ceil(static_cast<float>(tempCam.right - toCalculate.left) / static_cast<float>(TILESIZE));
 			}
 
-			//if (tempCam.top < toCalculate.top) //카메라의 탑이 첫째 타일의 탑보다 작을때, 즉 카메라가 맨 위일때
-			//{
-			//	clippedY = ceil(static_cast<float>(tempCam.bottom - toCalculate.top) / static_cast<float>(TILESIZE));
-			//}
 			if (tempCam.bottom > TILEROWY * TILESIZE) //카메라의 바텀이 총 타일 세로갯수보다 클떄, 즉 카메라가 맨 아래일때
 			{
 				clippedY = ceil(static_cast<float>((TILEROWY * TILESIZE) - toCalculate.top) / static_cast<float>(TILESIZE));
 			}
-			else //카메라가 중간 조건일때
+			else //이 외 조건일때
 			{
 				clippedY = ceil(static_cast<float>(tempCam.bottom - toCalculate.top) / static_cast<float>(TILESIZE));
 			}
-			break; //해당 연산 한번만 해서 TempX와 TempY를 
+			break;
 		}
 	}
 
+
+}
+
+//▼클리핑된 타일들 저장 및 업뎃
+void TileManager::UpdateClippedTiles()
+{
 	//▼알아낸 X,Y를 바탕으로 해당하는 타일들 
 	for (UINT j = clippedIndex.y; j < clippedIndex.y + clippedY; j++) //클리핑 시작한 인덱스부터, 클리핑Y까지
 	{
 		for (UINT i = clippedIndex.x; i < clippedIndex.x + clippedX; i++) //클리핑 시작한 인덱스부터, 클리핑X까지
 		{
-			clippedTiles.push_back(&field[j * TILECOLX + i]); //대상들을 집어넣음
+			field[j * TILECOLX + i].Update(); //클리핑된 타일들 업데이트
+			clippedTiles.insert({ std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i] }); //대상들을 집어넣음
 		}
 	}
 }
+  

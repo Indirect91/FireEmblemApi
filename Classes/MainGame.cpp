@@ -46,7 +46,6 @@ void MainGame::Render()
 	
 	SCENEMANAGER->Render();
 	TIMEMANAGER->Render();
-	IMAGEMANAGER->FindImage("Cursor")->Render(_ptMouse.x,_ptMouse.y);
 
 	/********************************************************/
 	D2DRENDERER->EndRender();

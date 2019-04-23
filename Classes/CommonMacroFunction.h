@@ -1,67 +1,73 @@
 #pragma once
 
-//  ------- WinAPI용 ------- 
-
-//▼선 그리기
-inline void LineMake(HDC hdc, int startX, int startY, int endX, int endY)
-{
-	MoveToEx(hdc, startX, startY, NULL);
-	LineTo(hdc, endX, endY);
-}
-
-//▼렉탱글함수 이용해서 사각 그리기
-inline void RectagleMake(HDC hdc, int x, int y, int width, int height)
-{
-	Rectangle(hdc, x, y, x + width, y + height);
-}
-
-//▼일립스함수 이용해서 타원 그리기
-inline void EllipseMake(HDC hdc, int x, int y, int width, int height)
-{
-	Ellipse(hdc, x, y, x + width, y + height);
-}
-
-//▼일립스함수 이용해서 센터점에 타원 그리기
-inline void EllipseMakeCenter(HDC hdc, int x, int y, int width, int height)
-{
-	Ellipse(hdc, x - width / 2, y - height / 2, x + width / 2, y + height / 2);
-}
-
-//렉트 던지면 그림
-inline void Rectangle(HDC hdc, RECT rc)
-{
-	Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
-}
-inline void Ellipse(HDC hdc, RECT rc)
-{
-	Ellipse(hdc, rc.left, rc.top, rc.right, rc.bottom);
-}
-
-//프레임렉트 함수 오버로딩(비어있는 렉트 만들기)
-inline void FrameRect(HDC hdc, RECT rc, COLORREF color)
-{
-	HBRUSH brush = CreateSolidBrush(color);
-	FrameRect(hdc, &rc, brush);
-	DeleteObject(brush);
-}
-
-inline void TextOutInt(HDC hdc, int x, int y, std::string whatIsIt, int intInput)
-{
-	whatIsIt += " : ";
-	whatIsIt += std::to_string(intInput);
-	TextOut(hdc, x, y, (LPCTSTR)whatIsIt.c_str(), whatIsIt.size());
-}
-
-inline void TextOutfloat(HDC hdc, int x, int y, std::string whatIsIt, float floatInput)
-{
-	whatIsIt += " : ";
-	whatIsIt += std::to_string(floatInput);
-	TextOut(hdc, x, y, (LPCTSTR)whatIsIt.c_str(), whatIsIt.size());
-}
+////  ------- WinAPI용 ------- 지금 D2D에선 안쓰기에 주석처리해둠
+//
+////▼선 그리기
+//inline void LineMake(HDC hdc, int startX, int startY, int endX, int endY)
+//{
+//	MoveToEx(hdc, startX, startY, NULL);
+//	LineTo(hdc, endX, endY);
+//}
+//
+////▼렉탱글함수 이용해서 사각 그리기
+//inline void RectagleMake(HDC hdc, int x, int y, int width, int height)
+//{
+//	Rectangle(hdc, x, y, x + width, y + height);
+//}
+//
+////▼일립스함수 이용해서 타원 그리기
+//inline void EllipseMake(HDC hdc, int x, int y, int width, int height)
+//{
+//	Ellipse(hdc, x, y, x + width, y + height);
+//}
+//
+////▼일립스함수 이용해서 센터점에 타원 그리기
+//inline void EllipseMakeCenter(HDC hdc, int x, int y, int width, int height)
+//{
+//	Ellipse(hdc, x - width / 2, y - height / 2, x + width / 2, y + height / 2);
+//}
+//
+////렉트 던지면 그림
+//inline void Rectangle(HDC hdc, RECT rc)
+//{
+//	Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
+//}
+//inline void Ellipse(HDC hdc, RECT rc)
+//{
+//	Ellipse(hdc, rc.left, rc.top, rc.right, rc.bottom);
+//}
+//
+////프레임렉트 함수 오버로딩(비어있는 렉트 만들기)
+//inline void FrameRect(HDC hdc, RECT rc, COLORREF color)
+//{
+//	HBRUSH brush = CreateSolidBrush(color);
+//	FrameRect(hdc, &rc, brush);
+//	DeleteObject(brush);
+//}
+//
+//inline void TextOutInt(HDC hdc, int x, int y, std::string whatIsIt, int intInput)
+//{
+//	whatIsIt += " : ";
+//	whatIsIt += std::to_string(intInput);
+//	TextOut(hdc, x, y, (LPCTSTR)whatIsIt.c_str(), whatIsIt.size());
+//}
+//
+//inline void TextOutfloat(HDC hdc, int x, int y, std::string whatIsIt, float floatInput)
+//{
+//	whatIsIt += " : ";
+//	whatIsIt += std::to_string(floatInput);
+//	TextOut(hdc, x, y, (LPCTSTR)whatIsIt.c_str(), whatIsIt.size());
+//}
 
 
 
 // ------- 통상 -------
+
+//▼RECT 중앙점 반환
+inline POINT GetRectCentre(RECT _rect)
+{
+	return { _rect.left + (_rect.right - _rect.left) / 2, _rect.top + (_rect.top - _rect.bottom) / 2 };
+}
 
 //▼RECT 만들기
 inline RECT RectMake(int x, int y, int width, int height)

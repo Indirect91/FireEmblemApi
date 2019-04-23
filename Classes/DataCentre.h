@@ -1,5 +1,19 @@
 #pragma once
 
+//▼컨테이너 타입들
+enum class ObjType : UINT
+{
+	Tile,
+	ClippedTile,
+	PlayerArmy,
+	CurrentPlayerArmy,
+	PlayerItem,
+	EnemyArmy,
+	CurrentEnemyArmy,
+	UI,
+	Gold,
+	ObjSize
+};
 
 //▼데이터 입출력 및 인게임 데이터 보유용 싱글톤
 class DataCentre
