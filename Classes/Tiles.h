@@ -5,6 +5,7 @@ constexpr UINT TILESIZE = 48; //타일 하나의 사이즈
 constexpr UINT TILEROWY = 20; //타일 Y 갯수
 constexpr auto TILECOLX = 32; //타일 X 갯수, constexpr 자동추론 테스트
 
+
 class Tiles : public GameObject
 {
 public:

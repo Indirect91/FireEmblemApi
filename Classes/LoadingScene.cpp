@@ -58,8 +58,13 @@ void LoadingScene::Render()
 //▼원래 사용하던 이미지 로딩방법
 void LoadingScene::LoadingImage()
 {
-	//▼통합
+	//▼커서
 	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");
+	_loading->LoadImg("CursorRed", L"IMAGE/ETC/cursorRed.png");
+	_loading->LoadImg("CursorBlue", L"IMAGE/ETC/cursorBlue.png");
+	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png", 4, 1);
+
+	//▼색
 	_loading->LoadImg("Blue", L"IMAGE/ETC/BLUE.png");
 	_loading->LoadImg("Yellow", L"IMAGE/ETC/YELLOW.png");
 	_loading->LoadImg("Green", L"IMAGE/ETC/GREEN.png");
@@ -86,7 +91,6 @@ void LoadingScene::LoadingImage()
 	_loading->LoadFrameImage("캐릭터Tharja", L"IMAGE/Characters/Tharja.png", 12, 128);
 	_loading->LoadFrameImage("캐릭터Olivia", L"IMAGE/Characters/Olivia.png", 12, 128);
 	_loading->LoadFrameImage("캐릭터Lissa", L"IMAGE/Characters/Lissa.png", 12, 128);
-
 	
 	//▼캐릭터 초상화
 	_loading->LoadImg("초상화Chrome", L"IMAGE/Portraits/Chrome.png");
@@ -97,7 +101,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("초상화Lissa", L"IMAGE/Portraits/Lissa.png");
 
 	//UI용
-	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png",4,1);
+	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
 }
 
 //▼원래 사용하던 로딩방법

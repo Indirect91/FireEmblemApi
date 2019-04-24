@@ -10,7 +10,6 @@ private:
 	std::map<std::string, GameObject*> &playerTroop = DATACENTRE.RefObjects(ObjType::PlayerArmy); //플레이어 부대
 	std::map<std::string, GameObject*> &battleTroop = DATACENTRE.RefObjects(ObjType::CurrentPlayerArmy); //현 전투에서 사용할 플레이어 부대
 	
-	RECT toMove = { 0,0,800,WINSIZEY };
 public:
 
 	void Init() override;

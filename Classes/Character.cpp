@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Item.h"
 #include "Tiles.h"
+#include "Cursor.h"
 
 
 Character::Character()
@@ -40,7 +41,7 @@ Character::Character()
 	isClicked = false;
 	moveRangeCalculator = 0;
 	isCalculated = false;
-	isMouseOn = false;
+	isCursorOn = false;
 }
 
 
@@ -80,7 +81,7 @@ void Character::Init()
 	isClicked = false;
 	moveRangeCalculator = 0;
 	isCalculated = false;
-	isMouseOn = false;
+	isCursorOn = false;
 }
 
 void Character::Release()
@@ -91,13 +92,13 @@ void Character::Release()
 void Character::Update()
 {
 	CheckInCamera();
+
 	if (isInCamera) //카메라에 잡혀있을때만 업데이트
 	{
-		if (PtInRect(&CAMERA.RelativeCameraRect(position), _ptMouse))
+		if(PointCompare(DATACENTRE.GetCertainObject(ObjType::UI,"Cursor")->GetIndex(),index))
 		{
-			isMouseOn = true;
-
-			if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
+			isCursorOn = true;
+			if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON || 'A'))
 			{
 				isClicked = true;
 				ShowMoveRange();
@@ -107,29 +108,29 @@ void Character::Update()
 				}
 			}
 		}
-		else if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
+		else
+		{
+			isCursorOn = false;
+		}
+		
+		if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON || 'S'))
 		{
 			isClicked = false;
 			DisableMoveRange();
 		}
-		else
-		{
-			isMouseOn = false;
-		}
 
 
-		if (isMouseOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
+
+		if (isCursorOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
 		{
 			ShowMoveRange(); //범위 계산해서 보여줌
 			isCalculated = true; //한번 계산했다고 알림
 		}
-		else if (!isMouseOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
+		else if (!isCursorOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
 		{
 			isCalculated = false;
 			DisableMoveRange();
 		}
-
-
 		SetPositionViaIndex(); //추후 변경 필요
 	}
 }
@@ -200,16 +201,27 @@ void Character::AdjustFrame()
 {
 	frameCounter++;
 
-	if (isClicked) frameInterval = 2;
-	else frameInterval = 7;
+	if (isClicked)
+	{
+		frameInterval = 2;
+	}
+	else if (isActionTaken)
+	{
+		frameInterval = 16;
+	}
+	else
+	{
+		frameInterval = 7;
+	}
 
-	if (frameCounter % frameInterval == 0) //5프레임마다.
+	if (frameCounter % frameInterval == 0) //정해진 프레임간격에 따라서
 	{
 		frameLoop++; //프레임 이미지 증가
 		if (frameLoop >= 4) frameLoop = 0; //모든 캐릭터 이미지는 0~3범위
 	}
 
-	if (isMouseOn||isClicked)
+	//추후 UI로 뺄 부분
+	if (isCursorOn||isClicked)
 	{
 		portraitAlpha += 0.1f;
 		if(portraitAlpha>=1) portraitAlpha = 1;
@@ -278,11 +290,25 @@ void Character::Render()
 	if (isInCamera)
 	{
 		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
+
 		frameImg->SetSize({ TILESIZE, TILESIZE });
 		frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);
 
+		if (isActionTaken)
+		{
+			IMAGEMANAGER->FindImage("ActionTaken")->SetAlpha(0.5f);
+			IMAGEMANAGER->FindImage("ActionTaken")->SetSize({ TILESIZE, TILESIZE });
+			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top);
+		}
+
 		portraitImg->SetAlpha(portraitAlpha);
-		if (index.x == 6 && index.y == 6) portraitImg->Render(900, 300);
-		else portraitImg->Render(900, 100);
+		if (index.x == 6 && index.y == 6)
+		{
+			portraitImg->Render(900, 300);
+		}
+		else
+		{
+			portraitImg->Render(900, 100);
+		}
 	}
 }

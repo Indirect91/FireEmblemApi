@@ -63,10 +63,17 @@
 
 // ------- 통상 -------
 
+//▼포인트 두개가 같은지 참거짓 반환
+inline BOOL PointCompare(POINT _pt1, POINT _pt2)
+{
+	return (_pt1.x == _pt2.x) && (_pt1.y == _pt2.y); //같으면 참 반환
+}
+
+
 //▼RECT 중앙점 반환
 inline POINT GetRectCentre(RECT _rect)
 {
-	return { _rect.left + (_rect.right - _rect.left) / 2, _rect.top + (_rect.top - _rect.bottom) / 2 };
+	return { _rect.left + (_rect.right - _rect.left) / 2, _rect.top + (_rect.bottom - _rect.top) / 2 };
 }
 
 //▼RECT 만들기
@@ -122,6 +129,26 @@ inline float GetAngle(float x1, float y1, float x2, float y2)
 	float angle = acos(x / distance);
 
 	if (y2 > y1)
+	{
+		angle = PI * 2.0f - angle;
+		if (angle >= PI * 2.0f)
+			angle -= PI * 2.0f;
+	}
+
+	return angle;
+}
+
+//▼ 두 점 사이 각을 구함. 포인트 버전
+inline float GetAngle(POINT _start, POINT _end)
+{
+	float x = _end.x - _start.x;
+	float y = _end.y - _start.y;
+
+	float distance = sqrtf((x * x) + (y * y));
+
+	float angle = acos(x / distance);
+
+	if (_end.y > _start.y)
 	{
 		angle = PI * 2.0f - angle;
 		if (angle >= PI * 2.0f)

@@ -45,15 +45,15 @@ private:
 
 	class Item *item;						//보유중인 아이템
 	BOOL isClicked;							//마우스가 캐릭터를 누른 상태일때
-	BOOL isMouseOn;							//마우스가 올라와있을때
+	BOOL isCursorOn;						//커서가 올라와있을때
 	BOOL isCalculated;						//이동범위 계산 한번 했는지 체크용
 	INT moveRangeCalculator;				//이동범위 계산용
 	std::vector<class Tiles*> blueTiles;	//이동범위 계산용2
 
 private:
-	void CheckInCamera(); //카메라 속에 캐릭이 있는지 체크
-	void ShowMoveRange(); //본인 주변 이동범위 표시
-	void DisableMoveRange(); //본인 주변 범위 끄기
+	void CheckInCamera();					//카메라 속에 캐릭이 있는지 체크
+	void ShowMoveRange();					//본인 주변 이동범위 표시
+	void DisableMoveRange();				//본인 주변 범위 끄기
 	void MakeItBlue(POINT _pos, UINT _move);
 	void AdjustFrame();
 	  

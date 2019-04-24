@@ -44,6 +44,8 @@ void TileManager::Update()
 void TileManager::Release()
 {
 	DATACENTRE.ClearObjects(ObjType::Tile); //데이터 센터서 사용하던 타일 싹 다 비움
+	DATACENTRE.ClearObjects(ObjType::ClippedTile);
+
 	for (int i = 0; i < TILEROWY * TILECOLX; i++) //여기서 이닛때 만든 모든 타일들 돌면서 릴리즈
 	{field[i].Release();}
 	SAFE_DELETE_ARRAY(field);

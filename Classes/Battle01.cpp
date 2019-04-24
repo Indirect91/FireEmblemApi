@@ -37,7 +37,7 @@ void Battle01::Init()
 
 	//▼커서를 만들고 이닛시킴
 	cursor = new Cursor;
-	cursor->Init(); // 위치 수정 필요
+	cursor->Init();
 	DATACENTRE.AddObj(ObjType::UI, "Cursor", cursor);
 
 	//▼플레이어를 만들고 이닛시킴
@@ -51,7 +51,7 @@ void Battle01::Init()
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
 	bg2 = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp2.png");
 
-
+	CAMERA.Init();
 
 	player->SetTurnStart(); //수정필요
 }
@@ -88,8 +88,6 @@ void Battle01::Release()
 	//▼ESC메뉴 릴리즈 후 삭제
 	escMenu->Release();
 	SAFE_DELETE(escMenu);
-
-
 }
 
 void Battle01::Update()
@@ -102,21 +100,27 @@ void Battle01::Update()
 	switch (currentState)
 	{
 	case BattleScenes::ingameStatus::StartPlacement:
+		cursor->SetCursorColour(Cursor::CursorColour::UI);
 		startPlacement->Update();
 		break;
 	case BattleScenes::ingameStatus::TurnChanging:
+		cursor->SetCursorColour(Cursor::CursorColour::UI);
 		turnManager->Update();
 		break;
 	case BattleScenes::ingameStatus::ESCMenu:
+		cursor->SetCursorColour(Cursor::CursorColour::UI);
 		escMenu->Update();
 		break;
 	case BattleScenes::ingameStatus::PlayerTurn:
+		cursor->SetCursorColour(Cursor::CursorColour::PlayerTurn);
 		player->Update();
 		break;
 	case BattleScenes::ingameStatus::EnemyTurn:
+		cursor->SetCursorColour(Cursor::CursorColour::EnemyTurn);
 		enemy->Update();
 		break;
 	}
+	CAMERA.Update();
 }
 
 void Battle01::Render()
