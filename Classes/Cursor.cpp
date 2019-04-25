@@ -122,6 +122,11 @@ BOOL Cursor::MoveLeft()
 //▼이동이 가능했다면 이동하고 성공시 True를 반환
 BOOL Cursor::MoveRight()
 {
+	if (cursorOccupied != "")
+	{
+
+	}
+
 	if (index.x == TILECOLX)
 	{
 		return false;

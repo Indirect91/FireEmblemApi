@@ -74,7 +74,8 @@ private:
 
 	//▼커서쪽 변수
 	std::set<class Tiles*> blueTiles;		//이동범위 표시된 타일들 모아둠
-	std::set<class Tiles*> toMove;			//이동 화살표 표시용
+	std::vector<class Tiles*> toMove;		//이동 화살표 표시용
+	UINT dragValidity;						//이동 가능한지
 	INT moveRangeCalculator;				//이동범위 계산용
 	BOOL isCalculated;						//이동범위 계산 한번 했는지 체크용
 

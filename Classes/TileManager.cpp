@@ -26,7 +26,7 @@ void TileManager::Init()
 			field[j * TILECOLX + i].SetIndex({ i,j });
 			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
 			{
-				field[j * TILECOLX + i].SetObj("tmp");
+				field[j * TILECOLX + i].SetObjT("tmp");
 			}
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
@@ -58,19 +58,32 @@ void TileManager::Render()
 	{
 		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
 		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::White, 2);
+
+		//1.무빙타일
+		//2.터레인
+		//3.오브젝트
+		//4.화살표
+
 		if (toExamen->GetIsBlue()) //파란타일일경우
 		{
 			IMAGEMANAGER->FindImage("Blue")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
 			IMAGEMANAGER->FindImage("Blue")->SetSize({ 48,48 }); //사이즈 세팅해주고
 			IMAGEMANAGER->FindImage("Blue")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
 		}
-		else if (toExamen->GetObj() != "")
+		//else if (toExamen->GetObjT() != "")
+		//{
+		//	D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
+		//}
+		if (toExamen->GetArrowT() != "")
 		{
-			D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
+			auto arrow = IMAGEMANAGER->FindImage("MoveArrow"); //파란 알파값 가져와서
+			arrow->SetSize({ TILESIZE,TILESIZE });
+			arrow->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetArrowFrame().x, toExamen->GetArrowFrame().y);
 		}
+
 	}
 
-	D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
+	//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
 
 }
 

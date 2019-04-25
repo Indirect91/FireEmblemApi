@@ -6,8 +6,8 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	status = TileStatus::none;
 	position = { 0 };
 
-	object = "";
-	objFrame = { 0 };
+	objectT = "";
+	objTFrame = { 0 };
 
 	terrain = "";
 	terrainFrame = { 0 };
@@ -47,8 +47,8 @@ void Tiles::Init()
 	status = TileStatus::none;
 	position = { 0 };
 
-	object = "";
-	objFrame = { 0 };
+	objectT = "";
+	objTFrame = { 0 };
 
 	terrain = "";
 	terrainFrame = { 0 };

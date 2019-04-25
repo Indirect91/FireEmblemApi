@@ -3,16 +3,17 @@
 //▼컨테이너 타입들
 enum class ObjType : UINT
 {
-	Tile,
-	ClippedTile,
-	PlayerArmy,
-	CurrentPlayerArmy,
-	PlayerItem,
-	EnemyArmy,
-	CurrentEnemyArmy,
 	UI,
+	Tile,
 	Gold,
-	ObjSize
+	EnemyArmy,
+	PlayerArmy,
+	PlayerItem,
+	ClippedTile,
+	AvailableTiles,
+	CurrentEnemyArmy,
+	CurrentPlayerArmy,
+	ObjSize //이건 항시 마지막에 두자
 };
 
 //▼데이터 입출력 및 인게임 데이터 보유용 싱글톤

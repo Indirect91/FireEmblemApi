@@ -62,7 +62,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");
 	_loading->LoadImg("CursorRed", L"IMAGE/ETC/cursorRed.png");
 	_loading->LoadImg("CursorBlue", L"IMAGE/ETC/cursorBlue.png");
-	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png", 4, 1);
+	
 
 	//▼색
 	_loading->LoadImg("Blue", L"IMAGE/ETC/BLUE.png");
@@ -100,8 +100,13 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("초상화Olivia", L"IMAGE/Portraits/Olivia.png");
 	_loading->LoadImg("초상화Lissa", L"IMAGE/Portraits/Lissa.png");
 
+	//▼타일용
+	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png", 4, 1);
+	_loading->LoadFrameImage("MoveArrow", L"IMAGE/Tiles/MoveArrow.png", 4, 4);
+
 	//UI용
 	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
+
 }
 
 //▼원래 사용하던 로딩방법

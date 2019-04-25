@@ -4,7 +4,7 @@
 #include "Tiles.h"
 #include "Cursor.h"
 
-
+//▼어짜피 출고 후 덮어씌워질 애들이긴 함
 Character::Character()
 {
 	draggingIndex = index;
@@ -46,7 +46,7 @@ Character::Character()
 	tmpCursor = nullptr;
 }
 
-
+//▼먼저 커서를 활성화 시키고 이닛을 통해 연결
 void Character::Init()
 {
 	tmpCursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
@@ -221,7 +221,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 	{ 
 		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y - 1) * TILECOLX + _pos.x))); 
 		UpValidity &= !checkTarget->GetIsChecked();
-		UpValidity &= checkTarget->GetObj() == "";
+		UpValidity &= checkTarget->GetObjT() == "";
 
 		if (UpValidity)
 		{MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);}
@@ -235,7 +235,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 	{
 		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y  * TILECOLX + _pos.x-1)));
 		LeftValidity &= !checkTarget->GetIsChecked();
-		LeftValidity &= checkTarget->GetObj() == "";
+		LeftValidity &= checkTarget->GetObjT() == "";
 
 		if (LeftValidity)
 		{
@@ -251,7 +251,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 	{
 		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y + 1) * TILECOLX + _pos.x)));
 		DownValidity &= !checkTarget->GetIsChecked();
-		DownValidity &= checkTarget->GetObj() == "";
+		DownValidity &= checkTarget->GetObjT() == "";
 
 		if (DownValidity)
 		{
@@ -267,7 +267,7 @@ void Character::MakeItBlue(POINT _pos, UINT _move)
 	{
 		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x+1)));
 		RightValidity &= !checkTarget->GetIsChecked();
-		RightValidity &= checkTarget->GetObj() == "";
+		RightValidity &= checkTarget->GetObjT() == "";
 
 		if (RightValidity)
 			{MakeItBlue({ _pos.x + 1,_pos.y }, _move - 1);}

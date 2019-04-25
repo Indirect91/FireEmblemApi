@@ -130,6 +130,7 @@ void Battle01::Render()
 	bg2->Render(288 - CAMERA.GetCameraRc().left, 0 - CAMERA.GetCameraRc().top);
 
 	tileManager->Render();
+
 	player->Render();
 	enemy->Render();
 	cursor->Render();
