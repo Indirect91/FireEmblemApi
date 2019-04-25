@@ -31,7 +31,7 @@ private:
 	std::string movingT;//타일이 들고있는 움직이는 타일
 	POINT movingtFrame;	//움직이는 타일 프레임렌더용
 	
-	BOOL checked;			//타일이 검사되었는지 여부
+	INT checked;			//타일이 검사되었는지 여부
 	INT blueNum;			//타일의 범위 중복 판단시 사용
 	FLOAT blueAlpha;		//진한 연한 파란 여부
 	BOOL blueClicked;		//클릭 눌렸는지 여부
@@ -58,9 +58,9 @@ public:
 	const std::string & GetObj() const { return object; }
 	const POINT & GetObjFrame() const { return objFrame; }
 
-	const BOOL& GetIsChecked() const { return checked; } // 지형 검색용 타일 체크여부
-	const BOOL &GetIsBlue() const { return blueNum; } //파란타일인지 참거짓
-	const FLOAT &GetBlueAlpha() const { return blueAlpha; } //파란 알파값 설정
+	const INT & GetIsChecked() const { return checked; }		// 지형 검색용 타일 체크여부
+	const BOOL & GetIsBlue() const { return blueNum; }			//파란타일인지 참거짓
+	const FLOAT & GetBlueAlpha() const { return blueAlpha; }	//파란 알파값 설정
 
 	//▼ 누가 타일을 점령중인지 파악함
 	void SetStatus(TileStatus _status) { this->status = _status; }
@@ -77,8 +77,8 @@ public:
 	void SetObj(const std::string _object) { this->object = _object; }
 	void SetObjFrame(const POINT _objFrame) { this->objFrame = _objFrame; }
 
-	void SetIsChecked(const BOOL _checked) { this->checked;} //체크 여부 변경
-	void IncreaseBlueNum() { blueNum++; } //블루 참조갯수 증가
+	void SetIsChecked(const INT _checked) { this->checked = _checked;} //체크 여부 변경
+	void IncreaseBlueNum();		//블루 참조갯수 증가
 	void SetBlueNum(INT _blue); //블루 참조갯수 강제설정
 	void DecreaseBlueNum(); //블루 참조갯수 감소
 

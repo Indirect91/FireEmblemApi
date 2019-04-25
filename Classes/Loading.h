@@ -13,19 +13,19 @@ enum class LOAD_KIND
 //▼이미지 리소스 구조체
 struct tagImageResource
 {
-	std::string keyName;		//이미지 키값
-	std::wstring fileName;		//파일이름
-	int frameX;					//프레임 이미지의 프레임X 갯수
-	int frameY;					//프레임 이미지의 프레임Y 갯수
+	std::string keyName ="";		//이미지 키값
+	std::wstring fileName = L"";		//파일이름
+	int frameX = 0;					//프레임 이미지의 프레임X 갯수
+	int frameY = 0;					//프레임 이미지의 프레임Y 갯수
 };
 
 //▼사운드 리소스 구조체
 struct tagSoundResource
 {
-	std::string keyName;		//이미지키값
-	const char* fileName;		//파일 이름
-	bool bgm;					//브금인지 여부
-	bool loop;					//루프인지 여부
+	std::string keyName = "";			//이미지키값
+	const char* fileName = "";			//파일 이름
+	bool bgm = false;					//브금인지 여부
+	bool loop = false;					//루프인지 여부
 };
 
 //▼씬이 가지는 구조체

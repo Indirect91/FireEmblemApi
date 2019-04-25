@@ -7,6 +7,9 @@
 
 Character::Character()
 {
+	draggingIndex = index;
+	draggindDirection = DraggingDirection::LEFT;
+	charStatus = CharStatus::Idle;
 	isInCamera = false;
 	classes = Occupation::Infantary; //일단은 모든 캐릭은 보병으로 출고
 	portraitImg = nullptr;
@@ -38,50 +41,15 @@ Character::Character()
 	baseLuck = 0;
 	baseMove = 0;
 
-	isClicked = false;
 	moveRangeCalculator = 0;
 	isCalculated = false;
-	isCursorOn = false;
+	tmpCursor = nullptr;
 }
 
 
 void Character::Init()
 {
-	isInCamera = false;
-	classes = Occupation::Infantary;
-	portraitImg = nullptr;
-	portraitAlpha = 0.f;
-	frameImg = nullptr;
-	item = nullptr;
-
-	isActionTaken = false;
-	frame = { 0 };
-	frameLoop = 0;
-	frameCounter = 0;
-	frameInterval = 5;
-
-	classHp = 0;
-	classAttack = 0;
-	classDefence = 0;
-	classLuck = 0;
-	classMove = 0;
-
-	AdditionalHp = 0;
-	AdditionalAttack = 0;
-	AdditionalDefence = 0;
-	AdditionalLuck = 0;
-	AdditionalMove = 0;
-
-	baseHp = 0;
-	baseAttack = 0;
-	baseDefence = 0;
-	baseLuck = 0;
-	baseMove = 0;
-
-	isClicked = false;
-	moveRangeCalculator = 0;
-	isCalculated = false;
-	isCursorOn = false;
+	tmpCursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
 }
 
 void Character::Release()
@@ -90,53 +58,110 @@ void Character::Release()
 }
 
 void Character::Update()
-{
-	CheckInCamera();
+{	
+	CheckInCamera(); //카메라부터 체크
 
-	if (isInCamera) //카메라에 잡혀있을때만 업데이트
+	//▼먼저 상태를 준다
+	if (charStatus == CharStatus::IsClicked) //현 캐릭을 클릭 중이라
 	{
-		if(PointCompare(DATACENTRE.GetCertainObject(ObjType::UI,"Cursor")->GetIndex(),index))
-		{
-			isCursorOn = true;
-			if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON || 'A'))
-			{
-				isClicked = true;
-				ShowMoveRange();
-				for (auto& toThicken : blueTiles)
-				{
-					toThicken->SetBlueAlpha(0.8f);
-				}
-			}
-		}
+		if(PointCompare(index, draggingIndex))
+			charStatus = CharStatus::IsClicked;//클릭은 되었는데 아직 인덱스를 바꾼적이 없다면 유지
 		else
+			charStatus = CharStatus::IsDragging;//클릭 후 커서를 이동했을땐 드래깅
+	} 
+	else if(charStatus == CharStatus::IsDragging)
+	{
+		charStatus = CharStatus::IsDragging;//클릭 후 커서를 이동했을땐 드래깅
+	}
+	else if (PointCompare(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor")->GetIndex(), index)) //커서 온 상태도 유지. 강제로 커서타겟이 바뀌었을때 사용됨
+	{
+		charStatus = CharStatus::IsCursorOn;
+	}
+	else //클릭된 상태도, 커서on 상태도 아니라면
+	{	
+		if (isInCamera) //그 상태 아닐때 최소 카메라 속에라도 들어왔다면
+			{charStatus = CharStatus::Idle;}
+		else
+			{charStatus = CharStatus::Disable;}
+	}
+
+
+
+
+	//▼상태에 따른 행동
+	switch (charStatus)
+	{
+		//▼클릭된 상태라면. 
+	case CharStatus::IsClicked:
+		//▼우클릭이나 S를 누르면 픽상태 해지
+		if (KEYMANAGER->IsOnceKeyDown('S'))
 		{
-			isCursorOn = false;
-		}
-		
-		if (isClicked && KEYMANAGER->IsOnceKeyDown(VK_RBUTTON || 'S'))
-		{
-			isClicked = false;
+			charStatus = CharStatus::IsCursorOn;
 			DisableMoveRange();
+			tmpCursor->SetCursorOccupied("");
+		}
+		//TODO: 화살표
+		draggingIndex = tmpCursor->GetIndex();
+		if (!PointCompare(index, tmpCursor->GetIndex()))
+		{
+			charStatus = CharStatus::IsDragging;
+			draggingIndex = tmpCursor->GetIndex();
 		}
 
 
+		break;
 
-		if (isCursorOn && !isCalculated) //마우스가 올라와있고 한번도 쇼레인지 계산 안한상태라면
+		//▼커서가 올라와있는 상태라면.
+	case CharStatus::IsCursorOn:
+		if (!isCalculated) //한번도 범위를 계산한적 없다면
 		{
 			ShowMoveRange(); //범위 계산해서 보여줌
 			isCalculated = true; //한번 계산했다고 알림
 		}
-		else if (!isCursorOn && !isClicked) //마우스가 올라와있지 않고, 캐릭터 클릭상태도 아닐떄
+
+		//▼그 상태에서 마우스L버튼이나 A버튼이 들어오는지 체크
+		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
-			isCalculated = false;
-			DisableMoveRange();
+			charStatus = CharStatus::IsClicked; //눌렸다면 상태를 클릭된 상태로 바꿈
+
+			for (auto& toThicken : blueTiles)
+			{
+				toThicken->SetBlueAlpha(0.8f);
+			}
 		}
-		SetPositionViaIndex(); //추후 변경 필요
+		break;
+
+	//▼ 아이들 상태일때
+	case CharStatus::Idle:
+		DisableMoveRange();
+		break;
+
+	//▼ 드래깅 상태일때
+	case CharStatus::IsDragging:
+		//▼우클릭이나 S를 누르면 픽상태 해지
+		if (KEYMANAGER->IsOnceKeyDown('S'))
+		{
+			charStatus = CharStatus::IsCursorOn;
+			DisableMoveRange();
+			tmpCursor->SetCursorOccupied("");
+			tmpCursor->SetIndex({ index.x,index.y });
+			tmpCursor->SetPositionViaIndex();
+		}
+
+		draggingIndex = tmpCursor->GetIndex();
+
+		break;
+	case CharStatus::Disable:
+
+		break;
 	}
+
+
+	SetPositionViaIndex(); //추후 변경 필요
 }
 
-//▼카메라 속에 캐릭터가 있는지 체크하는 함수
-void Character::CheckInCamera()
+//▼카메라 속에 캐릭터가 있는지 체크하는 함수. 반환하기도 함
+BOOL Character::CheckInCamera()
 {
 	isInCamera = false;
 	for (auto& toCheck : DATACENTRE.RefObjects(ObjType::ClippedTile))
@@ -147,18 +172,26 @@ void Character::CheckInCamera()
 			break;
 		}
 	}
+	return isInCamera;
 }
 
 //▼이동 범위 보이게 함
 void Character::ShowMoveRange()
 {
-	moveRangeCalculator = AdditionalMove + classMove + baseMove +2;
+	//▼현 캐릭터의 움직임을 계산함
+	moveRangeCalculator = AdditionalMove + classMove + baseMove;
+
+	//▼이동값에 음수가 들어오면 터뜨림
 	assert(moveRangeCalculator > -1);
 
 	MakeItBlue(index, moveRangeCalculator);
 
+	//▼재귀를 통해 담긴 블루백터에 계산하고 남은 부산물 뒤처리
 	for (auto& blueTile : blueTiles)
-	{blueTile->SetIsChecked(false);}
+	{
+		blueTile->IncreaseBlueNum();	//블루 참조 갯수 증가
+		blueTile->SetIsChecked(false);	
+	}
 }
 //▼이동 범위 안보이게 함
 void Character::DisableMoveRange()
@@ -167,44 +200,91 @@ void Character::DisableMoveRange()
 	{
 		blueTile->DecreaseBlueNum();
 	}
+	isCalculated = false;
 	blueTiles.clear();
 }
 
 //▼타일 보이게 색칠하는 재귀함수
 void Character::MakeItBlue(POINT _pos, UINT _move)
 {
-	if (((0 <= _pos.x) && (_pos.x < TILECOLX)) && (0 <= _pos.y) && (_pos.y < TILEROWY))
+	//▼들어온 첫 타일 처리
+	Tiles* startTile = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x)));
+	startTile->SetIsChecked(_move);										//체크에 숫자 대입
+	if (startTile->GetBlueAlpha() < 0.5f) startTile->SetBlueAlpha(0.2f);//진하게 처리된게 아니라면 알파 옅게 세팅
+	blueTiles.insert(startTile);										//처리된 타일 Set에 담아줌
+
+	//▼위 검사
+	BOOL UpValidity = true;
+	UpValidity &= (0 <= _pos.y-1);
+	UpValidity &= _move > 0;
+	if (UpValidity)
+	{ 
+		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y - 1) * TILECOLX + _pos.x))); 
+		UpValidity &= !checkTarget->GetIsChecked();
+		UpValidity &= checkTarget->GetObj() == "";
+
+		if (UpValidity)
+		{MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);}
+	}
+	
+	//▼좌 검사
+	BOOL LeftValidity = true;
+	LeftValidity &= (0 <= _pos.x-1);
+	LeftValidity &= _move > 0;
+	if (LeftValidity)
 	{
-		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x)));
-		BOOL recursionContinue = true;
-		recursionContinue &= checkTarget->GetIsChecked() == false;
-		recursionContinue &= checkTarget->GetObj() == "";
-		recursionContinue &= _move > 1;
+		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y  * TILECOLX + _pos.x-1)));
+		LeftValidity &= !checkTarget->GetIsChecked();
+		LeftValidity &= checkTarget->GetObj() == "";
 
-		if (recursionContinue)
+		if (LeftValidity)
 		{
-			checkTarget->IncreaseBlueNum();
-			checkTarget->SetIsChecked(true);
-			if(checkTarget->GetBlueAlpha()<0.5f) checkTarget->SetBlueAlpha(0.2f);
-			blueTiles.push_back(checkTarget); //나중에 파란처리 되어있는 
-
-			MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);
 			MakeItBlue({ _pos.x - 1,_pos.y }, _move - 1);
-			MakeItBlue({ _pos.x,_pos.y + 1 }, _move - 1);
-			MakeItBlue({ _pos.x + 1,_pos.y }, _move - 1);
 		}
+	}
+
+	//▼아래 검사
+	BOOL DownValidity = true;
+	DownValidity &= (_pos.y + 1 < TILEROWY);
+	DownValidity &= _move > 0;
+	if (DownValidity)
+	{
+		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y + 1) * TILECOLX + _pos.x)));
+		DownValidity &= !checkTarget->GetIsChecked();
+		DownValidity &= checkTarget->GetObj() == "";
+
+		if (DownValidity)
+		{
+			MakeItBlue({ _pos.x,_pos.y + 1 }, _move - 1);
+		}
+	}
+
+	//▼우 검사
+	BOOL RightValidity = true;
+	RightValidity &= (_pos.x + 1 < TILECOLX);
+	RightValidity &= _move > 0;
+	if (RightValidity)
+	{
+		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x+1)));
+		RightValidity &= !checkTarget->GetIsChecked();
+		RightValidity &= checkTarget->GetObj() == "";
+
+		if (RightValidity)
+			{MakeItBlue({ _pos.x + 1,_pos.y }, _move - 1);}
 	}
 }
 
 //▼프레임돌리는 부분
 void Character::AdjustFrame()
 {
-	frameCounter++;
+	frameCounter++; //프레임 항시 돌림
 
-	if (isClicked)
+	//▼클릭된 상태일땐
+	if (charStatus==CharStatus::IsClicked)
 	{
-		frameInterval = 2;
+		frameInterval = 2; //정말 빠르게 움직인다
 	}
+	//▼액션을 이미 취한 상태라면
 	else if (isActionTaken)
 	{
 		frameInterval = 16;
@@ -221,7 +301,7 @@ void Character::AdjustFrame()
 	}
 
 	//추후 UI로 뺄 부분
-	if (isCursorOn||isClicked)
+	if(charStatus==CharStatus::IsCursorOn || charStatus == CharStatus::IsClicked)
 	{
 		portraitAlpha += 0.1f;
 		if(portraitAlpha>=1) portraitAlpha = 1;
@@ -243,28 +323,28 @@ void Character::SetOccupation(Occupation _job)
 		classAttack = 5;
 		classDefence = 5;
 		classLuck = 5;
-		classMove = 5;
+		classMove = 4;
 		break;
 	case Occupation::Knight:
 		classHp = 25;
 		classAttack = 5;
 		classDefence = 5;
 		classLuck = 5;
-		classMove = 8;
+		classMove = 6;
 		break;
-	case Occupation::mage:
+	case Occupation::Mage:
 		classHp = 20;
 		classAttack = 8;
 		classDefence = 2;
 		classLuck = 5;
-		classMove = 5;
+		classMove = 4;
 		break;
 	case Occupation::Rogue:
 		classHp = 20;
 		classAttack = 8;
 		classDefence = 2;
 		classLuck = 10;
-		classMove = 5;
+		classMove = 4;
 		break;
 	}
 }
@@ -310,5 +390,11 @@ void Character::Render()
 		{
 			portraitImg->Render(900, 100);
 		}
+	}
+	if (charStatus == CharStatus::IsDragging)
+	{
+		frameImg->SetSize({ TILESIZE, TILESIZE });
+		frameImg->SetAlpha(0.7f);
+		frameImg->RelativeFrameRender(draggingIndex.x * TILESIZE, draggingIndex.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
 	}
 }

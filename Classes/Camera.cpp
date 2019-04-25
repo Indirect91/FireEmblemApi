@@ -9,7 +9,7 @@ Camera::Camera()
 	cRc = { 0,0,WINSIZEX,WINSIZEY }; //일단은 윈도 사이즈만큼 만들어 출고됨
 	toFollow = { WINSIZEX / 2,WINSIZEY / 2 }; //일단은 화면 중간으로 출고
 	followSpeed = 0.5f;
-	maxFollowSpd = 10;
+	maxFollowSpd = 15;
 	prevRc = cRc;
 	cStatus = CameraStatus::Idle;
 	cursor = nullptr;

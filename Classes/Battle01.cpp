@@ -42,7 +42,7 @@ void Battle01::Init()
 
 	//▼플레이어를 만들고 이닛시킴
 	player = new Player;
-	//player->Init();
+	player->Init();
 
 	//▼타일매니져를 만들고 이닛을 시킴
 	tileManager = new TileManager;

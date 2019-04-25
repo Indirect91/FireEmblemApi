@@ -21,6 +21,12 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	blueClicked = false;
 }
 
+void Tiles::IncreaseBlueNum()
+{
+	assert(blueNum < 2);
+	blueNum++;
+}
+
 void Tiles::SetBlueNum(INT _blue)
 {
 	assert(_blue >= 0);

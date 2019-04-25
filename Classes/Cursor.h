@@ -18,6 +18,8 @@ public:
 private:
 	CursorColour cursorColour;				//커서 색깔
 	CursorState cursorState;				//커서 상태
+	std::string cursorOccupied;				//커서 점유상태
+	POINT prevLocation;						//커서 드래그시 시작지점
 	UINT cursorFrame;						//커서 프레임
 	UINT cursorCounter;						//커서 프레임올릴 카운터
 
@@ -36,9 +38,11 @@ public:
 	BOOL MoveRight();
 
 	UINT &GetCursorFrame() { return cursorFrame; }
+	std::string& GetCursorOccupied() { return cursorOccupied; }
 
-	void SetCursorStatus(CursorState state) { cursorState = state; }
-	void SetCursorColour(CursorColour colour) { cursorColour = colour; } //색 세팅
+	void SetCursorOccupied(std::string _target) { cursorOccupied = _target; }	//대상 설정
+	void SetCursorStatus(CursorState state) { cursorState = state; }		//M키 활성화여부
+	void SetCursorColour(CursorColour colour) { cursorColour = colour; }	//색 세팅
 
 	Cursor();
 	~Cursor() {};
