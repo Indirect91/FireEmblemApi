@@ -32,7 +32,7 @@ private:
 	std::string arrowT;	//타일이 들고있는 화살표
 	POINT arrowtFrame;	//화살표 프레임랜더용
 	
-	INT checked;			//타일이 검사되었는지 여부
+	INT checkedNum;			//타일이 검사되었는지 여부
 	INT blueNum;			//타일의 범위 중복 판단시 사용
 	FLOAT blueAlpha;		//진한 연한 파란 여부
 	BOOL blueClicked;		//클릭 눌렸는지 여부
@@ -63,7 +63,7 @@ public:
 	const std::string& GetArrowT() const { return arrowT; }
 	const POINT& GetArrowFrame() const { return arrowtFrame; }
 
-	const INT & GetIsChecked() const { return checked; }		// 지형 검색용 타일 체크여부
+	const INT & GetCheckedNum() const { return checkedNum; }		// 지형 검색용 타일 체크여부
 	const BOOL & GetIsBlue() const { return blueNum; }			//파란타일인지 참거짓
 	const FLOAT & GetBlueAlpha() const { return blueAlpha; }	//파란 알파값 설정
 
@@ -86,7 +86,7 @@ public:
 	void SetArrowT(const std::string _object) { this->objectT = _object; }
 	void SetArrowtFrame(const POINT _objFrame) { this->objTFrame = _objFrame; }
 
-	void SetIsChecked(const INT _checked) { this->checked = _checked;} //체크 여부 변경
+	void SetCheckedNum(const INT _checked) { this->checkedNum = _checked;} //체크 여부 변경
 	void IncreaseBlueNum();		//블루 참조갯수 증가
 	void SetBlueNum(INT _blue); //블루 참조갯수 강제설정
 	void DecreaseBlueNum(); //블루 참조갯수 감소

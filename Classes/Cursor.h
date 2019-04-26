@@ -42,7 +42,7 @@ public:
 
 	void SetCursorOccupied(std::string _target) { cursorOccupied = _target; }	//대상 설정
 	void SetCursorStatus(CursorState state) { cursorState = state; }		//M키 활성화여부
-	void SetCursorColour(CursorColour colour) { cursorColour = colour; }	//색 세팅
+	void SetCursorColour(const CursorColour &colour) { cursorColour = colour; }	//색 세팅
 
 	Cursor();
 	~Cursor() {};

@@ -2,12 +2,18 @@
 #include "GameObject.h"
 
 //▼직업
-enum class Occupation
+enum class Occupation : UINT
 {
-	Infantary,
-	Knight,
-	Mage,
+	//공격 사거리 1짜리들
+	Infantary = 0,
 	Rogue,
+	Knight,
+
+	RangeSeparater, //사거리 분할값. 
+	
+	//공격 사거리 2짜리들
+	Archer,
+	Mage,
 };
 
 //▼캐릭터 상태
@@ -36,7 +42,7 @@ private:
 	POINT draggingIndex;					//드래깅 위치
 	DraggingDirection draggindDirection;	//드래깅 방향
 	CharStatus charStatus;					//캐릭터 상태
-	Occupation classes;						//직업
+	Occupation occupation;						//직업
 	class Item *item;						//보유중인 아이템
 	Image* frameImg;						//프레임 이미지
 	BOOL isInCamera;						//카메라 안에 있어야만 업데이트/랜더됨
@@ -72,11 +78,14 @@ private:
 	INT AdditionalMove;			//버프, 디버프, 혹은 아이템의 영향을 받는 스텟
 	INT AdditionalHp;			//버프, 디버프, 혹은 아이템의 영향을 받는 스텟
 
-	//▼커서쪽 변수
+	//▼이동관련 변수
+	std::set<class Tiles*> AvailableTiles;	//행동가능 타일들 모아둠
+	std::set<class Tiles*> greenTiles;		//힐범위 표시된 타일들 모아둠
 	std::set<class Tiles*> blueTiles;		//이동범위 표시된 타일들 모아둠
 	std::vector<class Tiles*> toMove;		//이동 화살표 표시용
+	std::set<class Tiles*> redTiles;		//공격범위 표시된 타일들 모아둠
+	INT RangeCalculator;					//이동범위 계산용
 	UINT dragValidity;						//이동 가능한지
-	INT moveRangeCalculator;				//이동범위 계산용
 	BOOL isCalculated;						//이동범위 계산 한번 했는지 체크용
 
 private:
@@ -104,7 +113,7 @@ public:
 	void SetAdditionalMove(UINT _move) { this->AdditionalMove = _move; }
 
 	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
-	const Occupation &GetOccupation() const { return this->classes; }
+	const Occupation &GetOccupation() const { return this->occupation; }
 	const POINT &GetFrame() const { return this->frame; }
 	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 

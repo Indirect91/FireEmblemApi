@@ -15,7 +15,7 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	movingT = "";
 	movingtFrame = { 0 };
 
-	checked = false;
+	checkedNum = 0;
 	blueNum = 0;
 	blueAlpha = 0;
 	blueClicked = false;
@@ -56,7 +56,7 @@ void Tiles::Init()
 	movingT = "";
 	movingtFrame = { 0 };
 
-	checked = false;
+	checkedNum = 0;
 	blueNum = 0;
 	blueAlpha = 0;
 	blueClicked = false;

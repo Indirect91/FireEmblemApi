@@ -11,7 +11,7 @@ Character::Character()
 	draggindDirection = DraggingDirection::LEFT;
 	charStatus = CharStatus::Idle;
 	isInCamera = false;
-	classes = Occupation::Infantary; //일단은 모든 캐릭은 보병으로 출고
+	occupation = Occupation::Infantary; //일단은 모든 캐릭은 보병으로 출고
 	portraitImg = nullptr;
 	portraitAlpha = 0.f;
 	frameImg = nullptr;
@@ -41,9 +41,10 @@ Character::Character()
 	baseLuck = 0;
 	baseMove = 0;
 
-	moveRangeCalculator = 0;
+	RangeCalculator = 0;
 	isCalculated = false;
 	tmpCursor = nullptr;
+	dragValidity = false;
 }
 
 //▼먼저 커서를 활성화 시키고 이닛을 통해 연결
@@ -87,7 +88,6 @@ void Character::Update()
 
 
 
-
 	//▼상태에 따른 행동
 	switch (charStatus)
 	{
@@ -124,7 +124,7 @@ void Character::Update()
 		{
 			charStatus = CharStatus::IsClicked; //눌렸다면 상태를 클릭된 상태로 바꿈
 
-			for (auto& toThicken : blueTiles)
+			for (auto& toThicken : AvailableTiles)
 			{
 				toThicken->SetBlueAlpha(0.8f);
 			}
@@ -156,7 +156,6 @@ void Character::Update()
 		break;
 	}
 
-
 	SetPositionViaIndex(); //추후 변경 필요
 }
 
@@ -178,100 +177,117 @@ BOOL Character::CheckInCamera()
 //▼이동 범위 보이게 함
 void Character::ShowMoveRange()
 {
-	//▼현 캐릭터의 움직임을 계산함
-	moveRangeCalculator = AdditionalMove + classMove + baseMove;
+	//▼현 캐릭터의 행동 가능 범위를 표시함
+	INT ActionRange = (((UINT)occupation) % (UINT)Occupation::RangeSeparater) + 1;  //사거리 or 힐범위
+	INT MoveRange = AdditionalMove + classMove + baseMove;							//이동범위
+	RangeCalculator = ActionRange + MoveRange;										//행동+이동범위
 
-	//▼이동값에 음수가 들어오면 터뜨림
-	assert(moveRangeCalculator > -1);
+	//▼0이하의 수가 들어오면 터뜨림
+	assert(ActionRange > 0);
+	assert(MoveRange > 0);
+	assert(RangeCalculator > 0);
 
-	MakeItBlue(index, moveRangeCalculator);
+	//▼연산용 임시 큐 생성. 큐 대신 스택 쓰면 Bfs(너비우선 알고리즘)가 아닌 Dfs()로 구현가능
+	std::queue<Tiles *> BfsFloodFill;
 
-	//▼재귀를 통해 담긴 블루백터에 계산하고 남은 부산물 뒤처리
-	for (auto& blueTile : blueTiles)
+	//▼시작 타일을 하나 넣어줌
+	Tiles* initTile = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(index.y * TILECOLX + index.x)));
+	initTile->SetCheckedNum(RangeCalculator);//검사대상에 아까 계산해둔 최초 이동값 넣어둠
+	BfsFloodFill.push(initTile);			//시작 타일 하나 넣어주고 시작
+
+	while (!BfsFloodFill.empty())
 	{
+		//▼액션파트
+		auto toExamen = BfsFloodFill.front();   //큐의 첫째 요소 확인 후 담아둠
+		BfsFloodFill.pop();						//큐 첫째요소 터뜨림
+		AvailableTiles.insert(toExamen);		//사용 가능한 타일에 넣어둠
+
+		//▼위 검사
+		BOOL UpValidity = true;
+		UpValidity &= (0 <= toExamen->GetIndex().y - 1);
+		UpValidity &= toExamen->GetCheckedNum() > 0;
+		if (UpValidity)
+		{
+			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y - 1) * TILECOLX + toExamen->GetIndex().x)));
+			UpValidity &= !checkTarget->GetCheckedNum();
+			UpValidity &= checkTarget->GetObjT() == "";
+
+			if (UpValidity)
+			{
+				checkTarget->SetCheckedNum(toExamen->GetCheckedNum()-1);
+				BfsFloodFill.push(checkTarget);
+			}
+		}
+
+		//▼좌 검사
+		BOOL LeftValidity = true;
+		LeftValidity &= (0 <= toExamen->GetIndex().x - 1);
+		LeftValidity &= toExamen->GetCheckedNum() > 0;
+		if (LeftValidity)
+		{
+			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x - 1)));
+			LeftValidity &= !checkTarget->GetCheckedNum();
+			LeftValidity &= checkTarget->GetObjT() == "";
+
+			if (LeftValidity)
+			{
+				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+				BfsFloodFill.push(checkTarget);
+			}
+		}
+
+		//▼아래 검사
+		BOOL DownValidity = true;
+		DownValidity &= (toExamen->GetIndex().y + 1 < TILEROWY);
+		DownValidity &= toExamen->GetCheckedNum() > 0;
+		if (DownValidity)
+		{
+			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y + 1) * TILECOLX + toExamen->GetIndex().x)));
+			DownValidity &= !checkTarget->GetCheckedNum();
+			DownValidity &= checkTarget->GetObjT() == "";
+
+			if (DownValidity)
+			{
+				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+				BfsFloodFill.push(checkTarget);
+			}
+		}
+
+		//▼우 검사
+		BOOL RightValidity = true;
+		RightValidity &= (toExamen->GetIndex().x + 1 < TILECOLX);
+		RightValidity &= toExamen->GetCheckedNum() > 0;
+		if (RightValidity)
+		{
+			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x + 1)));
+			RightValidity &= !checkTarget->GetCheckedNum();
+			RightValidity &= checkTarget->GetObjT() == "";
+
+			if (RightValidity)
+			{
+				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+				BfsFloodFill.push(checkTarget);
+			}
+		}
+	}
+
+	//▼연산 통해 담긴 행동범위에 따라 액션
+	for (auto& blueTile : AvailableTiles)
+	{
+		if (blueTile->GetBlueAlpha() < 0.5f) blueTile->SetBlueAlpha(0.2f);
 		blueTile->IncreaseBlueNum();	//블루 참조 갯수 증가
-		blueTile->SetIsChecked(false);	
+		blueTile->SetCheckedNum(0);	
 	}
 }
 //▼이동 범위 안보이게 함
 void Character::DisableMoveRange()
 {
-	for (auto &blueTile : blueTiles)
+	for (auto &blueTile : AvailableTiles)
 	{
 		blueTile->DecreaseBlueNum();
 	}
 	isCalculated = false;
-	blueTiles.clear();
-}
-
-//▼타일 보이게 색칠하는 재귀함수
-void Character::MakeItBlue(POINT _pos, UINT _move)
-{
-	//▼들어온 첫 타일 처리
-	Tiles* startTile = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x)));
-	startTile->SetIsChecked(_move);										//체크에 숫자 대입
-	if (startTile->GetBlueAlpha() < 0.5f) startTile->SetBlueAlpha(0.2f);//진하게 처리된게 아니라면 알파 옅게 세팅
-	blueTiles.insert(startTile);										//처리된 타일 Set에 담아줌
-
-	//▼위 검사
-	BOOL UpValidity = true;
-	UpValidity &= (0 <= _pos.y-1);
-	UpValidity &= _move > 0;
-	if (UpValidity)
-	{ 
-		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y - 1) * TILECOLX + _pos.x))); 
-		UpValidity &= !checkTarget->GetIsChecked();
-		UpValidity &= checkTarget->GetObjT() == "";
-
-		if (UpValidity)
-		{MakeItBlue({ _pos.x,_pos.y - 1 }, _move - 1);}
-	}
-	
-	//▼좌 검사
-	BOOL LeftValidity = true;
-	LeftValidity &= (0 <= _pos.x-1);
-	LeftValidity &= _move > 0;
-	if (LeftValidity)
-	{
-		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y  * TILECOLX + _pos.x-1)));
-		LeftValidity &= !checkTarget->GetIsChecked();
-		LeftValidity &= checkTarget->GetObjT() == "";
-
-		if (LeftValidity)
-		{
-			MakeItBlue({ _pos.x - 1,_pos.y }, _move - 1);
-		}
-	}
-
-	//▼아래 검사
-	BOOL DownValidity = true;
-	DownValidity &= (_pos.y + 1 < TILEROWY);
-	DownValidity &= _move > 0;
-	if (DownValidity)
-	{
-		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((_pos.y + 1) * TILECOLX + _pos.x)));
-		DownValidity &= !checkTarget->GetIsChecked();
-		DownValidity &= checkTarget->GetObjT() == "";
-
-		if (DownValidity)
-		{
-			MakeItBlue({ _pos.x,_pos.y + 1 }, _move - 1);
-		}
-	}
-
-	//▼우 검사
-	BOOL RightValidity = true;
-	RightValidity &= (_pos.x + 1 < TILECOLX);
-	RightValidity &= _move > 0;
-	if (RightValidity)
-	{
-		Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(_pos.y * TILECOLX + _pos.x+1)));
-		RightValidity &= !checkTarget->GetIsChecked();
-		RightValidity &= checkTarget->GetObjT() == "";
-
-		if (RightValidity)
-			{MakeItBlue({ _pos.x + 1,_pos.y }, _move - 1);}
-	}
+	AvailableTiles.clear();
 }
 
 //▼프레임돌리는 부분
@@ -315,8 +331,8 @@ void Character::AdjustFrame()
 
 void Character::SetOccupation(Occupation _job)
 {
-	this->classes = _job;
-	switch (this->classes)
+	this->occupation = _job;
+	switch (this->occupation)
 	{
 	case Occupation::Infantary:
 		classHp = 25;
@@ -345,6 +361,16 @@ void Character::SetOccupation(Occupation _job)
 		classDefence = 2;
 		classLuck = 10;
 		classMove = 4;
+		break;
+	case Occupation::Archer:
+		classHp = 15;
+		classAttack = 8;
+		classDefence = 2;
+		classLuck = 10;
+		classMove = 4;
+		break;
+	default:
+		assert("Occupation does not exist");
 		break;
 	}
 }
