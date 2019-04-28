@@ -241,8 +241,8 @@ void Image::RelativeFrameRender(int x, int y, int frameX, int frameY, Pivot pivo
 void Image::SkewRenderRotate(int x, int y,float angleX, float angleY, Pivot pivot)
 {
 	//그릴 사이즈 = 사이즈 * 스케일
-	this->mSize.x = mSize.x * mScale * (cosf(angleY * 3.14 / 180));
-	this->mSize.y = mSize.y * mScale* (cosf(angleX * 3.14 / 180));
+	this->mSize.x = mSize.x * mScale * (cosf(angleY * 3.14f / 180.f));
+	this->mSize.y = mSize.y * mScale* (cosf(angleX * 3.14f / 180.f));
 
 	//렌더링 좌표
 	POINTFLOAT renderPos = GetPivotPosition(x, y, pivot);
@@ -345,7 +345,7 @@ const POINTFLOAT Image::GetPivotPosition( int x,  int  y, Pivot pivot)
 	if (pivot == Pivot::LeftTop)
 		return { (FLOAT)x, (FLOAT)y };
 
-	POINTFLOAT pos = { x, y };
+	POINTFLOAT pos = { (FLOAT)x, (FLOAT)y };
 
 	switch (pivot)
 	{

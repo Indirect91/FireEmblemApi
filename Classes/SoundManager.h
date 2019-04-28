@@ -61,7 +61,7 @@ public:
 	void setFadeIn();
 	void FadeIn();
 
-	SoundManager() : _system(NULL), _sound(NULL), _channel(NULL){}
+	SoundManager() : _system(NULL), _sound(NULL), _channel(NULL) { isFadingIn = false; isFadingOut = false; totalVolume = 0; prevVolume = 0; }
 	~SoundManager() {}
 };
 

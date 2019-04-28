@@ -11,6 +11,8 @@ testScene::testScene()
 	line = 1;
 	cherryVisible = false;
 	cherryLoc = WINSIZEX / 2+100;
+	ZeroMemory(&testAngle, sizeof(testAngle));
+	virion = { 0 };
 }
 
 
@@ -27,7 +29,6 @@ void testScene::Init()
 			testVec.push_back(RectMake(200 + j * 48, i * 48, 48, 48));
 			//testVec.push_back(RectMake(200 + j * (48 + j), i * (48 + i), 48 + j * 2, 48 + i * 2));
 		}
-		IMAGEMANAGER->AddFrameImage("cherry", L"IMAGE/ETC/cherry.png", 33, 0);
 	}
 	
 	SetCoverStatue::FadeIn;

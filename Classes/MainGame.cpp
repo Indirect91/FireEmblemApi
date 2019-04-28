@@ -4,7 +4,7 @@
 
 MainGame::MainGame()
 {
-	srand(GetTickCount64()); //랜덤초기화
+	srand(static_cast<UINT>(GetTickCount64())); //랜덤초기화
 }
 
 

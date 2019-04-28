@@ -17,7 +17,7 @@
 void D2DRenderer::RenderText( int  x,  int  y, std::wstring  text,  int  size,
 	 DefaultBrush defaultBrush,  DWRITE_TEXT_ALIGNMENT  align, std::wstring  font)
 {
-	POINTFLOAT pos = { x, y };
+	POINTFLOAT pos = { (float)x, (float)y };
 	IDWriteTextLayout* layout = nullptr;
 	HRESULT hr = this->mDWFactory->CreateTextLayout
 	(
@@ -60,7 +60,7 @@ void D2DRenderer::RenderText( int  x,  int  y, std::wstring  text,  int  size,
 void D2DRenderer::RenderText( int  x,  int  y, std::wstring  text,  COLORREF  color,
 	 float  alpha,  int  size,  DWRITE_TEXT_ALIGNMENT  align, std::wstring  font)
 {
-	POINTFLOAT pos = {x, y};
+	POINTFLOAT pos = { (float)x, (float)y};
 
 	IDWriteTextLayout* layout = nullptr;
 	//텍스트 레이아웃 생성
@@ -108,7 +108,7 @@ void D2DRenderer::RenderText( int  x,  int  y, std::wstring  text,  COLORREF  co
 void D2DRenderer::RenderTextField( int  x,  int  y, std::wstring  text,  int  size,
 	 int  width,  int  height,  DefaultBrush  defaultBrush,  DWRITE_TEXT_ALIGNMENT  align, std::wstring  font)
 {
-	POINTFLOAT pos = { x, y };
+	POINTFLOAT pos = { (float)x, (float)y };
 
 	IDWriteTextLayout* layout = nullptr;
 	mDWFactory->CreateTextLayout(

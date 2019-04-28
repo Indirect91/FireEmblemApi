@@ -6,6 +6,7 @@ class MapToolScene : public GameNode
 private:
 	struct moveDir //방향키 눌렸을때
 	{
+		moveDir() { pos = { 0 }; pressed = false; }
 		POINT pos;
 		BOOL pressed;
 	};
@@ -19,7 +20,6 @@ private:
 	//std::vector<class Tiles> vecField;    //
 	float moveAngle;
 	class Tiles *field;					//타일들 보유할 배열. 저장에 사용
-	RECT tempC;								//충돌에 사용할 임시 렉트 초기화
 	void moveCamera();
 	RECT reLocate(RECT _rc);
 	RECT palletes[9];
@@ -33,7 +33,7 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	MapToolScene() {};
+	MapToolScene();
 	~MapToolScene() {};
 };
 

@@ -9,7 +9,7 @@ Cursor::Cursor()
 	cursorFrame = 0;								//커서 프레임
 	cursorCounter = 0;								//커서 프레임올릴 카운터
 	cursorState = CursorState::cursorDeactivated;	//커서 비활성화 출고
-	cursorColour = CursorColour::PlayerTurn;		//일단은 플레이어 턴 색으로 출고
+	cursorTurn = CursorTurn::PlayerTurn;		//일단은 플레이어 턴 색으로 출고
 	cursorOccupied = "";							//커서 점유한 캐릭터명
 	prevLocation = index;							//커서 드래그시 시작지점
 }
@@ -142,15 +142,15 @@ BOOL Cursor::MoveRight()
 //▼랜더.
 void Cursor::Render()
 {	
-	switch (cursorColour)
+	switch (cursorTurn)
 	{
-	case Cursor::CursorColour::PlayerTurn:
+	case Cursor::CursorTurn::PlayerTurn:
 		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
 		break;
-	case Cursor::CursorColour::EnemyTurn:
+	case Cursor::CursorTurn::EnemyTurn:
 		IMAGEMANAGER->FindImage("CursorRed")->Render(_ptMouse.x, _ptMouse.y);
 		break;
-	case Cursor::CursorColour::UI:
+	case Cursor::CursorTurn::UI:
 		IMAGEMANAGER->FindImage("Cursor")->Render(_ptMouse.x, _ptMouse.y);
 		break;
 	}

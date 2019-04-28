@@ -9,11 +9,7 @@ TileManager::TileManager()
 	clippedIndex = { 0 };
 	clippedX = 0;
 	clippedY = 0;
-}
 
-//▼타일매니져 이닛을 해야 비로소 뉴할당이 일어난다.
-void TileManager::Init()
-{
 	field = new Tiles[TILECOLX * TILEROWY];
 
 	for (int j = 0; j < TILEROWY; j++)
@@ -31,6 +27,29 @@ void TileManager::Init()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
+
+}
+
+//▼타일매니져 이닛을 해야 비로소 뉴할당이 일어난다.
+void TileManager::Init()
+{
+	//field = new Tiles[TILECOLX * TILEROWY];
+	//
+	//for (int j = 0; j < TILEROWY; j++)
+	//{
+	//	for (int i = 0; i < TILECOLX; i++)
+	//	{
+	//		field[j * TILECOLX + i].Init(); //생성된 타일 초기화
+	//		//▼추후 불러오기로 대체
+	//		field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
+	//		field[j * TILECOLX + i].SetIndex({ i,j });
+	//		if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
+	//		{
+	//			field[j * TILECOLX + i].SetObjT("tmp");
+	//		}
+	//		DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
+	//	}
+	//}
 }
 
 //▼업데이트는 보통 클리핑을 실시함.
@@ -63,12 +82,30 @@ void TileManager::Render()
 		//2.터레인
 		//3.오브젝트
 		//4.화살표
+		if(toExamen->GetIsRed())
+		{
+			IMAGEMANAGER->FindImage("Red")->SetAlpha(toExamen->GetRedAlpha()); //빨간 알파값 가져와서
+			IMAGEMANAGER->FindImage("Red")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Red")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력 
+		}
 
-		if (toExamen->GetIsBlue()) //파란타일일경우
+		else if (toExamen->GetIsBlue()) //파란타일일경우
 		{
 			IMAGEMANAGER->FindImage("Blue")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
-			IMAGEMANAGER->FindImage("Blue")->SetSize({ 48,48 }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Blue")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
 			IMAGEMANAGER->FindImage("Blue")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		else if (toExamen->GetIsGreen()) //초록타일일경우
+		{
+			IMAGEMANAGER->FindImage("Green")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Green")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Green")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		else if (toExamen->GetIsPurple()) //퍼플타일일경우
+		{
+			IMAGEMANAGER->FindImage("Purple")->SetAlpha(toExamen->GetPurpleAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Purple")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Purple")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
 		}
 		//else if (toExamen->GetObjT() != "")
 		//{
@@ -76,7 +113,7 @@ void TileManager::Render()
 		//}
 		if (toExamen->GetArrowT() != "")
 		{
-			auto arrow = IMAGEMANAGER->FindImage("MoveArrow"); //파란 알파값 가져와서
+			auto arrow = IMAGEMANAGER->FindImage("MoveArrow");
 			arrow->SetSize({ TILESIZE,TILESIZE });
 			arrow->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetArrowFrame().x, toExamen->GetArrowFrame().y);
 		}
@@ -103,20 +140,20 @@ void TileManager::ClipTiles()
 
 			if (tempCam.right > TILECOLX * TILESIZE) //카메라의 우측이 모든 타일 가로갯수보다 클때. 즉 카메라가 우측끝일때
 			{
-				clippedX = ceil(static_cast<float>((TILECOLX * TILESIZE) - toCalculate.left) / static_cast<float>(TILESIZE));
+				clippedX = static_cast<UINT>(ceil(static_cast<float>((TILECOLX * TILESIZE) - toCalculate.left) / static_cast<float>(TILESIZE)));
 			}
 			else //우측 끝인 조건이 아닐땐
 			{
-				clippedX = ceil(static_cast<float>(tempCam.right - toCalculate.left) / static_cast<float>(TILESIZE));
+				clippedX = static_cast<UINT>(ceil(static_cast<float>(tempCam.right - toCalculate.left) / static_cast<float>(TILESIZE)));
 			}
 
 			if (tempCam.bottom > TILEROWY * TILESIZE) //카메라의 바텀이 총 타일 세로갯수보다 클떄, 즉 카메라가 맨 아래일때
 			{
-				clippedY = ceil(static_cast<float>((TILEROWY * TILESIZE) - toCalculate.top) / static_cast<float>(TILESIZE));
+				clippedY = static_cast<UINT>(ceil(static_cast<float>((TILEROWY * TILESIZE) - toCalculate.top) / static_cast<float>(TILESIZE)));
 			}
 			else //이 외 조건일때
 			{
-				clippedY = ceil(static_cast<float>(tempCam.bottom - toCalculate.top) / static_cast<float>(TILESIZE));
+				clippedY = static_cast<UINT>(ceil(static_cast<float>(tempCam.bottom - toCalculate.top) / static_cast<float>(TILESIZE)));
 			}
 			break;
 		}

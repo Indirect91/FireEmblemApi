@@ -1,6 +1,28 @@
 #include "../stdafx.h"
 #include "TitleScene.h"
 
+TitleScene::TitleScene()
+{
+	isMaptool=0;
+	isPlayPressed=0;
+	isDone=0;
+	ascending=0;
+	Tcounter=0;
+	falchionframeX=0;
+					
+	 pickAlpha=0;
+	 titleAlpha=0;
+	 moveWindowRateX=0;
+	 moveWindowRateY=0;
+	 moveWindowRateAccX=0;
+	 moveWindowRateAccY=0;
+	 resizeWindowRateX=0;
+	 resizeWindowRateY=0;
+	 resizeWindowRateAccX=0;
+	 resizeWindowRateAccY=0;
+}
+
+
 void TitleScene::Init()
 {
 	//▼윈도우 이동관련 변수 초기화
@@ -178,3 +200,4 @@ void TitleScene::Render()
 	IMAGEMANAGER->FindImage("타이틀텍스트")->Render(0,0);
 	IMAGEMANAGER->FindImage("타이틀선택박스")->Render(selectionBox.x, selectionBox.y);
 }
+

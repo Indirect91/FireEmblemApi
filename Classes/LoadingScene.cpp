@@ -45,9 +45,9 @@ void LoadingScene::Update()
 //▼퍼센테이지 화면에 그려줌. 
 void LoadingScene::Render()
 {
-	float num = _loading->GetLoadItem().size();
-	float cur = _loading->GetCurrentGauge();
-	per = cur / num * 100;
+	float num = static_cast<float>(_loading->GetLoadItem().size());
+	float cur = static_cast<float>(_loading->GetCurrentGauge());
+	per = cur / num * 100.f;
 
 	std::wstring str = std::to_wstring(per);
 	str += L" %";
@@ -69,6 +69,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("Yellow", L"IMAGE/ETC/YELLOW.png");
 	_loading->LoadImg("Green", L"IMAGE/ETC/GREEN.png");
 	_loading->LoadImg("Red", L"IMAGE/ETC/RED.png");
+	_loading->LoadImg("Purple", L"IMAGE/ETC/PURPLE.png");
 
 	//▼맵툴용 
 	_loading->LoadImg("MapToolBg1",		L"IMAGE/MapToolScene/MapToolBg1.png");
@@ -85,12 +86,13 @@ void LoadingScene::LoadingImage()
 	_loading->LoadFrameImage("타이틀팔시온",	L"IMAGE/TitleScene/TitleFalchion.png", 34, 1);
 
 	//▼캐릭터 프레임이미지
-	_loading->LoadFrameImage("캐릭터Chrome", L"IMAGE/Characters/Chrome.png", 12, 128);
-	_loading->LoadFrameImage("캐릭터Virion", L"IMAGE/Characters/Virion.png", 12, 144);
-	_loading->LoadFrameImage("캐릭터Anna", L"IMAGE/Characters/Anna.png", 12, 144);
-	_loading->LoadFrameImage("캐릭터Tharja", L"IMAGE/Characters/Tharja.png", 12, 128);
-	_loading->LoadFrameImage("캐릭터Olivia", L"IMAGE/Characters/Olivia.png", 12, 128);
-	_loading->LoadFrameImage("캐릭터Lissa", L"IMAGE/Characters/Lissa.png", 12, 128);
+	_loading->LoadFrameImage("캐릭터Chrome", L"IMAGE/Characters/Chrome.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Virion", L"IMAGE/Characters/Virion.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Anna", L"IMAGE/Characters/Anna.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Tharja", L"IMAGE/Characters/Tharja.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Olivia", L"IMAGE/Characters/Olivia.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Lissa", L"IMAGE/Characters/Lissa.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터Lucina", L"IMAGE/Characters/Lucina.png", 12, 293);
 	
 	//▼캐릭터 초상화
 	_loading->LoadImg("초상화Chrome", L"IMAGE/Portraits/Chrome.png");
@@ -99,6 +101,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("초상화Tharja", L"IMAGE/Portraits/Tharja.png");
 	_loading->LoadImg("초상화Olivia", L"IMAGE/Portraits/Olivia.png");
 	_loading->LoadImg("초상화Lissa", L"IMAGE/Portraits/Lissa.png");
+	_loading->LoadImg("초상화Lucina", L"IMAGE/Portraits/Lucina.png");
 
 	//▼타일용
 	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png", 4, 1);
@@ -106,6 +109,8 @@ void LoadingScene::LoadingImage()
 
 	//UI용
 	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
+	_loading->LoadImg("BattleUIBg", L"IMAGE/ETC/BattleUIBg.png");
+	_loading->LoadImg("BattleBg", L"IMAGE/ETC/BattleBg.png");
 
 }
 

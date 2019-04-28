@@ -9,12 +9,13 @@ Player::Player()
 {
 	playerGold = nullptr;
 	cursor = nullptr;
+	BOOL enemyRangeDetector = false;
+	enemyRangeCalculated = "";
 }
 
 //▼이닛시 데이터센터와의 연결점을 만든다
 void Player::Init()
 {
-	DATACENTRE.LoadFromFile();
 	//플레이어의 부대,아이템,골드는 데이터센터서 가져와 넣는다
 	playerGold = dynamic_cast<Gold*>(DATACENTRE.GetCertainObject(ObjType::Gold, "playerGold"));
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
@@ -48,6 +49,17 @@ void Player::Update()
 			}
 			dynamic_cast<Character*>(character.second)->Update();
 		}
+
+		//for (auto& enemyEncounter : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+		//{
+		//	dynamic_cast<Character*>(enemyEncounter.second)->Update();
+		//	if (dynamic_cast<Character*>(enemyEncounter.second)->GetStatus()==Character::CharStatus::IsCheckingOut)
+		//	{
+		//		cursor->SetCursorOccupied(enemyEncounter.first);
+		//		break;
+		//	}
+		//}
+
 	}
 	//▼토글키인 M이 눌려있는지 여부를 커서에게 알림
 	if (KEYMANAGER->IsToggleKey('M')) 
@@ -77,10 +89,56 @@ void Player::Update()
 		cursor->MoveDown();
 	}
 
+	if (KEYMANAGER->IsOnceKeyDown('D'))
+	{
+		if (!enemyRangeDetector)
+		{
+			for (auto& eachEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+			{
+				dynamic_cast<Character*>(eachEnemy.second)->ShowActionRange();
+			}
+			enemyRangeDetector = true;
+		}
+		else
+		{
+			enemyRangeDetector = false;
+			for (auto& eachEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+			{
+				dynamic_cast<Character*>(eachEnemy.second)->DisableActionRange();
+			}
+		}
+
+	}
+
+	enemyRangeCalculated = "";
+	for (auto& enemyEncounter : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+	{
+		if (PointCompare(cursor->GetIndex(), enemyEncounter.second->GetIndex()))
+		{
+			if (enemyRangeCalculated == "")
+			{
+				enemyRangeCalculated = enemyEncounter.first;
+				enemyRangeCalculatedPrev = enemyRangeCalculated;
+				break;
+			}
+		}
+	}
+	
+	if (enemyRangeCalculated != "")
+	{
+		if (cursor->GetCursorOccupied() == "")
+		{
+			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::EnemyArmy, enemyRangeCalculated))->Update();
+		}
+	}
+	else if (enemyRangeCalculated=="" && enemyRangeCalculatedPrev!="")
+	{
+		dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::EnemyArmy, enemyRangeCalculatedPrev))->DisableMoveRange();
+		enemyRangeCalculatedPrev = "";
+	}
 
 
 	CAMERA.Follow(cursor->GetPosition());
-	
 }
 
 void Player::Render()

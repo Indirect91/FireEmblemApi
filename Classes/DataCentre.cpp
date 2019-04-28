@@ -70,6 +70,7 @@ void DataCentre::Render()
 	}
 }
 
+//▼특정 오브젝트 컨테이너 클리어
 void DataCentre::ClearObjects(ObjType _toClear)
 {
 	objContainer[_toClear].clear();
@@ -97,9 +98,10 @@ void DataCentre::RemoveObj(ObjType _type, std::string _name, GameObject* _obj)
 	}
 }
 
+//▼특정 오브젝트 가져오기
 GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 {
-	assert(objContainer[_type].count(_name) > 0); //삭제하고자 하는 대상이 존재해야만 하니,안전검사 일단 실행
+	assert(objContainer[_type].count(_name) > 0 || "searched object not found"); 
 	return objContainer[_type][_name]; //타입,이름이 일치하는 오브젝트 반환
 }
 
@@ -116,17 +118,11 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
-	std::string stringImgTest; //임시 스트링
-	stringImgTest = "Chrome"; //거기에 크롬 대입
-	GameObject* addTest = new Character; //임시 객체 생성
-	dynamic_cast<Character*> (addTest)->SetInitialChar(Occupation::Infantary, { 4,70 }, stringImgTest, { 3,4 });
-	AddObj(ObjType::PlayerArmy, stringImgTest , addTest); //방금 만들어진 정보를 추가함
+	AddObj(ObjType::PlayerArmy, "Chrome", new Character(Occupation::Swordsman, "Chrome", { 3,4 }, Character::OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Anna", new Character(Occupation::Swordsman, "Anna", { 6,6 }, Character::OwnedBy::Player));
 
-	std::string stringImgTest2; //임시 스트링
-	stringImgTest2 = "Anna"; //거기에 안나 대입
-	GameObject* addTest2 = new Character; //임시 객체 생성
-	dynamic_cast<Character*> (addTest2)->SetInitialChar(Occupation::Infantary, { 0,0 }, stringImgTest2, { 6,6 });
-	AddObj(ObjType::PlayerArmy, stringImgTest2, addTest2); //방금 만들어진 정보를 추가함
+	AddObj(ObjType::EnemyArmy, "Olivia", new Character(Occupation::Assassin, "Olivia", { 8,8 }, Character::OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Lucina", new Character(Occupation::Sniper, "Lucina", { 5,2 }, Character::OwnedBy::Enemy));
 
 	return S_OK;
 }

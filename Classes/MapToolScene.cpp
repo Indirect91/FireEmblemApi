@@ -2,6 +2,17 @@
 #include "MapToolScene.h"
 #include "Tiles.h"
 
+MapToolScene::MapToolScene()
+{
+	moveWindowRateX = 0;	  
+	moveWindowRateAccX = 0;
+	isMovingDone = 0;
+	paperScrollX = 0;
+
+	moveAngle = 0;
+	field =0;
+	memset(&palletes,0, sizeof(palletes));
+}
 
 
 void MapToolScene::Init()
@@ -12,7 +23,7 @@ void MapToolScene::Init()
 	moveWindowRateX = 789.5;	//윈도우 이동시킬 초기값
 	moveWindowRateAccX = 3; //윈도우 이동시킬 수치 가속                 
 	isMovingDone = false;
-	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
+	paperScrollX = static_cast<UINT>(moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth());
 	moveAngle = 0;
 
 	//▼음악 초기화. 맵툴은 타이틀서부터밖에 못넘어온다
@@ -93,7 +104,7 @@ void MapToolScene::moveWindowFrame()
 	SetWindowPos(_hWnd, 0, 150, 130, moveWindowRateX, 900, SWP_NOZORDER| SWP_NOMOVE);
 	//▼랜더타겟변경으로 변경된 해상도에 맞게 세팅
 	D2DRENDERER->GetRenderTarget()->Resize({ static_cast<UINT32>(moveWindowRateX),900 });
-	paperScrollX = moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth();
+	paperScrollX = static_cast<UINT>(moveWindowRateX - IMAGEMANAGER->FindImage("MapToolBg2")->GetWidth());
 }
 
 void MapToolScene::moveCamera()

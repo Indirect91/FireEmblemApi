@@ -9,11 +9,22 @@ constexpr auto TILECOLX = 32; //타일 X 갯수, constexpr 자동추론 테스트
 class Tiles : public GameObject
 {
 public:
+
+	//▼타일 상태
 	enum class TileStatus : UINT
 	{
 		none,				//아무 상태도 아님
 		enemyOccupied,		//적이 점거중 표시
 		playerOccupied		//아군이 점거중 표시
+	};
+
+	//▼
+	struct colourTiles
+	{
+		colourTiles() { Num = 0; Alpha = 0; Clicked = false; }
+		INT Num;
+		FLOAT Alpha;
+		BOOL Clicked;
 	};
 
 private:
@@ -33,9 +44,12 @@ private:
 	POINT arrowtFrame;	//화살표 프레임랜더용
 	
 	INT checkedNum;			//타일이 검사되었는지 여부
-	INT blueNum;			//타일의 범위 중복 판단시 사용
-	FLOAT blueAlpha;		//진한 연한 파란 여부
-	BOOL blueClicked;		//클릭 눌렸는지 여부
+
+	colourTiles purpleTile;
+	colourTiles greenTile;
+	colourTiles blueTile;
+	colourTiles redTile;
+
 
 public:
 	//▼오버라이드된 함수들
@@ -63,9 +77,24 @@ public:
 	const std::string& GetArrowT() const { return arrowT; }
 	const POINT& GetArrowFrame() const { return arrowtFrame; }
 
+	//▼통합 길찾기/범위표시용
 	const INT & GetCheckedNum() const { return checkedNum; }		// 지형 검색용 타일 체크여부
-	const BOOL & GetIsBlue() const { return blueNum; }			//파란타일인지 참거짓
-	const FLOAT & GetBlueAlpha() const { return blueAlpha; }	//파란 알파값 설정
+
+	//▼파란타일용
+	const BOOL & GetIsBlue() const { return blueTile.Num; }			//파란타일인지 참거짓
+	const FLOAT & GetBlueAlpha() const { return blueTile.Alpha; }	//파란 알파값 설정
+
+	//▼빨간타일용
+	const BOOL& GetIsRed() const { return (redTile.Num); }			//빨간타일인지 참거짓
+	const FLOAT& GetRedAlpha() const { return redTile.Alpha; }			//파란 알파값 설정
+
+	//▼초록타일용
+	const BOOL& GetIsGreen() const { return (greenTile.Num); }			//빨간타일인지 참거짓
+	const FLOAT& GetGreenAlpha() const { return greenTile.Alpha; }			//파란 알파값 설정
+
+	//▼보라타일용
+	const BOOL& GetIsPurple() const { return (purpleTile.Num); }			//빨간타일인지 참거짓
+	const FLOAT& GetPurpleAlpha() const { return purpleTile.Alpha; }			//파란 알파값 설정
 
 	//▼ 누가 타일을 점령중인지 파악함
 	void SetStatus(TileStatus _status) { this->status = _status; }
@@ -87,11 +116,26 @@ public:
 	void SetArrowtFrame(const POINT _objFrame) { this->objTFrame = _objFrame; }
 
 	void SetCheckedNum(const INT _checked) { this->checkedNum = _checked;} //체크 여부 변경
-	void IncreaseBlueNum();		//블루 참조갯수 증가
-	void SetBlueNum(INT _blue); //블루 참조갯수 강제설정
-	void DecreaseBlueNum(); //블루 참조갯수 감소
 
-	void SetBlueAlpha(const FLOAT _blueAlpha) { blueAlpha = _blueAlpha; } //블루알파값 세팅
+	void IncreaseBlueNum();			//블루 참조갯수 증가
+	void IncreaseRedNum();			//레드 참조갯수 증가
+	void IncreaseGreenNum();		//그린 참조갯수 증가
+	void IncreasePurpleNum();		//퍼플 참조갯수 증가
+
+	void SetBlueNum(INT _blue);		//블루 참조갯수 강제설정
+	void SetGreenNum(INT _green);	//그린 참조갯수 강제설정
+	void SetRedNum(INT _red);		//레드 참조갯수 강제설정
+	void SetPurpleNum(INT _Purple);	//퍼플 참조갯수 강제설정
+
+	void DecreaseBlueNum();			//블루 참조갯수 감소
+	void DecreaseRedNum();			//레드 참조갯수 감소
+	void DecreaseGreenNum();		//그린 참조갯수 감소
+	void DecreasePurpleNum();		//퍼플 참조갯수 감소
+
+	void SetBlueAlpha(const FLOAT _blueAlpha) { blueTile.Alpha = _blueAlpha; }		//블루알파값 세팅
+	void SetGreenAlpha(const FLOAT _green) { greenTile.Alpha = _green; }			//초록알파값 세팅
+	void SetRedAlpha(const FLOAT _red) { redTile.Alpha = _red; }					//빨강알파값 세팅
+	void SetPurpleAlpha(const FLOAT _purple) {purpleTile.Alpha = _purple; }			//보라알파값 세팅
 
 	Tiles();
 	~Tiles() {};

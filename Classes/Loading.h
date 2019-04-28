@@ -31,6 +31,7 @@ struct tagSoundResource
 //▼씬이 가지는 구조체
 struct tagSceneResource
 {
+	tagSceneResource() { sceneName = ""; scene = nullptr; }
 	std::string sceneName;
 	GameNode* scene;
 };
@@ -60,11 +61,11 @@ public:
 	//로딩아이템 종류 가져오기
 	LOAD_KIND GetLoadingKind() { return _kind; }
 	//이미지 리소스 가져오기
-	tagImageResource GetImageResource() { return _imageResource; }
-	tagSoundResource GetSoundResource() { return _soundResource; }
-	tagSceneResource GetSceneResource() { return _sceneResource; }
+	const tagImageResource &GetImageResource() const{ return _imageResource; }
+	const tagSoundResource &GetSoundResource() const{ return _soundResource; }
+	const tagSceneResource &GetSceneResource() const{ return _sceneResource; }
 
-	LoadItem() {}
+	LoadItem() { _kind = LOAD_KIND::LOAD_KIND_IMAGE; }
 	~LoadItem() {}
 };
 
@@ -104,7 +105,7 @@ public:
 	const arrLoadItem &GetLoadItem() { return _vLoadItem; }
 	int GetCurrentGauge() { return _currentGauge; }
 
-	Loading() {}
+	Loading() { _currentGauge = 0; }
 	~Loading() {}
 };
 

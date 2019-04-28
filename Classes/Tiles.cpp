@@ -15,33 +15,91 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	movingT = "";
 	movingtFrame = { 0 };
 
+	arrowT = "";
+	arrowtFrame = { 0 };
+
 	checkedNum = 0;
-	blueNum = 0;
-	blueAlpha = 0;
-	blueClicked = false;
+
+	ZeroMemory(&purpleTile, sizeof(purpleTile));
+	ZeroMemory(&greenTile, sizeof(greenTile));
+	ZeroMemory(&blueTile, sizeof(blueTile));
+	ZeroMemory(&redTile, sizeof(redTile));
+	
+	//blueClicked = false;
+
+	
 }
 
+//▼빨강 파랑 초록 갯수 증가
 void Tiles::IncreaseBlueNum()
 {
-	assert(blueNum < 2);
-	blueNum++;
+	blueTile.Num++;
+}
+void Tiles::IncreaseRedNum()
+{
+	redTile.Num++;
+}
+void Tiles::IncreaseGreenNum()
+{
+	greenTile.Num++;
 }
 
+void Tiles::IncreasePurpleNum()
+{
+	purpleTile.Num++;
+}
+
+//▼빨강파랑초록 숫자 강제설정
 void Tiles::SetBlueNum(INT _blue)
 {
 	assert(_blue >= 0);
-	blueNum = _blue;
+	blueTile.Num = _blue;
+}
+void Tiles::SetGreenNum(INT _green)
+{
+	assert(_green >= 0);
+	greenTile.Num = _green;
+}
+void Tiles::SetRedNum(INT _red)
+{
+	assert(_red >= 0);
+	redTile.Num = _red;
 }
 
+void Tiles::SetPurpleNum(INT _Purple)
+{
+	assert(_Purple >= 0);
+	purpleTile.Num = _Purple;
+}
+
+//▼빨강 파랑 초록 참조 갯수 감소
 void Tiles::DecreaseBlueNum()
 {
-	blueNum--;
-	assert(blueNum >= 0);
-	if (blueNum == 0) blueAlpha = 0;
+	blueTile.Num--;
+	assert(blueTile.Num >= 0 || "BlueTile negative"); //음수만 아니면 됨
+	if (blueTile.Num == 0) blueTile.Alpha = 0;
+}
+void Tiles::DecreaseRedNum()
+{
+	redTile.Num--;
+	assert(redTile.Num >= 0|| "RedTile negative"); //음수만 아니면 됨
+	if (redTile.Num == 0) redTile.Alpha = 0;
+}
+void Tiles::DecreaseGreenNum()
+{
+	greenTile.Num--;
+	assert(greenTile.Num >= 0 || "GreenTile negative"); //음수만 아니면 됨
+	if (greenTile.Num == 0) greenTile.Alpha = 0;
 }
 
+void Tiles::DecreasePurpleNum()
+{
+	purpleTile.Num--;
+	assert(purpleTile.Num >= 0 || "PurpleTile negative"); //음수만 아니면 됨
+	if (purpleTile.Num == 0) purpleTile.Alpha = 0;
+}
 
-
+//▼타일 이닛될떄
 void Tiles::Init()
 {
 	status = TileStatus::none;
@@ -57,9 +115,7 @@ void Tiles::Init()
 	movingtFrame = { 0 };
 
 	checkedNum = 0;
-	blueNum = 0;
-	blueAlpha = 0;
-	blueClicked = false;
+
 }
 
 void Tiles::Release()

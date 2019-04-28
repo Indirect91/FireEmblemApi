@@ -4,6 +4,7 @@ class TitleScene : public GameNode
 {
 	struct selectionTool
 	{
+		selectionTool() { x = 0; y = 0; }
 		UINT x;		//¹Ú½º ÁÂÇ¥
 		UINT y;		//¹Ú½º ÁÂÇ¥
 	};
@@ -36,7 +37,7 @@ public:
 	void Update();
 	void Render();
 
-	TitleScene() {};
+	TitleScene();
 	~TitleScene() {};
 };
 
