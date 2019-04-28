@@ -105,6 +105,12 @@ GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 	return objContainer[_type][_name]; //타입,이름이 일치하는 오브젝트 반환
 }
 
+BOOL DataCentre::CheckObjectExistance(ObjType _type, std::string _name)
+{
+	//해당 컨테이너 뒤져서 이름이 있는가 세본다. 있으면 참 반환, 없으면 거짓
+	return objContainer[_type].count(_name) > 0;
+}
+
 std::map<std::string, GameObject*>& DataCentre::RefObjects(ObjType _type)
 {
 	return objContainer[_type]; //타입이 일치하는 맵 반환
@@ -118,11 +124,11 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
-	AddObj(ObjType::PlayerArmy, "Chrome", new Character(Occupation::Swordsman, "Chrome", { 3,4 }, Character::OwnedBy::Player));
-	AddObj(ObjType::PlayerArmy, "Anna", new Character(Occupation::Swordsman, "Anna", { 6,6 }, Character::OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Chrome", new Character(Occupation::Swordsman, "Chrome", { 5,2 }, Character::OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Anna", new Character(Occupation::Swordsman, "Anna", { 3,4 }, Character::OwnedBy::Player));
 
-	AddObj(ObjType::EnemyArmy, "Olivia", new Character(Occupation::Assassin, "Olivia", { 8,8 }, Character::OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Lucina", new Character(Occupation::Sniper, "Lucina", { 5,2 }, Character::OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Olivia", new Character(Occupation::Assassin, "Olivia", { 6,6 }, Character::OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Lucina", new Character(Occupation::Sniper, "Lucina", { 8,8 }, Character::OwnedBy::Enemy));
 
 	return S_OK;
 }

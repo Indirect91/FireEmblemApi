@@ -215,8 +215,14 @@ inline int RandomRangeInt(int fromNum, int toNum)
 }
 
 //▼ 랜덤값 실수형
-float RandomRangeFloat(float fromNum, float toNum)
+inline float RandomRangeFloat(float fromNum, float toNum)
 {
 	float rnd = (float)rand() / (float)RAND_MAX;
 	return (rnd * (toNum - fromNum) + fromNum);
+}
+
+//▼ 2차원배열 인덱스 1차원배열 인덱스로 바꿔줌
+inline std::string TwoDimentionArrayToOneString(POINT _twoDimention, int _tileROWY)
+{
+	return std::to_string(_twoDimention.y * _tileROWY + _twoDimention.x);
 }

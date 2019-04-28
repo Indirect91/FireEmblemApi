@@ -75,7 +75,6 @@ public:
 		Ally = 8,
 	};
 
-
 private:
 
 	//▼통상
@@ -106,18 +105,20 @@ private:
 	std::set<class Tiles*> purpleTiles;		//적 행동범위
 	std::set<class Tiles*> greenTiles;		//힐범위 표시된 타일들 모아둠
 	std::set<class Tiles*> blueTiles;		//이동범위 표시된 타일들 모아둠
+	std::set<class Tiles*> allyTiles;		//아군 저장 컨테이너
+	std::set<class Tiles*> foeTiles;		//상대방 저장 컨테이너
 	std::set<class Tiles*> redTiles;		//공격범위 표시된 타일들 모아둠
 
-
-	std::vector<class Tiles*> toMove;		//이동 화살표 표시용
-	INT RangeCalculator;					//이동범위 계산용
-	UINT dragValidity;						//이동 가능한지
-	BOOL isMoveCalculated;						//이동범위 계산 한번 했는지 체크용
+	//▼거리계산관련
 	BOOL isRangeCalculated;						//이동범위 계산 한번 했는지 체크용
+	BOOL isMoveCalculated;						//이동범위 계산 한번 했는지 체크용
+	INT RangeCalculator;					//이동범위 계산용
 
 	//▼드래깅 관련
-	POINT draggingIndex;					//드래깅 위치
 	DraggingDirection draggindDirection;	//드래깅 방향
+	std::set<class Tiles*> toMove;		//이동 화살표 표시용
+	POINT draggingIndex;					//드래깅 위치
+	UINT dragValidity;						//이동 가능한지
 
 private:
 	BOOL CheckInCamera();										//카메라 속에 캐릭이 있는지 체크

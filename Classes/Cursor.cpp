@@ -77,7 +77,17 @@ void Cursor::CursorFrameManage()
 //▼이동이 가능했다면 이동하고 성공시 True를 반환
 BOOL Cursor::MoveUp()
 {
-	if (index.y == 0)
+	if (cursorOccupied != "")
+	{
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILEROWY))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILEROWY)))
+		{
+			index.y -= 1;
+			SetPositionViaIndex();
+			return true;
+		}
+	}
+	else if (index.y == 0)
 	{
 		return false;
 	}
@@ -92,7 +102,17 @@ BOOL Cursor::MoveUp()
 //▼이동이 가능했다면 이동하고 성공시 True를 반환
 BOOL Cursor::MoveDown()
 {
-	if (index.y == TILEROWY)
+	if (cursorOccupied != "")
+	{
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILEROWY))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILEROWY)))
+		{
+			index.y += 1;
+			SetPositionViaIndex();
+			return true;
+		}
+	}
+	else if (index.y == TILEROWY)
 	{
 		return false;
 	}
@@ -107,7 +127,17 @@ BOOL Cursor::MoveDown()
 //▼이동이 가능했다면 이동하고 성공시 True를 반환
 BOOL Cursor::MoveLeft()
 {
-	if (index.x == 0)
+	if (cursorOccupied != "")
+	{
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILEROWY))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILEROWY)))
+		{
+			index.x -= 1;
+			SetPositionViaIndex();
+			return true;
+		}
+	}
+	else if (index.x == 0)
 	{
 		return false;
 	}
@@ -124,10 +154,15 @@ BOOL Cursor::MoveRight()
 {
 	if (cursorOccupied != "")
 	{
-
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILEROWY))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILEROWY)))
+		{
+			index.x += 1;
+			SetPositionViaIndex();
+			return true;
+		}
 	}
-
-	if (index.x == TILECOLX)
+	else if (index.x == TILECOLX)
 	{
 		return false;
 	}

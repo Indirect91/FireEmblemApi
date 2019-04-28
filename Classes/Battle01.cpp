@@ -29,8 +29,8 @@ void Battle01::Init()
 	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
 	DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
 
-
-
+	SOUNDMANAGER->pause("타이틀BGM");
+	SOUNDMANAGER->play("인게임BGM");
 
 
 	//▼맵에 맞게 카메라를 세팅함
@@ -60,7 +60,7 @@ void Battle01::Init()
 
 	CAMERA.Init();
 
-	player->SetTurnStart(); //수정필요
+	player->SetTurnStart(); //TODO:수정
 }
 
 	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거

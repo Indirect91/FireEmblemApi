@@ -6,14 +6,14 @@ enum class ObjType : UINT
 	UI,
 	Tile,
 	Gold,
-	RedTiles,
+	FoeTiles,
 	BlueTiles,
 	EnemyArmy,
+	AllyTiles,
 	PlayerArmy,
-	GreenTiles,
 	PlayerItem,
 	ClippedTile,
-	CurrentEnemyArmy,
+	//CurrentEnemyArmy,
 	CurrentPlayerArmy,
 	ObjSize //이건 항시 마지막에 두자
 };
@@ -48,6 +48,7 @@ public:
 	void AddObj(ObjType _type, std::string _name, class GameObject* _obj); //지정해준 컨테이너에 이름주고 등록
 	void RemoveObj(ObjType _type, std::string _name, GameObject* _obj); //지정된 컨테이너 속, 이름의 대상을 지움
 	GameObject* GetCertainObject(ObjType _type, std::string _name); //지정된 컨테이너에 이름주고 반환받음
+	BOOL CheckObjectExistance(ObjType _type, std::string _name); //지정된 컨테이너에 존재하는지 체크
 	std::map<std::string, GameObject*> & RefObjects(ObjType _type); //지정된 컨테이너 전부를 반환받음
 
 	//▼세이브로드관련

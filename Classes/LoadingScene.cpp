@@ -121,6 +121,8 @@ void LoadingScene::LoadingSound()
 	_loading->LoadSound("맵툴BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
 	//▼타이틀용
 	_loading->LoadSound("타이틀BGM", "SOUND/FE/TitleBgm.mp3", true, true);
+	//▼인게임용
+	_loading->LoadSound("인게임BGM", "SOUND/FE/InGame_March to Deliverance.mp3", true, true); 
 }
 
 //▼로딩방법

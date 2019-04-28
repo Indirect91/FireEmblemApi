@@ -146,6 +146,11 @@ void Character::Update()
 		{
 			charStatus = CharStatus::IsCursorOn;
 			DisableMoveRange();
+
+			DATACENTRE.ClearObjects(ObjType::BlueTiles);
+			DATACENTRE.ClearObjects(ObjType::FoeTiles);
+			DATACENTRE.ClearObjects(ObjType::AllyTiles);
+
 			cursor->SetCursorOccupied("");
 		}
 		//TODO: 화살표
@@ -172,10 +177,6 @@ void Character::Update()
 		{
 			charStatus = CharStatus::IsClicked; //눌렸다면 상태를 클릭된 상태로 바꿈
 
-			for (auto& toThickenBlue : blueTiles)
-			{
-				toThickenBlue->SetBlueAlpha(0.8f);
-			}
 			for (auto& toThickenRed : redTiles)
 			{
 				toThickenRed->SetRedAlpha(0.8f);
@@ -184,7 +185,19 @@ void Character::Update()
 			{
 				toThickenGreen->SetGreenAlpha(0.8f);
 			}
-
+			for (auto& toThickenBlue : blueTiles)
+			{
+				toThickenBlue->SetBlueAlpha(0.8f);
+				DATACENTRE.AddObj(ObjType::BlueTiles, TwoDimentionArrayToOneString(toThickenBlue->GetIndex(), TILEROWY), toThickenBlue);
+			}
+			for (auto& Ally : allyTiles)
+			{
+				DATACENTRE.AddObj(ObjType::AllyTiles, TwoDimentionArrayToOneString(Ally->GetIndex(), TILEROWY), Ally);
+			}
+			for (auto& Enemy :foeTiles)
+			{
+				DATACENTRE.AddObj(ObjType::FoeTiles, TwoDimentionArrayToOneString(Enemy->GetIndex(), TILEROWY), Enemy);
+			}
 		}
 		break;
 
@@ -203,9 +216,24 @@ void Character::Update()
 			cursor->SetCursorOccupied("");
 			cursor->SetIndex({ index.x,index.y });
 			cursor->SetPositionViaIndex();
+
+			DATACENTRE.ClearObjects(ObjType::BlueTiles);
+			DATACENTRE.ClearObjects(ObjType::FoeTiles);
+			DATACENTRE.ClearObjects(ObjType::AllyTiles);
 		}
 
 		draggingIndex = cursor->GetIndex();
+
+		//while node 도착
+
+
+
+
+
+
+
+
+
 
 		break;
 	case CharStatus::Disable:
@@ -291,19 +319,47 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			UpValidity &= checkTarget->GetObjT() == "";
 			if (UpValidity)
 			{
-				for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+				if (whosChar == OwnedBy::Player)
 				{
-					if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
 					{
-						redTiles.insert(checkTarget);
-						UpValidity &= false;
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							UpValidity &= false;
+						}
 					}
-					else
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 					{
-						UpValidity &= true;
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
+					}
+
+				}
+				else if (whosChar == OwnedBy::Enemy)
+				{
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							UpValidity &= false;
+						}
+					}
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
 					}
 				}
 			}
+
 			if (UpValidity)
 			{
 				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -322,16 +378,43 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			LeftValidity &= checkTarget->GetObjT() == "";
 			if (LeftValidity)
 			{
-				for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+				if (whosChar == OwnedBy::Player)
 				{
-					if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
 					{
-						redTiles.insert(checkTarget);
-						LeftValidity &= false;
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							LeftValidity &= false;
+						}
 					}
-					else
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 					{
-						LeftValidity &= true;
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
+					}
+
+				}
+				else if (whosChar == OwnedBy::Enemy)
+				{
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							LeftValidity &= false;
+						}
+					}
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
 					}
 				}
 			}
@@ -354,16 +437,43 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			DownValidity &= checkTarget->GetObjT() == "";
 			if (DownValidity)
 			{
-				for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+				if (whosChar == OwnedBy::Player)
 				{
-					if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
 					{
-						redTiles.insert(checkTarget);
-						DownValidity &= false;
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							DownValidity &= false;
+						}
 					}
-					else
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 					{
-						DownValidity &= true;
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
+					}
+
+				}
+				else if (whosChar == OwnedBy::Enemy)
+				{
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							DownValidity &= false;
+						}
+					}
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
 					}
 				}
 			}
@@ -386,16 +496,43 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			RightValidity &= checkTarget->GetObjT() == "";
 			if (RightValidity)
 			{
-				for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+				if (whosChar == OwnedBy::Player)
 				{
-					if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
 					{
-						redTiles.insert(checkTarget);
-						RightValidity &= false;
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							RightValidity &= false;
+						}
 					}
-					else
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 					{
-						RightValidity &= true;
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
+					}
+
+				}
+				else if (whosChar == OwnedBy::Enemy)
+				{
+					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+						{
+							redTiles.insert(checkTarget);
+							foeTiles.insert(checkTarget);
+							RightValidity &= false;
+						}
+					}
+					for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+					{
+						if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+						{
+							allyTiles.insert(checkTarget);
+						}
 					}
 				}
 			}
@@ -447,7 +584,6 @@ void Character::DisableActionRange()
 			purpleTile->DecreasePurpleNum();
 		}
 
-		//isCalculated = false;
 		isRangeCalculated = false;
 	}
 	purpleTiles.clear();
@@ -549,6 +685,14 @@ void Character::PurpleShow(INT _actionRange)
 		purpleTile->SetCheckedNum(0);
 		purpleTiles.insert(purpleTile);
 	}
+
+	for (auto& purpleEnemyTile : foeTiles)
+	{
+		if (purpleEnemyTile->GetPurpleAlpha() < 0.5f) purpleEnemyTile->SetPurpleAlpha(0.4f);
+		purpleEnemyTile->IncreasePurpleNum();	//레드 참조 갯수 증가
+		purpleEnemyTile->SetCheckedNum(0);
+		purpleTiles.insert(purpleEnemyTile);
+	}
 }
 
 
@@ -564,7 +708,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 5;
 		occupationData.Defence = 5;
 		occupationData.Luck = 90;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	case Occupation::Knight:
 		occupationData.Range = 1;
@@ -572,7 +716,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 5;
 		occupationData.Defence = 5;
 		occupationData.Luck = 90;
-		occupationData.Move = 6;
+		occupationData.Move = 7;
 		break;
 	case Occupation::Mage:
 		occupationData.Range = 2;
@@ -580,7 +724,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 80;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	case Occupation::Assassin:
 		occupationData.Range = 1;
@@ -588,7 +732,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 95;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	case Occupation::Archer:
 		occupationData.Range = 2;
@@ -596,7 +740,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 70;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	case Occupation::Cleric:
 		occupationData.Range = 1;
@@ -604,7 +748,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 2;
 		occupationData.Defence = 1;
 		occupationData.Luck = 100;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	case Occupation::Sniper:
 		occupationData.Range = 3;
@@ -612,7 +756,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 70;
-		occupationData.Move = 4;
+		occupationData.Move = 5;
 		break;
 	default:
 		assert(false && "Occupation does not exist"); //존재하지 않는 직업 들어오면 터뜨림
