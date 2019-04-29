@@ -17,7 +17,7 @@ Character::Character()
 	portraitAlpha = 0.f;
 	frameImg = nullptr;
 	item = nullptr;
-
+	draggingStarted = nullptr;
 	isActionTaken = false;
 	frame = { 0 };
 	frameLoop = 0;
@@ -27,7 +27,7 @@ Character::Character()
 	occupationData = { 0 };
 	ZeroMemory(&additionalData, sizeof(additionalData));
 	memset(&baseData, 0, sizeof(baseData));
-
+	draggingIndexPrev = {0};
 	RangeCalculator = 0;
 	isMoveCalculated = false;
 	isRangeCalculated = false;
@@ -153,18 +153,17 @@ void Character::Update()
 
 			cursor->SetCursorOccupied("");
 		}
-		//TODO: 화살표
 		draggingIndex = cursor->GetIndex();
 		if (!PointCompare(index, cursor->GetIndex()))
 		{
 			charStatus = CharStatus::IsDragging;
+
 			draggingIndex = cursor->GetIndex();
+			draggingIndexPrev = draggingIndex;
 		}
-
-
 		break;
 
-		//▼커서가 올라와있는 상태라면.
+	//▼커서가 올라와있는 상태라면.
 	case CharStatus::IsCursorOn:
 		if (!isMoveCalculated) //한번도 범위를 계산한적 없다면
 		{
@@ -194,20 +193,21 @@ void Character::Update()
 			{
 				DATACENTRE.AddObj(ObjType::AllyTiles, TwoDimentionArrayToOneString(Ally->GetIndex(), TILEROWY), Ally);
 			}
-			for (auto& Enemy :foeTiles)
+			for (auto& Enemy : foeTiles)
 			{
 				DATACENTRE.AddObj(ObjType::FoeTiles, TwoDimentionArrayToOneString(Enemy->GetIndex(), TILEROWY), Enemy);
 			}
 		}
 		break;
 
-		//▼ 아이들 상태일때
+	//▼ 아이들 상태일때
 	case CharStatus::Idle:
 		DisableMoveRange();
 		break;
 
-		//▼ 드래깅 상태일때
+	//▼ 드래깅 상태일때
 	case CharStatus::IsDragging:
+	{
 		//▼우클릭이나 S를 누르면 픽상태 해지
 		if (KEYMANAGER->IsOnceKeyDown('S'))
 		{
@@ -220,22 +220,86 @@ void Character::Update()
 			DATACENTRE.ClearObjects(ObjType::BlueTiles);
 			DATACENTRE.ClearObjects(ObjType::FoeTiles);
 			DATACENTRE.ClearObjects(ObjType::AllyTiles);
+			for (auto& arrowTiles : toMove)
+			{
+				arrowTiles->SetArrowT("");
+			}
+			toMove.clear();
+			break;
 		}
 
-		draggingIndex = cursor->GetIndex();
+		//▼시작 세팅
+		draggingIndex = cursor->GetIndex(); //플레이어 위치
+		draggingStarted = nullptr;			//시작지점 비워줌
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)))
+		{
+			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)));
+			draggingIndexPrev = draggingIndex;
+		}
+		if (draggingStarted == nullptr)
+			{draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)));}
+		assert(draggingStarted!=nullptr);
 
-		//while node 도착
+		auto MoveContainer = DATACENTRE.RefObjects(ObjType::BlueTiles);
+		for (auto& arrowTiles : toMove)
+		{
+			arrowTiles->SetArrowT("");
+		}
+		toMove.clear();
+		
+		//▼구현 
+		while (!PointCompare(draggingStarted->GetIndex(), this->index))
+		{
+			toMove.push_back(draggingStarted);
+			int toFind = draggingStarted->GetRouteNum();
+			for (auto& availableTile : MoveContainer)
+			{
+				assert((dynamic_cast<Tiles*>(availableTile.second)) != nullptr);
+				if ((dynamic_cast<Tiles*>(availableTile.second)->GetRouteNum() == toFind + 1)
+					&& (((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x+1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
+					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x-1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
+					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y-1 == draggingStarted->GetIndex().y))
+					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y+1 == draggingStarted->GetIndex().y))))
+				{
+					draggingStarted = dynamic_cast<Tiles*>(availableTile.second);
+					break;
+				}
+			}
+		}
+		toMove.push_back(dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(index, TILEROWY))));
 
-
-
-
-
-
-
-
-
+		if (toMove.size() > 0)
+		{
+			for (UINT i = 0; i < toMove.size(); i++)
+			{
+				toMove[i]->SetArrowT("MoveArrow");
+				if (i == 0 && (i + 1 < toMove.size()))
+				{
+					if (toMove[i + 1]->GetIndex().x > toMove[i]->GetIndex().x)
+						toMove[i]->SetArrowtFrame({ 2,0 });
+					else if (toMove[i + 1]->GetIndex().x < toMove[i]->GetIndex().x)
+						toMove[i]->SetArrowtFrame({ 2,1 });
+					else if (toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
+						toMove[i]->SetArrowtFrame({ 2,3 });
+					else
+						toMove[i]->SetArrowtFrame({ 2,2 });
+				}
+				else if ((i - 1 >= 0) && i == toMove.size() - 1)
+				{
+					if (toMove[i - 1]->GetIndex().x > toMove[i]->GetIndex().x)
+						toMove[i]->SetArrowtFrame({ 3,0 });
+					else if (toMove[i - 1]->GetIndex().x < toMove[i]->GetIndex().x)
+						toMove[i]->SetArrowtFrame({ 3,1 });
+					else if (toMove[i - 1]->GetIndex().y > toMove[i]->GetIndex().y)
+						toMove[i]->SetArrowtFrame({ 3,3 });
+					else
+						toMove[i]->SetArrowtFrame({ 3,2 });
+				}
+			}
+		}
 
 		break;
+	}
 	case CharStatus::Disable:
 
 		break;
@@ -249,7 +313,6 @@ void Character::Update()
 			ShowMoveRange(&Character::BlueRedShow); //범위 계산해서 보여줌
 			isMoveCalculated = true; //한번 계산했다고 알림
 		}
-
 		break;
 
 	default:
@@ -299,6 +362,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 	//▼시작 타일을 하나 넣어줌
 	Tiles* initTile = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(index.y * TILECOLX + index.x)));
 	initTile->SetCheckedNum(RangeCalculator);//검사대상에 아까 계산해둔 최초 이동값 넣어둠
+	initTile->SetRouteNum(RangeCalculator);//검사대상에 아까 계산해둔 최초 이동값 넣어둠
 	BfsFloodFill.push(initTile);			//시작 타일 하나 넣어주고 시작
 
 	while (!BfsFloodFill.empty())
@@ -312,21 +376,26 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 		bool UpValidity = true;
 		UpValidity &= (0 <= toExamen->GetIndex().y - 1);
 		UpValidity &= toExamen->GetCheckedNum() > 1;
+		//▼첫째 조건이 참이라면
 		if (UpValidity)
 		{
 			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y - 1) * TILECOLX + toExamen->GetIndex().x)));
-			UpValidity &= !checkTarget->GetCheckedNum();
-			UpValidity &= checkTarget->GetObjT() == "";
+			UpValidity &= !checkTarget->GetCheckedNum();	//체크넘버 가져옴
+			UpValidity &= checkTarget->GetObjT() == "";		//장애물 있는지 가져옴
+			//▼이번에도 참이라면
 			if (UpValidity)
 			{
+				//▼아군의 캐릭터였다면
 				if (whosChar == OwnedBy::Player)
 				{
+					//▼상대방을 마주쳤을시, 상대방 리스트에 담음
 					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
 					{
 						if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							UpValidity &= false;
 						}
 					}
@@ -347,6 +416,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							UpValidity &= false;
 						}
 					}
@@ -386,6 +456,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							LeftValidity &= false;
 						}
 					}
@@ -406,6 +477,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							LeftValidity &= false;
 						}
 					}
@@ -445,6 +517,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							DownValidity &= false;
 						}
 					}
@@ -465,6 +538,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							DownValidity &= false;
 						}
 					}
@@ -504,6 +578,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							RightValidity &= false;
 						}
 					}
@@ -524,6 +599,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 						{
 							redTiles.insert(checkTarget);
 							foeTiles.insert(checkTarget);
+							checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
 							RightValidity &= false;
 						}
 					}
@@ -546,9 +622,10 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 	}
 	(this->*colourShow)(ActionRange);
 }
-//▼이동 범위 안보이게 함
+//▼이동 및 공격범위 파란색 안보이게 처리
 void Character::DisableMoveRange()
 {
+	//▼해당 기능은 한번이라도 범위표시 연산이 있었을때만 작동
 	if (isMoveCalculated)
 	{
 		for (auto& redTile : redTiles)
@@ -575,8 +652,10 @@ void Character::DisableMoveRange()
 	}
 }
 
+//▼(공+이동) 보라색 행동범위 표시한거 끌 때 사용
 void Character::DisableActionRange()
 {
+	//▼해당 기능은 한번이라도 범위표시 연산이 있었을때만 작동
 	if (isRangeCalculated)
 	{
 		for (auto& purpleTile : purpleTiles)
@@ -594,11 +673,12 @@ void Character::DisableActionRange()
 	AvailableTiles.clear();
 }
 
-
+//▼공+이동 범위 통합표시
 void Character::ShowActionRange()
 {
+	//▼함수포인터를 넘겨서 각기 다른 기능 수행
 	ShowMoveRange(&Character::PurpleShow);
-	isRangeCalculated = true;
+	isRangeCalculated = true; //계산했다고 알림
 }
 
 //▼프레임돌리는 부분
@@ -640,6 +720,7 @@ void Character::AdjustFrame()
 	}
 }
 
+//▼ 공격범위인 빨강과 이동범위 파란색을 둘 다 보여주는 기능
 void Character::BlueRedShow(INT _actionRange)
 {
 	//▼연산 통해 담긴 행동범위에 따라 액션
@@ -652,17 +733,21 @@ void Character::BlueRedShow(INT _actionRange)
 				if (toCal->GetGreenAlpha() < 0.5f) toCal->SetGreenAlpha(0.4f);
 				toCal->IncreaseGreenNum();	//그린 참조 갯수 증가
 				greenTiles.insert(toCal);
+				toCal->SetRouteNum(toCal->GetCheckedNum());
 				toCal->SetCheckedNum(0);
 			}
 			else
 			{
 				redTiles.insert(toCal);
+				toCal->SetRouteNum(toCal->GetCheckedNum());
+				toCal->SetCheckedNum(0);
 			}
 		}
 		else
 		{
 			if (toCal->GetBlueAlpha() < 0.5f) toCal->SetBlueAlpha(0.4f);
 			toCal->IncreaseBlueNum();	//블루 참조 갯수 증가
+			toCal->SetRouteNum(toCal->GetCheckedNum());
 			toCal->SetCheckedNum(0);
 			blueTiles.insert(toCal);
 		}
@@ -671,10 +756,12 @@ void Character::BlueRedShow(INT _actionRange)
 	{
 		if (redTile->GetRedAlpha() < 0.5f) redTile->SetRedAlpha(0.4f);
 		redTile->IncreaseRedNum();	//레드 참조 갯수 증가
+		redTile->SetRouteNum(redTile->GetCheckedNum());
 		redTile->SetCheckedNum(0);
 	}
 }
 
+//▼공+이동범위 통합인 보라색을 보여주는 기능
 void Character::PurpleShow(INT _actionRange)
 {
 	//▼연산 통해 담긴 행동범위에 따라 액션
@@ -682,6 +769,7 @@ void Character::PurpleShow(INT _actionRange)
 	{
 		if (purpleTile->GetPurpleAlpha() < 0.5f) purpleTile->SetPurpleAlpha(0.4f);
 		purpleTile->IncreasePurpleNum();	//레드 참조 갯수 증가
+		purpleTile->SetRouteNum(purpleTile->GetCheckedNum());
 		purpleTile->SetCheckedNum(0);
 		purpleTiles.insert(purpleTile);
 	}
@@ -690,13 +778,14 @@ void Character::PurpleShow(INT _actionRange)
 	{
 		if (purpleEnemyTile->GetPurpleAlpha() < 0.5f) purpleEnemyTile->SetPurpleAlpha(0.4f);
 		purpleEnemyTile->IncreasePurpleNum();	//레드 참조 갯수 증가
+		purpleEnemyTile->SetRouteNum(purpleEnemyTile->GetCheckedNum());
 		purpleEnemyTile->SetCheckedNum(0);
 		purpleTiles.insert(purpleEnemyTile);
 	}
 }
 
 
-//▼직업 세팅용
+//▼직업 세팅용. 들어올 시 해당하는 스텟을 넣어줌. 존재하지 않는 직업이 들어올 시 터뜨림
 void Character::SetOccupation(Occupation _job)
 {
 	this->occupation = _job;
@@ -764,6 +853,7 @@ void Character::SetOccupation(Occupation _job)
 	}
 }
 
+//▼소유주와 직업에 따라서 알아서 넣어짐
 void Character::SetFrameAuto(Occupation _job, OwnedBy _whos)
 {
 	frame.x = static_cast<UINT>(_whos);
@@ -791,20 +881,22 @@ void Character::SetInitialChar(Occupation _job, std::string _charName, POINT _in
 //▼그리기
 void Character::Render()
 {
+	//▼카메라 속에 있을때만 랜더한다
 	if (CheckInCamera())
 	{
 		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
 
-		frameImg->SetSize({ TILESIZE, TILESIZE });
-		frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);
+		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
+		frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y); //카메라 상대 랜더
 
-		if (isActionTaken)
+		if (isActionTaken) //행동을 취했었다면
 		{
 			IMAGEMANAGER->FindImage("ActionTaken")->SetAlpha(0.5f);
 			IMAGEMANAGER->FindImage("ActionTaken")->SetSize({ TILESIZE, TILESIZE });
-			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top);
+			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top); //어두운 그림자로 덮어버림
 		}
 
+		//▼추 후 UI로 뺼 부분
 		portraitImg->SetAlpha(portraitAlpha);
 		if (index.x == 6 && index.y == 6)
 		{
@@ -815,10 +907,15 @@ void Character::Render()
 			portraitImg->Render(900, 100);
 		}
 	}
+	//▼캐릭터 범위를 표시 후 드래깅중일때 예상 이동경로에 캐릭터를 그림
 	if (charStatus == CharStatus::IsDragging)
 	{
 		frameImg->SetSize({ TILESIZE, TILESIZE });
-		frameImg->SetAlpha(0.7f);
-		frameImg->RelativeFrameRender(draggingIndex.x * TILESIZE, draggingIndex.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
+		frameImg->SetAlpha(0.5f);
+		frameImg->RelativeFrameRender(draggingIndexPrev.x * TILESIZE, draggingIndexPrev.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
+	}
+	for (auto asd : toMove)
+	{
+		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(asd->GetPosition()),D2DRenderer::DefaultBrush::Red, 5);
 	}
 }

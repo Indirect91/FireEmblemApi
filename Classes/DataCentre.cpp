@@ -101,7 +101,7 @@ void DataCentre::RemoveObj(ObjType _type, std::string _name, GameObject* _obj)
 //▼특정 오브젝트 가져오기
 GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 {
-	assert(objContainer[_type].count(_name) > 0 || "searched object not found"); 
+	assert(objContainer[_type].count(_name) > 0 && "searched object not found"); 
 	return objContainer[_type][_name]; //타입,이름이 일치하는 오브젝트 반환
 }
 

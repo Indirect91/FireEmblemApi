@@ -110,18 +110,20 @@ private:
 	std::set<class Tiles*> redTiles;		//공격범위 표시된 타일들 모아둠
 
 	//▼거리계산관련
-	BOOL isRangeCalculated;						//이동범위 계산 한번 했는지 체크용
-	BOOL isMoveCalculated;						//이동범위 계산 한번 했는지 체크용
+	BOOL isRangeCalculated;					//이동범위 계산 한번 했는지 체크용
+	BOOL isMoveCalculated;					//이동범위 계산 한번 했는지 체크용
 	INT RangeCalculator;					//이동범위 계산용
 
 	//▼드래깅 관련
 	DraggingDirection draggindDirection;	//드래깅 방향
-	std::set<class Tiles*> toMove;		//이동 화살표 표시용
+	std::vector<class Tiles*> toMove;		//이동 화살표 표시용
 	POINT draggingIndex;					//드래깅 위치
+	POINT draggingIndexPrev;				//드래깅 이전위치
+	Tiles* draggingStarted;					//드래깅 시작 노드
 	UINT dragValidity;						//이동 가능한지
 
 private:
-	BOOL CheckInCamera();										//카메라 속에 캐릭이 있는지 체크
+	BOOL CheckInCamera();					//카메라 속에 캐릭이 있는지 체크
 	void AdjustFrame();
 
 

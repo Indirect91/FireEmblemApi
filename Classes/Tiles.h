@@ -44,6 +44,7 @@ private:
 	POINT arrowtFrame;	//화살표 프레임랜더용
 	
 	INT checkedNum;			//타일이 검사되었는지 여부
+	INT routeNum;				//적 위치 추적에만 사용될 숫자
 
 	colourTiles purpleTile;
 	colourTiles greenTile;
@@ -79,6 +80,7 @@ public:
 
 	//▼통합 길찾기/범위표시용
 	const INT & GetCheckedNum() const { return checkedNum; }		// 지형 검색용 타일 체크여부
+	const INT& GetRouteNum() const { return routeNum; }
 
 	//▼파란타일용
 	const BOOL & GetIsBlue() const { return blueTile.Num; }			//파란타일인지 참거짓
@@ -112,10 +114,11 @@ public:
 	void SetObjTFrame(const POINT _objFrame) { this->objTFrame = _objFrame; }
 
 	//▼화살표 세팅
-	void SetArrowT(const std::string _object) { this->objectT = _object; }
-	void SetArrowtFrame(const POINT _objFrame) { this->objTFrame = _objFrame; }
+	void SetArrowT(const std::string _arrow) { this->arrowT = _arrow; }
+	void SetArrowtFrame(const POINT _arrowFrame) { this->arrowtFrame = _arrowFrame; }
 
 	void SetCheckedNum(const INT _checked) { this->checkedNum = _checked;} //체크 여부 변경
+	void SetRouteNum(const INT _routeNum) { routeNum = _routeNum; }			//길 추적용 숫자
 
 	void IncreaseBlueNum();			//블루 참조갯수 증가
 	void IncreaseRedNum();			//레드 참조갯수 증가

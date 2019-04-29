@@ -70,59 +70,6 @@ void TileManager::Release()
 	SAFE_DELETE_ARRAY(field);
 }
 
-//▼카메라에 들어온 타일들만 굴림
-void TileManager::Render()
-{
-	for (auto& toRender : clippedTiles) //클리핑된 타일들만 돌면서
-	{
-		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
-		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::White, 2);
-
-		//1.무빙타일
-		//2.터레인
-		//3.오브젝트
-		//4.화살표
-		if(toExamen->GetIsRed())
-		{
-			IMAGEMANAGER->FindImage("Red")->SetAlpha(toExamen->GetRedAlpha()); //빨간 알파값 가져와서
-			IMAGEMANAGER->FindImage("Red")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
-			IMAGEMANAGER->FindImage("Red")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력 
-		}
-
-		else if (toExamen->GetIsBlue()) //파란타일일경우
-		{
-			IMAGEMANAGER->FindImage("Blue")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
-			IMAGEMANAGER->FindImage("Blue")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
-			IMAGEMANAGER->FindImage("Blue")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
-		}
-		else if (toExamen->GetIsGreen()) //초록타일일경우
-		{
-			IMAGEMANAGER->FindImage("Green")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
-			IMAGEMANAGER->FindImage("Green")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
-			IMAGEMANAGER->FindImage("Green")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
-		}
-		else if (toExamen->GetIsPurple()) //퍼플타일일경우
-		{
-			IMAGEMANAGER->FindImage("Purple")->SetAlpha(toExamen->GetPurpleAlpha()); //파란 알파값 가져와서
-			IMAGEMANAGER->FindImage("Purple")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
-			IMAGEMANAGER->FindImage("Purple")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
-		}
-		//else if (toExamen->GetObjT() != "")
-		//{
-		//	D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
-		//}
-		if (toExamen->GetArrowT() != "")
-		{
-			auto arrow = IMAGEMANAGER->FindImage("MoveArrow");
-			arrow->SetSize({ TILESIZE,TILESIZE });
-			arrow->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetArrowFrame().x, toExamen->GetArrowFrame().y);
-		}
-
-	}
-
-	//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
-
-}
 
 void TileManager::ClipTiles()
 {
@@ -176,3 +123,57 @@ void TileManager::UpdateClippedTiles()
 	}
 }
   
+
+//▼카메라에 들어온 타일들만 굴림
+void TileManager::Render()
+{
+	for (auto& toRender : clippedTiles) //클리핑된 타일들만 돌면서
+	{
+		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
+		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::White, 2);
+
+		//1.무빙타일
+		//2.터레인
+		//3.오브젝트
+		//4.화살표
+		if (toExamen->GetIsRed())
+		{
+			IMAGEMANAGER->FindImage("Red")->SetAlpha(toExamen->GetRedAlpha()); //빨간 알파값 가져와서
+			IMAGEMANAGER->FindImage("Red")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Red")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력 
+		}
+
+		else if (toExamen->GetIsBlue()) //파란타일일경우
+		{
+			IMAGEMANAGER->FindImage("Blue")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Blue")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Blue")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		else if (toExamen->GetIsGreen()) //초록타일일경우
+		{
+			IMAGEMANAGER->FindImage("Green")->SetAlpha(toExamen->GetBlueAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Green")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Green")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		else if (toExamen->GetIsPurple()) //퍼플타일일경우
+		{
+			IMAGEMANAGER->FindImage("Purple")->SetAlpha(toExamen->GetPurpleAlpha()); //파란 알파값 가져와서
+			IMAGEMANAGER->FindImage("Purple")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
+			IMAGEMANAGER->FindImage("Purple")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
+		}
+		//else if (toExamen->GetObjT() != "")
+		//{
+		//	D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
+		//}
+		if (toExamen->GetArrowT() != "")
+		{
+			auto arrow = IMAGEMANAGER->FindImage("MoveArrow");
+			arrow->SetSize({ TILESIZE,TILESIZE });
+			arrow->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetArrowFrame().x, toExamen->GetArrowFrame().y);
+		}
+
+	}
+
+	//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
+
+}
