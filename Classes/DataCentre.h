@@ -42,7 +42,6 @@ public:
 	void Release();
 	void Render();
 
-
 	//▼게임 오브젝트 관련
 	void ClearObjects(ObjType _toClear); //타입을 지정해준 컨테이너를 비움
 	void AddObj(ObjType _type, std::string _name, class GameObject* _obj); //지정해준 컨테이너에 이름주고 등록

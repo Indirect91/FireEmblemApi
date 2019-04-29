@@ -3,8 +3,8 @@
 
 BattleScenes::BattleScenes()
 {
-	currentState = ingameStatus::PlayerTurn;
-	previousState = ingameStatus::StartPlacement;
+	currentState = IngameStatus::PlayerTurn;
+	previousState = IngameStatus::StartPlacement;
 	escMenu = nullptr;
 	turnManager = nullptr;
 	tileManager = nullptr;
@@ -12,16 +12,18 @@ BattleScenes::BattleScenes()
 	enemy = nullptr;
 	startPlacement = nullptr;
 	cursor = nullptr;
+	selectionUI = nullptr;
+	ingameUI = nullptr;
 }
 
 void BattleScenes::ESCManage()
 {
 	if (KEYMANAGER->IsOnceKeyDown(VK_ESCAPE))
 	{
-		if (currentState != ingameStatus::ESCMenu) //현재 ESC 메뉴를 열고 있는 상태가 아니었다면
+		if (currentState != IngameStatus::ESCMenu) //현재 ESC 메뉴를 열고 있는 상태가 아니었다면
 		{
 			previousState = currentState;
-			currentState = ingameStatus::ESCMenu;
+			currentState = IngameStatus::ESCMenu;
 		}
 		else //ESC가 아니었을 모든 상태는 위 조건에 걸리니, else는 ESC메뉴를 보여주고 있는 상황
 		{

@@ -36,8 +36,6 @@ void LoadingScene::Update()
 	{
 		//▼로딩이 끝나고 이동할 씬
 		SCENEMANAGER->RefcoverAlpha() = 1.f;
-		//SCENEMANAGER->LoadScene("test");
-		//SCENEMANAGER->LoadScene("Battle01");
 		SCENEMANAGER->LoadScene("TitleScene");
 	}
 }
@@ -111,6 +109,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
 	_loading->LoadImg("BattleUIBg", L"IMAGE/ETC/BattleUIBg.png");
 	_loading->LoadImg("BattleBg", L"IMAGE/ETC/BattleBg.png");
+	_loading->LoadImg("PhotoFrame", L"IMAGE/ETC/PhotoFrame.png");
 
 }
 

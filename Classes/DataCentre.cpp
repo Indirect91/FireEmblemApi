@@ -109,6 +109,7 @@ BOOL DataCentre::CheckObjectExistance(ObjType _type, std::string _name)
 {
 	//해당 컨테이너 뒤져서 이름이 있는가 세본다. 있으면 참 반환, 없으면 거짓
 	return objContainer[_type].count(_name) > 0;
+
 }
 
 std::map<std::string, GameObject*>& DataCentre::RefObjects(ObjType _type)

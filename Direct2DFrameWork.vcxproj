@@ -167,6 +167,7 @@
     <ClInclude Include="Classes\Resource.h" />
     <ClInclude Include="Classes\SaveloadScene.h" />
     <ClInclude Include="Classes\SceneManager.h" />
+    <ClInclude Include="Classes\SelectionUI.h" />
     <ClInclude Include="Classes\SingletonBase.h" />
     <ClInclude Include="Classes\SoundManager.h" />
     <ClInclude Include="Classes\StartPlacement.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="Classes\Player.cpp" />
     <ClCompile Include="Classes\SaveloadScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />
+    <ClCompile Include="Classes\SelectionUI.cpp" />
     <ClCompile Include="Classes\SoundManager.cpp" />
     <ClCompile Include="Classes\StartPlacement.cpp" />
     <ClCompile Include="Classes\stdafx.cpp">

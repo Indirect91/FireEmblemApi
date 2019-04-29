@@ -9,7 +9,8 @@ Cursor::Cursor()
 	cursorFrame = 0;								//커서 프레임
 	cursorCounter = 0;								//커서 프레임올릴 카운터
 	cursorState = CursorState::cursorDeactivated;	//커서 비활성화 출고
-	cursorTurn = CursorTurn::PlayerTurn;		//일단은 플레이어 턴 색으로 출고
+	cursorTurn = IngameStatus::PlayerTurn;			//일단은 플레이어 턴 색으로 출고
+	cursorTurnPrev = IngameStatus::PlayerTurn;			//일단은 플레이어 턴 색으로 출고
 	cursorOccupied = "";							//커서 점유한 캐릭터명
 	prevLocation = index;							//커서 드래그시 시작지점
 }
@@ -20,7 +21,7 @@ void Cursor::Init()
 	this->index = {5,5};//일단 {5,5} 로 출고
 
 	//▼비어있으면 어짜피 실행안됨. 현 플레이어의 부대가 따로 존재한다면 첫째 아군에 포인터를 맞춰줌
-	for (auto& getFirst : DATACENTRE.RefObjects(ObjType::CurrentPlayerArmy))
+	for (auto& getFirst : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 	{
 		this->index = getFirst.second->GetIndex();
 		break;
@@ -79,8 +80,8 @@ BOOL Cursor::MoveUp()
 {
 	if (cursorOccupied != "")
 	{
-		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILEROWY))
-			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILEROWY)))
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILECOLX))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y - 1 }, TILECOLX)))
 		{
 			index.y -= 1;
 			SetPositionViaIndex();
@@ -104,8 +105,8 @@ BOOL Cursor::MoveDown()
 {
 	if (cursorOccupied != "")
 	{
-		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILEROWY))
-			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILEROWY)))
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILECOLX))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x,index.y + 1 }, TILECOLX)))
 		{
 			index.y += 1;
 			SetPositionViaIndex();
@@ -129,8 +130,8 @@ BOOL Cursor::MoveLeft()
 {
 	if (cursorOccupied != "")
 	{
-		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILEROWY))
-			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILEROWY)))
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILECOLX))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x - 1,index.y }, TILECOLX)))
 		{
 			index.x -= 1;
 			SetPositionViaIndex();
@@ -154,8 +155,8 @@ BOOL Cursor::MoveRight()
 {
 	if (cursorOccupied != "")
 	{
-		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILEROWY))
-			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILEROWY)))
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILECOLX))
+			|| DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString({ index.x + 1,index.y }, TILECOLX)))
 		{
 			index.x += 1;
 			SetPositionViaIndex();
@@ -179,13 +180,18 @@ void Cursor::Render()
 {	
 	switch (cursorTurn)
 	{
-	case Cursor::CursorTurn::PlayerTurn:
+	case IngameStatus::PlayerTurn:
 		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
 		break;
-	case Cursor::CursorTurn::EnemyTurn:
+
+	case IngameStatus::EnemyTurn:
 		IMAGEMANAGER->FindImage("CursorRed")->Render(_ptMouse.x, _ptMouse.y);
 		break;
-	case Cursor::CursorTurn::UI:
+
+	case IngameStatus::ESCMenu:
+	case IngameStatus::SelectionUI:
+	case IngameStatus::StartPlacement:
+	case IngameStatus::TurnChanging:
 		IMAGEMANAGER->FindImage("Cursor")->Render(_ptMouse.x, _ptMouse.y);
 		break;
 	}

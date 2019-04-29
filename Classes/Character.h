@@ -33,11 +33,11 @@ enum class Occupation : UINT
 	Theif = 283,		//도둑				상위:Assassin			하급	C
 };
 
-//▼캐릭터 드래깅 방향
-enum class DraggingDirection : UINT
+//▼캐릭터 드래깅,이동 방향
+typedef enum class DraggingDirection : INT
 {
-	LEFT = 2,RIGHT,DOWN,UP
-};
+	IDLE = 0, LEFT = 2,RIGHT,DOWN,UP,
+} MovingDirection;
 
 class Character : public GameObject
 {
@@ -121,6 +121,9 @@ private:
 	POINT draggingIndexPrev;				//드래깅 이전위치
 	Tiles* draggingStarted;					//드래깅 시작 노드
 	UINT dragValidity;						//이동 가능한지
+
+	//▼이동 관련
+	MovingDirection movingDirection;
 
 private:
 	BOOL CheckInCamera();					//카메라 속에 캐릭이 있는지 체크

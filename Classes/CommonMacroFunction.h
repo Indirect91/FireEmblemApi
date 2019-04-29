@@ -222,7 +222,47 @@ inline float RandomRangeFloat(float fromNum, float toNum)
 }
 
 //▼ 2차원배열 인덱스 1차원배열 인덱스로 바꿔줌
-inline std::string TwoDimentionArrayToOneString(POINT _twoDimention, int _tileROWY)
+inline std::string TwoDimentionArrayToOneString(POINT _twoDimention, int _tileCOLX)
 {
-	return std::to_string(_twoDimention.y * _tileROWY + _twoDimention.x);
+	return std::to_string(_twoDimention.y * _tileCOLX + _twoDimention.x);
+}
+
+inline POINT IndexToLeftTop(POINT _index, int _tileSize)
+{
+	return { _index.x * _tileSize, _index.y * _tileSize };
+}
+
+inline POINT RectLeftTopOnly(RECT _position)
+{
+	return { _position.left, _position.top };
+}
+
+inline float ToRadian(const float& _degree)
+{
+	return _degree * 3.141592f / 180.0f;
+}
+
+inline float ToDegree(const float& _radian)
+{
+	return _radian * 180.0f / 3.141592f;
+}
+
+//▼ 두 점 사이 각을 구함. 포인트 버전, 디그리
+inline float GetAngleDegree(POINT _start, POINT _end)
+{
+	float x = _end.x - _start.x;
+	float y = _end.y - _start.y;
+
+	float distance = sqrtf((x * x) + (y * y));
+
+	float angle = acos(x / distance);
+
+	if (_end.y > _start.y)
+	{
+		angle = PI * 2.0f - angle;
+		if (angle >= PI * 2.0f)
+			angle -= PI * 2.0f;
+	}
+
+	return ToDegree(angle);
 }

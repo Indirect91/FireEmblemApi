@@ -9,7 +9,8 @@ Character::Character()
 {
 	whosChar = OwnedBy::Ally;
 	draggingIndex = index;
-	draggindDirection = DraggingDirection::LEFT;
+	draggindDirection = DraggingDirection::IDLE;
+	movingDirection = MovingDirection::IDLE;
 	charStatus = CharStatus::Idle;
 	isInCamera = false;
 	occupation = Occupation::Archer;
@@ -41,7 +42,8 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 {
 	index = _index;
 	draggingIndex = _index;
-	draggindDirection = DraggingDirection::LEFT;
+	draggindDirection = DraggingDirection::IDLE;
+	movingDirection = MovingDirection::IDLE;
 	charStatus = CharStatus::Idle;
 	isInCamera = false;
 	occupation = _job;
@@ -89,13 +91,17 @@ void Character::Update()
 {
 	CheckInCamera(); //카메라부터 체크
 
-	if (cursor->GetCursorTurn() == Cursor::CursorTurn::PlayerTurn && whosChar == OwnedBy::Player)
+	if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && whosChar == OwnedBy::Player)
 	{
 		//▼먼저 상태를 준다
 		if (isActionTaken) //행동을 취한적이 있는 캐릭터라면
 		{
 			charStatus = CharStatus::IsActed;
 		} //행동한 상태로 유지
+		else if(charStatus == CharStatus::IsMoving)
+		{
+			charStatus = CharStatus::IsMoving;
+		}
 		else if (charStatus == CharStatus::IsClicked) //현 캐릭을 클릭 중이라
 		{
 			if (PointCompare(index, draggingIndex))
@@ -123,11 +129,11 @@ void Character::Update()
 			}
 		}
 	}
-	else if (cursor->GetCursorTurn() == Cursor::CursorTurn::PlayerTurn && whosChar == OwnedBy::Enemy)
+	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && whosChar == OwnedBy::Enemy)
 	{
 		charStatus = CharStatus::IsCheckingOut;
 	}
-	else if (cursor->GetCursorTurn() == Cursor::CursorTurn::EnemyTurn)
+	else if (cursor->GetCursorTurn() == IngameStatus::EnemyTurn)
 	{
 
 	}
@@ -187,15 +193,15 @@ void Character::Update()
 			for (auto& toThickenBlue : blueTiles)
 			{
 				toThickenBlue->SetBlueAlpha(0.8f);
-				DATACENTRE.AddObj(ObjType::BlueTiles, TwoDimentionArrayToOneString(toThickenBlue->GetIndex(), TILEROWY), toThickenBlue);
+				DATACENTRE.AddObj(ObjType::BlueTiles, TwoDimentionArrayToOneString(toThickenBlue->GetIndex(), TILECOLX), toThickenBlue);
 			}
 			for (auto& Ally : allyTiles)
 			{
-				DATACENTRE.AddObj(ObjType::AllyTiles, TwoDimentionArrayToOneString(Ally->GetIndex(), TILEROWY), Ally);
+				DATACENTRE.AddObj(ObjType::AllyTiles, TwoDimentionArrayToOneString(Ally->GetIndex(), TILECOLX), Ally);
 			}
 			for (auto& Enemy : foeTiles)
 			{
-				DATACENTRE.AddObj(ObjType::FoeTiles, TwoDimentionArrayToOneString(Enemy->GetIndex(), TILEROWY), Enemy);
+				DATACENTRE.AddObj(ObjType::FoeTiles, TwoDimentionArrayToOneString(Enemy->GetIndex(), TILECOLX), Enemy);
 			}
 		}
 		break;
@@ -231,13 +237,13 @@ void Character::Update()
 		//▼시작 세팅
 		draggingIndex = cursor->GetIndex(); //플레이어 위치
 		draggingStarted = nullptr;			//시작지점 비워줌
-		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)))
+		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)))
 		{
-			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)));
+			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));
 			draggingIndexPrev = draggingIndex;
 		}
 		if (draggingStarted == nullptr)
-			{draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILEROWY)));}
+			{draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));}
 		assert(draggingStarted!=nullptr);
 
 		auto MoveContainer = DATACENTRE.RefObjects(ObjType::BlueTiles);
@@ -266,9 +272,9 @@ void Character::Update()
 				}
 			}
 		}
-		toMove.push_back(dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(index, TILEROWY))));
+		toMove.push_back(dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(index, TILECOLX))));
 
-		if (toMove.size() > 0)
+		if (toMove.size() > 1)
 		{
 			for (UINT i = 0; i < toMove.size(); i++)
 			{
@@ -276,31 +282,191 @@ void Character::Update()
 				if (i == 0 && (i + 1 < toMove.size()))
 				{
 					if (toMove[i + 1]->GetIndex().x > toMove[i]->GetIndex().x)
-						toMove[i]->SetArrowtFrame({ 2,0 });
+					{
+						toMove[i]->SetArrowtFrame({ 0,2 });
+						draggindDirection = DraggingDirection::LEFT;
+					}
 					else if (toMove[i + 1]->GetIndex().x < toMove[i]->GetIndex().x)
-						toMove[i]->SetArrowtFrame({ 2,1 });
+					{
+						toMove[i]->SetArrowtFrame({ 1,2 });
+						draggindDirection = DraggingDirection::RIGHT;
+					}
 					else if (toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
-						toMove[i]->SetArrowtFrame({ 2,3 });
+					{
+						toMove[i]->SetArrowtFrame({ 3,2 });
+						draggindDirection = DraggingDirection::UP;
+					}
 					else
+					{
 						toMove[i]->SetArrowtFrame({ 2,2 });
+						draggindDirection = DraggingDirection::DOWN;
+					}
 				}
 				else if ((i - 1 >= 0) && i == toMove.size() - 1)
 				{
 					if (toMove[i - 1]->GetIndex().x > toMove[i]->GetIndex().x)
-						toMove[i]->SetArrowtFrame({ 3,0 });
+						toMove[i]->SetArrowtFrame({ 0,3 });
 					else if (toMove[i - 1]->GetIndex().x < toMove[i]->GetIndex().x)
-						toMove[i]->SetArrowtFrame({ 3,1 });
+						toMove[i]->SetArrowtFrame({ 1,3 });
 					else if (toMove[i - 1]->GetIndex().y > toMove[i]->GetIndex().y)
 						toMove[i]->SetArrowtFrame({ 3,3 });
 					else
-						toMove[i]->SetArrowtFrame({ 3,2 });
+						toMove[i]->SetArrowtFrame({ 2,3 });
+				}
+				else
+				{
+					if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x && toMove[i + 1]->GetIndex().x== toMove[i]->GetIndex().x)
+						toMove[i]->SetArrowtFrame({ 3,1 });
+					else if (toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y && toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+						toMove[i]->SetArrowtFrame({ 0,1 });
+
+					if (index.y > cursor->GetIndex().y)
+					{
+						if (toMove[i - 1]->GetIndex().x > toMove[i]->GetIndex().x
+						&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+						&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+						&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
+
+						toMove[i]->SetArrowtFrame({ 0,0 });
+
+						else if (toMove[i - 1]->GetIndex().x < toMove[i]->GetIndex().x
+						&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+						&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+						&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
+					
+						toMove[i]->SetArrowtFrame({ 1,0 });
+
+						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y < toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x > toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 3,0 });
+
+						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y < toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x < toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 2,0 });
+						//TODO:추후 추가
+					}
+					else
+					{
+						if (toMove[i - 1]->GetIndex().x < toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y < toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 2,0 });
+
+						else if (toMove[i - 1]->GetIndex().x > toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y < toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 3,0 });
+
+						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y > toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x > toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 0,0 });
+
+						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y > toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x < toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 1,0 });
+						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i - 1]->GetIndex().y < toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x > toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 3,0 });
+						//TODO:추후 추가
+					}
 				}
 			}
+		}
+
+		//▼드래깅 도중 A키를 누르면 이동지역 확정지음
+		if (KEYMANAGER->IsOnceKeyDown('A'))
+		{
+			this->charStatus = CharStatus::IsMoving;
 		}
 
 		break;
 	}
 	case CharStatus::Disable:
+
+		break;
+	case CharStatus::IsMoving:
+		for (auto& arrowTiles : toMove)
+		{
+			arrowTiles->SetArrowT("");
+		}
+		if (toMove.size() > 0)
+		{
+			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
+			{
+				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
+				if (directionAngle == 0)
+				{movingDirection = MovingDirection::RIGHT;}
+				else if (directionAngle == 90)
+				{movingDirection = MovingDirection::LEFT;}
+				else if (directionAngle == 180)
+				{movingDirection = MovingDirection::UP;}
+				else if (directionAngle == 270)
+				{movingDirection = MovingDirection::DOWN;}
+				this->toMove.pop_back();
+			}
+			else if (PointCompare(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())))
+			{
+				index = toMove.back()->GetIndex();
+				this->toMove.pop_back();
+			}
+			else
+			{
+				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
+				if(directionAngle==0)
+				{
+					position.left += 4;
+					position.right += 4;
+					movingDirection = MovingDirection::RIGHT;
+				}
+				else if(directionAngle ==90)
+				{ 
+					position.top -= 4;
+					position.bottom -= 4;
+					movingDirection = MovingDirection::LEFT;
+				}
+				else if (directionAngle == 180)
+				{
+					position.left -= 4;
+					position.right -= 4;
+					movingDirection = MovingDirection::UP;
+				}
+				else if(directionAngle==270)
+				{
+					position.top += 4;
+					position.bottom += 4;
+					movingDirection = MovingDirection::DOWN;
+				}
+				else
+				{
+					assert(false && "wrong angle");
+				}
+
+			}
+		}
+		else
+		{
+			cursor->SetCursorTurn(IngameStatus::SelectionUI);
+			cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+		}
 
 		break;
 	case CharStatus::IsActed:
@@ -320,7 +486,8 @@ void Character::Update()
 		break;
 	}
 
-	SetPositionViaIndex(); //추후 변경 필요
+	//TODO
+	//GameObject::SetPositionViaIndex();
 }
 
 
@@ -644,6 +811,9 @@ void Character::DisableMoveRange()
 			blueTile->DecreaseBlueNum();
 		}
 		blueTiles.clear();
+		DATACENTRE.ClearObjects(ObjType::BlueTiles);
+		DATACENTRE.ClearObjects(ObjType::FoeTiles);
+		DATACENTRE.ClearObjects(ObjType::AllyTiles);
 		redTiles.clear();
 		greenTiles.clear();
 
@@ -887,7 +1057,10 @@ void Character::Render()
 		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
 
 		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
-		frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y); //카메라 상대 랜더
+		if (charStatus == CharStatus::IsMoving) 
+			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); } //카메라 상대 랜더
+		else 
+			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y); } //카메라 상대 랜더
 
 		if (isActionTaken) //행동을 취했었다면
 		{
@@ -916,6 +1089,8 @@ void Character::Render()
 	}
 	for (auto asd : toMove)
 	{
-		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(asd->GetPosition()),D2DRenderer::DefaultBrush::Red, 5);
+		//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(asd->GetPosition()),D2DRenderer::DefaultBrush::Red, 5);
+		D2DRENDERER->RenderText(CAMERA.RelativeCameraRect(asd->GetPosition()).left, CAMERA.RelativeCameraRect(asd->GetPosition()).top, std::to_wstring(asd->GetIndex().x) + L", " + std::to_wstring(asd->GetIndex().y), 20,D2DRenderer::DefaultBrush::Red);
+		D2DRENDERER->RenderText(CAMERA.RelativeCameraRect(asd->GetPosition()).right, CAMERA.RelativeCameraRect(asd->GetPosition()).bottom, std::to_wstring(asd->GetRouteNum()), 20, D2DRenderer::DefaultBrush::Black);
 	}
 }

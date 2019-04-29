@@ -9,6 +9,8 @@
 #include "StartPlacement.h"
 #include "ESCMenu.h"
 #include "Cursor.h"
+#include "UserInteface.h"
+#include "SelectionUI.h"
 
 Battle01::Battle01()
 {
@@ -30,7 +32,7 @@ void Battle01::Init()
 	DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
 
 	SOUNDMANAGER->pause("타이틀BGM");
-	SOUNDMANAGER->play("인게임BGM");
+	//SOUNDMANAGER->play("인게임BGM");
 
 
 	//▼맵에 맞게 카메라를 세팅함
@@ -53,6 +55,11 @@ void Battle01::Init()
 	tileManager = new TileManager;
 	tileManager->Init();
 
+	//▼통상 UI 제작
+	ingameUI = new UserInteface;
+
+	selectionUI = new SelectionUI;
+
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
 	bg2 = IMAGEMANAGER->AddImage("tmp1", L"IMAGE/Tiles/temp2.png");
 	bg3 = IMAGEMANAGER->AddImage("tmp2", L"IMAGE/Tiles/temp3.png");
@@ -61,6 +68,7 @@ void Battle01::Init()
 	CAMERA.Init();
 
 	player->SetTurnStart(); //TODO:수정
+	cursor->SetCursorTurn(IngameStatus::PlayerTurn);
 }
 
 	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거
@@ -100,30 +108,36 @@ void Battle01::Update()
 	ESCManage(); //ESC 메뉴를 눌렀을시 메뉴 나오는부분
 	cursor->Update();
 	tileManager->Update();
-	
+	ingameUI->Update();
+	//▼커서에게 누구턴인지 물어봄
+	currentState = cursor->GetCursorTurn();
+
+
 	//▼게임의 상태에 따라 업데이트 대상이 달라짐
 	switch (currentState)
 	{
-	case BattleScenes::ingameStatus::StartPlacement:
-		cursor->SetCursorTurn(Cursor::CursorTurn::UI);
+	case IngameStatus::StartPlacement:
 		startPlacement->Update();
 		break;
-	case BattleScenes::ingameStatus::TurnChanging:
-		cursor->SetCursorTurn(Cursor::CursorTurn::UI);
+	case IngameStatus::TurnChanging:
 		turnManager->Update();
 		break;
-	case BattleScenes::ingameStatus::ESCMenu:
-		cursor->SetCursorTurn(Cursor::CursorTurn::UI);
+	case IngameStatus::ESCMenu:
 		escMenu->Update();
 		break;
-	case BattleScenes::ingameStatus::PlayerTurn:
-		cursor->SetCursorTurn(Cursor::CursorTurn::PlayerTurn);
+	case IngameStatus::PlayerTurn:
 		player->Update();
 		break;
-	case BattleScenes::ingameStatus::EnemyTurn:
-		cursor->SetCursorTurn(Cursor::CursorTurn::EnemyTurn);
+	case IngameStatus::EnemyTurn:
 		enemy->Update();
 		break;
+	case IngameStatus::SelectionUI:
+		selectionUI->Update();
+		break;
+	default:
+		assert(false && "인게임status 미작성");
+		break;
+
 	}
 	CAMERA.Update();
 }
@@ -134,7 +148,6 @@ void Battle01::Render()
 	//▼랜더 순서를 결정지을 수 있음
 	bg->RelativeRender(0,0);
 	bg->RelativeRender(288, 0);
-	//bg->RelativeRender(-288, 0);
 	bg->RelativeRender(288+288, 0);
 	bg->RelativeRender(288+288+288, 0);
 	bg->RelativeRender(288 + 288 + 288 +288, 0);
@@ -151,4 +164,8 @@ void Battle01::Render()
 	player->Render();
 	enemy->Render();
 	cursor->Render();
+	if (currentState == IngameStatus::SelectionUI)
+	{
+		selectionUI->Render();
+	}
 }

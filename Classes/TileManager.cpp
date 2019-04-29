@@ -20,6 +20,7 @@ TileManager::TileManager()
 			//▼추후 불러오기로 대체
 			field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
 			field[j * TILECOLX + i].SetIndex({ i,j });
+			field[j * TILECOLX + i].SetPositionViaIndex();
 			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
 			{
 				field[j * TILECOLX + i].SetObjT("tmp");
