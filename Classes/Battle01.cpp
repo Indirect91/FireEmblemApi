@@ -59,6 +59,8 @@ void Battle01::Init()
 	ingameUI = new UserInteface;
 
 	selectionUI = new SelectionUI;
+	selectionUI->Init();
+	DATACENTRE.AddObj(ObjType::UI, "SelectionUI", selectionUI);
 
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
 	bg2 = IMAGEMANAGER->AddImage("tmp1", L"IMAGE/Tiles/temp2.png");

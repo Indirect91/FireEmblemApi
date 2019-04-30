@@ -78,13 +78,13 @@ public:
 private:
 
 	//▼통상
-	OwnedBy whosChar;
+	class Item *item = nullptr;				//보유중인 아이템
 	CharStatus charStatus;					//캐릭터 상태
 	Occupation occupation;					//직업
-	class Item *item = nullptr;				//보유중인 아이템
+	class Cursor* cursor;
+	OwnedBy whosChar;
 	Image* frameImg;						//프레임 이미지
 	BOOL isInCamera;						//카메라 안에 있어야만 업데이트/랜더됨
-	class Cursor* cursor;
 
 	//▼이미지쪽 변수
 	Image * portraitImg;		//초상화 이미지
@@ -117,10 +117,12 @@ private:
 	//▼드래깅 관련
 	DraggingDirection draggindDirection;	//드래깅 방향
 	std::vector<class Tiles*> toMove;		//이동 화살표 표시용
-	POINT draggingIndex;					//드래깅 위치
+	POINT moveStartLocation;				//이동시작 위치
 	POINT draggingIndexPrev;				//드래깅 이전위치
 	Tiles* draggingStarted;					//드래깅 시작 노드
+	POINT draggingIndex;					//드래깅 위치
 	UINT dragValidity;						//이동 가능한지
+	UINT moveSpeed;							//이동 속도
 
 	//▼이동 관련
 	MovingDirection movingDirection;
@@ -142,18 +144,23 @@ public:
 	void SetOccupation(Occupation _job);
 	void SetFrame(POINT _frame) { this->frame = _frame; }
 	void SetFrameAuto(Occupation _job, OwnedBy _whos);
-	void SetImg(std::string _CharName);
+	void SetImgAuto(std::string _CharName);
 
 	void SetAdditionalAttack(INT _attack) { this->additionalData.Attack = _attack; }
 	void SetAdditionalDefence(INT _defence) { this->additionalData.Defence = _defence; }
 	void SetAdditionalLuck(FLOAT _luck) { this->additionalData.Luck = _luck; }
 	void SetAdditionalMove(INT _move) { this->additionalData.Move = _move; }
 
+	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
+
+
 	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
 	const Occupation &GetOccupation() const { return this->occupation; }
 	const POINT &GetFrame() const { return this->frame; }
 	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 	const CharStatus& GetStatus() const { return charStatus; }
+	const POINT& GetMoveStartLocation() const { return moveStartLocation; }
+
 
 	//▼범위표시요청관련
 	void ShowMoveRange(void (Character::* colourShow)(INT));	//함수포인터로 어디를 보여줄지 확정지음

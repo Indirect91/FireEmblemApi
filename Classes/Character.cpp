@@ -3,12 +3,15 @@
 #include "Item.h"
 #include "Tiles.h"
 #include "Cursor.h"
+#include "SelectionUI.h"
 
 //▼생성자
 Character::Character()
 {
+	moveSpeed = 8;
 	whosChar = OwnedBy::Ally;
 	draggingIndex = index;
+	moveStartLocation = { 0 };
 	draggindDirection = DraggingDirection::IDLE;
 	movingDirection = MovingDirection::IDLE;
 	charStatus = CharStatus::Idle;
@@ -40,6 +43,7 @@ Character::Character()
 //▼편리한 캐릭 생성을 위한 생성자 오버로딩
 Character::Character(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos) : whosChar(_whos)
 {
+	moveSpeed = 8;
 	index = _index;
 	draggingIndex = _index;
 	draggindDirection = DraggingDirection::IDLE;
@@ -70,7 +74,7 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	isActionTaken = false;
 
 	SetOccupation(_job);
-	SetImg(_charName);
+	SetImgAuto(_charName);
 	SetPositionViaIndex();
 }
 
@@ -274,6 +278,7 @@ void Character::Update()
 		}
 		toMove.push_back(dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(index, TILECOLX))));
 
+		//▼드래깅 한 방향으로 화살표 그리는 기능
 		if (toMove.size() > 1)
 		{
 			for (UINT i = 0; i < toMove.size(); i++)
@@ -396,6 +401,7 @@ void Character::Update()
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
 			this->charStatus = CharStatus::IsMoving;
+			moveStartLocation = index; //출발하기 전에 원점 기억
 		}
 
 		break;
@@ -404,67 +410,72 @@ void Character::Update()
 
 		break;
 	case CharStatus::IsMoving:
+		//▼이동 도중에는 화살표를 꺼버린다
 		for (auto& arrowTiles : toMove)
 		{
 			arrowTiles->SetArrowT("");
 		}
+		//▼이동하고자 하는 컨테이너가 하나라도 존재할때만 존재
 		if (toMove.size() > 0)
 		{
+			//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
 			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
 			{
 				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
 				if (directionAngle == 0)
-				{movingDirection = MovingDirection::RIGHT;}
+					{movingDirection = MovingDirection::RIGHT;}
 				else if (directionAngle == 90)
-				{movingDirection = MovingDirection::LEFT;}
+					{movingDirection = MovingDirection::LEFT;}
 				else if (directionAngle == 180)
-				{movingDirection = MovingDirection::UP;}
+					{movingDirection = MovingDirection::UP;}
 				else if (directionAngle == 270)
-				{movingDirection = MovingDirection::DOWN;}
+					{movingDirection = MovingDirection::DOWN;}
 				this->toMove.pop_back();
 			}
+			//▼만약 백터 끝자락에 담긴 좌표로 이동 완료가 되었을시
 			else if (PointCompare(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())))
 			{
-				index = toMove.back()->GetIndex();
-				this->toMove.pop_back();
+				index = toMove.back()->GetIndex(); //현 캐릭터의 인덱스 또한 갱신해주고
+				this->toMove.pop_back(); //마지막 노드를 제거
 			}
 			else
 			{
+				assert(TILESIZE % moveSpeed == 0); //이동속도가 48의 약수가 아니면 터뜨림
 				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
 				if(directionAngle==0)
 				{
-					position.left += 4;
-					position.right += 4;
+					position.left += moveSpeed;
+					position.right += moveSpeed;
 					movingDirection = MovingDirection::RIGHT;
 				}
 				else if(directionAngle ==90)
 				{ 
-					position.top -= 4;
-					position.bottom -= 4;
-					movingDirection = MovingDirection::LEFT;
+					position.top -= moveSpeed;
+					position.bottom -= moveSpeed;
+					movingDirection = MovingDirection::UP;
 				}
 				else if (directionAngle == 180)
 				{
-					position.left -= 4;
-					position.right -= 4;
-					movingDirection = MovingDirection::UP;
+					position.left -= moveSpeed;
+					position.right -= moveSpeed;
+					movingDirection = MovingDirection::LEFT;
 				}
 				else if(directionAngle==270)
 				{
-					position.top += 4;
-					position.bottom += 4;
+					position.top += moveSpeed;
+					position.bottom += moveSpeed;
 					movingDirection = MovingDirection::DOWN;
 				}
 				else
 				{
 					assert(false && "wrong angle");
 				}
-
 			}
 		}
 		else
 		{
 			cursor->SetCursorTurn(IngameStatus::SelectionUI);
+			dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
 			cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
 		}
 
@@ -573,8 +584,8 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 							allyTiles.insert(checkTarget);
 						}
 					}
-
 				}
+				//▼캐릭터가 적의 소유일떈
 				else if (whosChar == OwnedBy::Enemy)
 				{
 					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
@@ -596,7 +607,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 				}
 			}
-
+			//▼모든 조건이 맞으면, 검사 대상에 추가
 			if (UpValidity)
 			{
 				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -636,6 +647,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 
 				}
+				//▼캐릭터가 적의 소유일떈
 				else if (whosChar == OwnedBy::Enemy)
 				{
 					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
@@ -657,7 +669,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 				}
 			}
-
+			//▼모든 조건이 맞으면, 검사 대상에 추가
 			if (LeftValidity)
 			{
 				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -697,6 +709,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 
 				}
+				//▼캐릭터가 적의 소유일떈
 				else if (whosChar == OwnedBy::Enemy)
 				{
 					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
@@ -718,7 +731,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 				}
 			}
-
+			//▼모든 조건이 맞으면, 검사 대상에 추가
 			if (DownValidity)
 			{
 				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -758,6 +771,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 
 				}
+				//▼캐릭터가 적의 소유일떈
 				else if (whosChar == OwnedBy::Enemy)
 				{
 					for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
@@ -779,7 +793,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 					}
 				}
 			}
-
+			//▼모든 조건이 맞으면, 검사 대상에 추가
 			if (RightValidity)
 			{
 				checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -797,18 +811,18 @@ void Character::DisableMoveRange()
 	{
 		for (auto& redTile : redTiles)
 		{
-			redTile->DecreaseRedNum();
+			redTile->DecreaseRedNum(); //빨강 참조갯수 줄이기
 		}
 
 		for (auto& greenTile : greenTiles)
 		{
-			greenTile->DecreaseGreenNum();
+			greenTile->DecreaseGreenNum();//초록 참조갯수 줄이기
 		}
 
 		for (auto& blueTile : blueTiles)
 		{
 
-			blueTile->DecreaseBlueNum();
+			blueTile->DecreaseBlueNum();//파랑 참조갯수 줄이기
 		}
 		blueTiles.clear();
 		DATACENTRE.ClearObjects(ObjType::BlueTiles);
@@ -900,14 +914,16 @@ void Character::BlueRedShow(INT _actionRange)
 		{
 			if (occupation == Occupation::Cleric || occupation == Occupation::WarCleric)
 			{
+				//▼그린 참조갯수 증가
 				if (toCal->GetGreenAlpha() < 0.5f) toCal->SetGreenAlpha(0.4f);
-				toCal->IncreaseGreenNum();	//그린 참조 갯수 증가
+				toCal->IncreaseGreenNum();	
 				greenTiles.insert(toCal);
 				toCal->SetRouteNum(toCal->GetCheckedNum());
 				toCal->SetCheckedNum(0);
 			}
 			else
 			{
+				//▼빨강 참조갯수 증가
 				redTiles.insert(toCal);
 				toCal->SetRouteNum(toCal->GetCheckedNum());
 				toCal->SetCheckedNum(0);
@@ -915,17 +931,19 @@ void Character::BlueRedShow(INT _actionRange)
 		}
 		else
 		{
+			//▼블루 참조 갯수 증가
 			if (toCal->GetBlueAlpha() < 0.5f) toCal->SetBlueAlpha(0.4f);
-			toCal->IncreaseBlueNum();	//블루 참조 갯수 증가
+			toCal->IncreaseBlueNum();	
 			toCal->SetRouteNum(toCal->GetCheckedNum());
 			toCal->SetCheckedNum(0);
 			blueTiles.insert(toCal);
 		}
 	}
+	//▼추가적으로 들어온 레드타일에 대한 특별처리
 	for (auto& redTile : redTiles)
 	{
 		if (redTile->GetRedAlpha() < 0.5f) redTile->SetRedAlpha(0.4f);
-		redTile->IncreaseRedNum();	//레드 참조 갯수 증가
+		redTile->IncreaseRedNum();	
 		redTile->SetRouteNum(redTile->GetCheckedNum());
 		redTile->SetCheckedNum(0);
 	}
@@ -937,23 +955,23 @@ void Character::PurpleShow(INT _actionRange)
 	//▼연산 통해 담긴 행동범위에 따라 액션
 	for (auto& purpleTile : AvailableTiles)
 	{
+		//▼통상 퍼플타일
 		if (purpleTile->GetPurpleAlpha() < 0.5f) purpleTile->SetPurpleAlpha(0.4f);
-		purpleTile->IncreasePurpleNum();	//레드 참조 갯수 증가
+		purpleTile->IncreasePurpleNum();
 		purpleTile->SetRouteNum(purpleTile->GetCheckedNum());
 		purpleTile->SetCheckedNum(0);
 		purpleTiles.insert(purpleTile);
 	}
-
 	for (auto& purpleEnemyTile : foeTiles)
 	{
+		//▼적 타일일경우 
 		if (purpleEnemyTile->GetPurpleAlpha() < 0.5f) purpleEnemyTile->SetPurpleAlpha(0.4f);
-		purpleEnemyTile->IncreasePurpleNum();	//레드 참조 갯수 증가
+		purpleEnemyTile->IncreasePurpleNum();
 		purpleEnemyTile->SetRouteNum(purpleEnemyTile->GetCheckedNum());
 		purpleEnemyTile->SetCheckedNum(0);
 		purpleTiles.insert(purpleEnemyTile);
 	}
 }
-
 
 //▼직업 세팅용. 들어올 시 해당하는 스텟을 넣어줌. 존재하지 않는 직업이 들어올 시 터뜨림
 void Character::SetOccupation(Occupation _job)
@@ -1031,7 +1049,7 @@ void Character::SetFrameAuto(Occupation _job, OwnedBy _whos)
 }
 
 //▼주어진 이미지 이름으로 세팅
-void Character::SetImg(std::string _CharName)
+void Character::SetImgAuto(std::string _CharName)
 {
 	portraitImg = IMAGEMANAGER->FindImage("초상화" + _CharName);
 	frameImg = IMAGEMANAGER->FindImage("캐릭터" + _CharName);
@@ -1043,7 +1061,7 @@ void Character::SetInitialChar(Occupation _job, std::string _charName, POINT _in
 	whosChar = _whos;
 	SetOccupation(_job);
 	SetFrameAuto(_job, _whos);
-	SetImg(_charName);
+	SetImgAuto(_charName);
 	SetIndex(_index);
 	SetPositionViaIndex();
 }
@@ -1069,7 +1087,7 @@ void Character::Render()
 			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top); //어두운 그림자로 덮어버림
 		}
 
-		//▼추 후 UI로 뺼 부분
+		//▼추후 UI로 뺼 부분
 		portraitImg->SetAlpha(portraitAlpha);
 		if (index.x == 6 && index.y == 6)
 		{
@@ -1086,11 +1104,5 @@ void Character::Render()
 		frameImg->SetSize({ TILESIZE, TILESIZE });
 		frameImg->SetAlpha(0.5f);
 		frameImg->RelativeFrameRender(draggingIndexPrev.x * TILESIZE, draggingIndexPrev.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
-	}
-	for (auto asd : toMove)
-	{
-		//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(asd->GetPosition()),D2DRenderer::DefaultBrush::Red, 5);
-		D2DRENDERER->RenderText(CAMERA.RelativeCameraRect(asd->GetPosition()).left, CAMERA.RelativeCameraRect(asd->GetPosition()).top, std::to_wstring(asd->GetIndex().x) + L", " + std::to_wstring(asd->GetIndex().y), 20,D2DRenderer::DefaultBrush::Red);
-		D2DRENDERER->RenderText(CAMERA.RelativeCameraRect(asd->GetPosition()).right, CAMERA.RelativeCameraRect(asd->GetPosition()).bottom, std::to_wstring(asd->GetRouteNum()), 20, D2DRenderer::DefaultBrush::Black);
 	}
 }

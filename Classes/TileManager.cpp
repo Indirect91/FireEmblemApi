@@ -31,26 +31,10 @@ TileManager::TileManager()
 
 }
 
-//▼타일매니져 이닛을 해야 비로소 뉴할당이 일어난다.
+//▼타일매니져 이닛
 void TileManager::Init()
 {
-	//field = new Tiles[TILECOLX * TILEROWY];
-	//
-	//for (int j = 0; j < TILEROWY; j++)
-	//{
-	//	for (int i = 0; i < TILECOLX; i++)
-	//	{
-	//		field[j * TILECOLX + i].Init(); //생성된 타일 초기화
-	//		//▼추후 불러오기로 대체
-	//		field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
-	//		field[j * TILECOLX + i].SetIndex({ i,j });
-	//		if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
-	//		{
-	//			field[j * TILECOLX + i].SetObjT("tmp");
-	//		}
-	//		DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
-	//	}
-	//}
+
 }
 
 //▼업데이트는 보통 클리핑을 실시함.
@@ -71,7 +55,7 @@ void TileManager::Release()
 	SAFE_DELETE_ARRAY(field);
 }
 
-
+//▼타일 클리핑 하는부분
 void TileManager::ClipTiles()
 {
 	clippedTiles.clear(); //일단 클리핑 된 타일 목록을 비움
