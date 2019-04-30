@@ -226,6 +226,7 @@ void Character::Update()
 			cursor->SetCursorOccupied("");
 			cursor->SetIndex({ index.x,index.y });
 			cursor->SetPositionViaIndex();
+			cursor->SetIsEnemyOn(false);
 
 			DATACENTRE.ClearObjects(ObjType::BlueTiles);
 			DATACENTRE.ClearObjects(ObjType::FoeTiles);
@@ -239,6 +240,7 @@ void Character::Update()
 		}
 
 		//▼시작 세팅
+		cursor->SetIsEnemyOn(false);
 		draggingIndex = cursor->GetIndex(); //플레이어 위치
 		draggingStarted = nullptr;			//시작지점 비워줌
 		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)))
@@ -247,7 +249,10 @@ void Character::Update()
 			draggingIndexPrev = draggingIndex;
 		}
 		if (draggingStarted == nullptr)
-			{draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));}
+		{
+			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));
+			cursor->SetIsEnemyOn(true);
+		}
 		assert(draggingStarted!=nullptr);
 
 		auto MoveContainer = DATACENTRE.RefObjects(ObjType::BlueTiles);
@@ -400,8 +405,22 @@ void Character::Update()
 		//▼드래깅 도중 A키를 누르면 이동지역 확정지음
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
-			this->charStatus = CharStatus::IsMoving;
-			moveStartLocation = index; //출발하기 전에 원점 기억
+			//적이 만약 없는곳에 커서를 두고 A를 눌렀다면
+			if (!cursor->GetIsEnemyOn())
+			{
+				this->charStatus = CharStatus::IsMoving;
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::selectionBox);
+				moveStartLocation = index; //출발하기 전에 원점 기억
+			}
+			else
+			{
+				cursor->SetCursorTurn(IngameStatus::SelectionUI);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::battlePredict);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+				//SelectionUI
+			}
+			
 		}
 
 		break;
@@ -472,6 +491,7 @@ void Character::Update()
 				}
 			}
 		}
+		//▼이 캐릭터가 도달했을때
 		else
 		{
 			cursor->SetCursorTurn(IngameStatus::SelectionUI);

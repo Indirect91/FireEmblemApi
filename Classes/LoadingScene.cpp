@@ -60,6 +60,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");
 	_loading->LoadImg("CursorRed", L"IMAGE/ETC/cursorRed.png");
 	_loading->LoadImg("CursorBlue", L"IMAGE/ETC/cursorBlue.png");
+	_loading->LoadImg("CursorBattle", L"IMAGE/ETC/cursorBattle.png");
 	
 
 	//▼색

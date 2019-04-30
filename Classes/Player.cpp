@@ -40,7 +40,7 @@ void Player::Update()
 	{
 		//TODO:추후 큐런트플레이어아미로 대체 필요
 		dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->Update();
-
+		
 	}
 	else
 	{
@@ -82,7 +82,8 @@ void Player::Update()
 		cursor->MoveDown();
 	}
 
-	if (KEYMANAGER->IsOnceKeyDown('D'))
+	//▼ D 누를때, 동시연산이 일어나지 못하도록 드래깅도중인건 무시, 평상시엔 사용가능하게 세팅
+	if ((KEYMANAGER->IsOnceKeyDown('D')&& cursor->GetCursorOccupied() == "") || (KEYMANAGER->IsOnceKeyDown('D') && cursor->GetCursorOccupied() != "" && dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->GetStatus() != Character::CharStatus::IsDragging))
 	{
 		if (!enemyRangeDetector)
 		{

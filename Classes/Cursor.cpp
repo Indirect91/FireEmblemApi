@@ -13,6 +13,7 @@ Cursor::Cursor()
 	cursorTurnPrev = IngameStatus::PlayerTurn;			//일단은 플레이어 턴 색으로 출고
 	cursorOccupied = "";							//커서 점유한 캐릭터명
 	prevLocation = index;							//커서 드래그시 시작지점
+	isEnemyOn = "";
 }
 
 //▼커서 이닛
@@ -30,6 +31,7 @@ void Cursor::Init()
 	cursorFrame = 0;				//커서 프레임
 	cursorCounter = 0;				//커서가 너무 커서 프레임돌릴 카운터
 	SetPositionViaIndex();			//커서 포지션도 인덱스에 맞게 설정
+
 }
 
 //▼커서 릴리즈
@@ -197,7 +199,10 @@ void Cursor::Render()
 	}
 
 	IMAGEMANAGER->FindImage("타일커서")->SetSize({ TILESIZE, TILESIZE });
-	IMAGEMANAGER->FindImage("타일커서")->FrameRender(index.x * TILESIZE - CAMERA.GetCameraRc().left, index.y * TILESIZE - CAMERA.GetCameraRc().top, cursorFrame, 0);
-		
-	
+	IMAGEMANAGER->FindImage("타일커서")->RelativeFrameRender(index.x * TILESIZE, index.y * TILESIZE, cursorFrame, 0);
+
+	IMAGEMANAGER->FindImage("CursorBattle")->SetAlpha(isEnemyOn!="");
+	IMAGEMANAGER->FindImage("CursorBattle")->SetSize({32,32});
+	IMAGEMANAGER->FindImage("CursorBattle")->RelativeRender(index.x * TILESIZE +8, (index.y * TILESIZE)-30);
+
 }

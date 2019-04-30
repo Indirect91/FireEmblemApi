@@ -17,6 +17,7 @@ private:
 	POINT prevLocation;						//커서 드래그시 시작지점
 	UINT cursorFrame;						//커서 프레임
 	UINT cursorCounter;						//커서 프레임올릴 카운터
+	std::string isEnemyOn;							//커서가 적 위에 있는지
 
 	std::map <std::string, GameObject*>& clippedTiles = DATACENTRE.RefObjects(ObjType::ClippedTile);
 
@@ -34,16 +35,17 @@ public:
 	BOOL MoveLeft();
 	BOOL MoveRight();
 
-	const UINT &GetCursorFrame() const{ return cursorFrame; }
-	std::string & GetCursorOccupied() { return cursorOccupied; }
-	const IngameStatus &GetCursorTurn() const { return cursorTurn; }
 	const IngameStatus& GetCursorTurnPrev() const { return cursorTurnPrev; }
+	const IngameStatus &GetCursorTurn() const { return cursorTurn; }
+	std::string & GetCursorOccupied() { return cursorOccupied; }
+	const UINT &GetCursorFrame() const{ return cursorFrame; }
+	const std::string& GetIsEnemyOn() { return isEnemyOn; }
 
-	void SetCursorStatus(CursorState state) { cursorState = state; }				//M키 활성화여부
-	void SetCursorTurn(const IngameStatus &_turn) { cursorTurn = _turn; }			//턴 세팅
-	void SetCursorOccupied(std::string _target) { cursorOccupied = _target; }		//대상 설정
 	void SetCursorTurnPrev(const IngameStatus& _turnPrev) { cursorTurnPrev = _turnPrev; }			//턴 세팅
-	
+	void SetCursorOccupied(std::string _target) { cursorOccupied = _target; }						//대상 설정
+	void SetCursorTurn(const IngameStatus &_turn) { cursorTurn = _turn; }							//턴 세팅
+	void SetIsEnemyOn(const std::string _isEnemyOn) { isEnemyOn = _isEnemyOn; }
+	void SetCursorStatus(CursorState state) { cursorState = state; }								//M키 활성화여부
 
 	Cursor();
 	~Cursor() {};

@@ -115,7 +115,7 @@ void TileManager::Render()
 	for (auto& toRender : clippedTiles) //클리핑된 타일들만 돌면서
 	{
 		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
-		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::White, 2);
+		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::Black, 1);
 
 		//1.무빙타일
 		//2.터레인
