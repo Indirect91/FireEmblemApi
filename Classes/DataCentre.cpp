@@ -44,15 +44,15 @@ void DataCentre::Update()
 //▼오브젝트 컨테이너 속에 모든걸 릴리즈시킴
 void DataCentre::Release()
 {
-	for (auto& allObj : objContainer) //오브젝트 컨테이너를 전부 돈다. allObj는 현재 ObjCtr형식
-	{
-		for (auto& certainObj : allObj.second) //certainObj는 현재 map<std::string, class GameObject*> 형식
-		{
-			certainObj.second->Release(); //certainObj의 second는 gameObject포인터임. 그것들 릴리즈
-			SAFE_DELETE(certainObj.second); //포인터는 안전하게 버리고 널처리
-		}
-		allObj.second.clear(); //방금 포인터들 정리한 백터 비워버림
-	}
+	//for (auto& allObj : objContainer) //오브젝트 컨테이너를 전부 돈다. allObj는 현재 ObjCtr형식
+	//{
+	//	for (auto& certainObj : allObj.second) //certainObj는 현재 map<std::string, class GameObject*> 형식
+	//	{
+	//		certainObj.second->Release(); //certainObj의 second는 gameObject포인터임. 그것들 릴리즈
+	//		SAFE_DELETE(certainObj.second); //포인터는 안전하게 버리고 널처리
+	//	}
+	//	allObj.second.clear(); //방금 포인터들 정리한 백터 비워버림
+	//}
 }
 
 //▼오브젝트 컨테이너 속에 모든걸 랜더 돌림

@@ -5,11 +5,14 @@
 
 SelectionUI::SelectionUI()
 {
-	selectionBoxList = { 500,200,600,300 };
+	
+	selectionBox.selectionBoxList = { 500,200,600,300 };
+	selectionBox.selectionBoxTomove = {};
+	battlePredict.allyRenderPosition = {100,100};
+	battlePredict.enemyRenderPosition = { 500,100 };
 	cursor = nullptr;
 	photoFrameAlpha = 0;
-	selectionBoxTomove = {};
-	toShow = ToShow::battlePredict;
+	toShow = ToShow::Idle;
 }
 
 void SelectionUI::Init()
@@ -30,17 +33,17 @@ void SelectionUI::Update()
 
 	switch (toShow)
 	{
-	case SelectionUI::ToShow::selectionBox:
+	case SelectionUI::ToShow::SelectionBox:
 
 		if (KEYMANAGER->IsOnceKeyDown(VK_UP))
 		{
-			selectionBoxList.top -= 150;
-			selectionBoxList.bottom -= 150;
+			selectionBox.selectionBoxList.top -= 150;
+			selectionBox.selectionBoxList.bottom -= 150;
 		}
 		else if (KEYMANAGER->IsOnceKeyDown(VK_DOWN))
 		{
-			selectionBoxList.top += 150;
-			selectionBoxList.bottom += 150;
+			selectionBox.selectionBoxList.top += 150;
+			selectionBox.selectionBoxList.bottom += 150;
 		}
 		else if (KEYMANAGER->IsOnceKeyDown(VK_RETURN))
 		{
@@ -70,26 +73,46 @@ void SelectionUI::Update()
 
 
 		break;
-	case SelectionUI::ToShow::battlePredict:
+	case SelectionUI::ToShow::BattlePredict:
+	{
 		if (KEYMANAGER->IsOnceKeyDown('S'))
 		{
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 			cursor->SetCursorTurnPrev(IngameStatus::SelectionUI);
 		}
+
+
+
+
 		break;
+	}
 	default:
 		assert(false && "SelectionUI not made yet");
 		break;
 	}
-	
 
-	
+
+
 }
 
 void SelectionUI::Render()
 {
-	IMAGEMANAGER->FindImage("Blue")->SetSize({ 300, 100 });
-	IMAGEMANAGER->FindImage("Blue")->Render(selectionBoxList.left, selectionBoxList.top);
+
+	switch (toShow)
+	{
+	case SelectionUI::ToShow::SelectionBox:
+		IMAGEMANAGER->FindImage("Blue")->SetSize({ 300, 100 });
+		IMAGEMANAGER->FindImage("Blue")->Render(selectionBox.selectionBoxList.left, selectionBox.selectionBoxList.top);
+
+		break;
+	case SelectionUI::ToShow::BattlePredict:
+		IMAGEMANAGER->FindImage("초상화" + battlePredict.allyPtr->GetName())->Render(battlePredict.allyRenderPosition.x, battlePredict.allyRenderPosition.y);
+		IMAGEMANAGER->FindImage("초상화" + battlePredict.enemyPtr->GetName())->Render(battlePredict.enemyRenderPosition.x, battlePredict.enemyRenderPosition.y);
+		break;
+	default:
+		assert(false && "보여주는 UI에 에러있음");
+		break;
+	}
 
 
 	IMAGEMANAGER->FindImage("PhotoFrame")->SetSize({ 800,640 });

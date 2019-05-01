@@ -27,7 +27,7 @@ Character::Character()
 	frameLoop = 0;
 	frameCounter = 0;
 	frameInterval = 5;
-
+	name = "";
 	occupationData = { 0 };
 	ZeroMemory(&additionalData, sizeof(additionalData));
 	memset(&baseData, 0, sizeof(baseData));
@@ -43,6 +43,7 @@ Character::Character()
 //▼편리한 캐릭 생성을 위한 생성자 오버로딩
 Character::Character(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos) : whosChar(_whos)
 {
+	name = _charName;
 	moveSpeed = 8;
 	index = _index;
 	draggingIndex = _index;
@@ -251,7 +252,17 @@ void Character::Update()
 		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)))
 		{
 			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));
-			draggingIndexPrev = draggingIndex;
+			bool checkAlly = false;
+			for (auto& toExamine : DATACENTRE.RefObjects(ObjType::AllyTiles))
+			{
+				if (PointCompare(toExamine.second->GetIndex(), draggingStarted->GetIndex()))
+				{
+					checkAlly = true;
+					break;
+				}
+			}
+			if(!checkAlly) 
+			{draggingIndexPrev = draggingIndex;}
 		}
 		if (draggingStarted == nullptr)
 		{
@@ -418,20 +429,24 @@ void Character::Update()
 		//▼드래깅 도중 A키를 누르면 이동지역 확정지음
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
-			//적이 만약 없는곳에 커서를 두고 A를 눌렀다면
+			//▼적이 만약 없는곳에, 즉 빈타일에 커서를 두고 A를 눌렀다면
 			if ((cursor->GetIsOtherUnit().name==""))
 			{
 				this->charStatus = CharStatus::IsMoving;
-				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::selectionBox);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::SelectionBox);
 				moveStartLocation = index; //출발하기 전에 원점 기억
 			}
+
 			else
 			{
+
 				cursor->SetCursorTurn(IngameStatus::SelectionUI);
-				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::battlePredict);
-				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+				SelectionUI* toSelect = dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"));
+				toSelect->SetToShow(SelectionUI::ToShow::BattlePredict);
+				toSelect->SetBattlePredict(this, this);
+				toSelect->SetPhotoFrameAlphaZero();
 				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
-				//SelectionUI
+				SelectionUI;
 			}
 			
 		}
@@ -1137,5 +1152,6 @@ void Character::Render()
 		frameImg->SetSize({ TILESIZE, TILESIZE });
 		frameImg->SetAlpha(0.5f);
 		frameImg->RelativeFrameRender(draggingIndexPrev.x * TILESIZE, draggingIndexPrev.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
+	
 	}
 }

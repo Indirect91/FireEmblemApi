@@ -70,6 +70,7 @@ public:
 private:
 
 	//▼통상
+	std::string name;
 	class Item *item = nullptr;				//보유중인 아이템
 	CharStatus charStatus;					//캐릭터 상태
 	Occupation occupation;					//직업
@@ -133,34 +134,35 @@ public:
 
 	void SetInitialChar(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos);
 	void SetActionTaken(BOOL _actionTaken) { this->isActionTaken = _actionTaken; }
-	void SetOccupation(Occupation _job);
 	void SetFrame(POINT _frame) { this->frame = _frame; }
 	void SetFrameAuto(Occupation _job, OwnedBy _whos);
 	void SetImgAuto(std::string _CharName);
+	void SetOccupation(Occupation _job);
 
-	void SetAdditionalAttack(INT _attack) { this->additionalData.Attack = _attack; }
 	void SetAdditionalDefence(INT _defence) { this->additionalData.Defence = _defence; }
+	void SetAdditionalAttack(INT _attack) { this->additionalData.Attack = _attack; }
 	void SetAdditionalLuck(FLOAT _luck) { this->additionalData.Luck = _luck; }
 	void SetAdditionalMove(INT _move) { this->additionalData.Move = _move; }
 
 	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
 
 
+	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
+	const POINT& GetMoveStartLocation() const { return moveStartLocation; }
 	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
 	const Occupation &GetOccupation() const { return this->occupation; }
-	const POINT &GetFrame() const { return this->frame; }
-	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 	const CharStatus& GetStatus() const { return charStatus; }
-	const POINT& GetMoveStartLocation() const { return moveStartLocation; }
+	const POINT &GetFrame() const { return this->frame; }
+	const std::string& GetName() const { return this->name; }
 
 
 	//▼범위표시요청관련
 	void ShowMoveRange(void (Character::* colourShow)(INT));	//함수포인터로 어디를 보여줄지 확정지음
-	void DisableMoveRange();									//본인 주변 범위 끄기
-	void ShowActionRange();
-	void DisableActionRange();
 	void BlueRedShow(INT _actionRange);
 	void PurpleShow(INT _actionRange);
+	void DisableActionRange();
+	void DisableMoveRange();									//본인 주변 범위 끄기
+	void ShowActionRange();
 
 	Character();
 	Character(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos);
