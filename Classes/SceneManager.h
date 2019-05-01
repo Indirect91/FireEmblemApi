@@ -1,9 +1,7 @@
 #pragma once
 #include "SingletonBase.h"
-//=============================================================
-//	## sceneManager ## (씬매니져)
-//=============================================================
 
+//▼마이어식 싱글톤이 아닌 싱글톤베이스 상속받아서 만드는방식도 해봄
 class SceneManager : public SingletonBase<SceneManager>
 {
 public:

@@ -45,7 +45,7 @@ void SelectionUI::Update()
 			selectionBox.selectionBoxList.top += 150;
 			selectionBox.selectionBoxList.bottom += 150;
 		}
-		else if (KEYMANAGER->IsOnceKeyDown(VK_RETURN))
+		else if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
 
 			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->DisableMoveRange();

@@ -20,3 +20,8 @@ https://shhyc1001.tistory.com/
 
 HanYeong SHIN Email ▼
 shhyc1001@gmail.com
+
+Used Tools are
+- Visual Studio 2019 (for the "v142" compatibility on my workspace)
+- Adobe Photoshop
+- Sony Vegas
