@@ -2,6 +2,7 @@
 #include "Image.h"
 class GameNode
 {
+
 protected:
 	RECT tempC = { 0 };	//게임노드로부터 파생된 모든 씬은 충돌용 렉트를 가진다
 	enum class IngameStatus : UINT //인게임 턴 상태는 배틀씬들만 가지고있는다

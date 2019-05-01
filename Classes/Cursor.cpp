@@ -13,7 +13,6 @@ Cursor::Cursor()
 	cursorTurnPrev = IngameStatus::PlayerTurn;			//일단은 플레이어 턴 색으로 출고
 	cursorOccupied = "";							//커서 점유한 캐릭터명
 	prevLocation = index;							//커서 드래그시 시작지점
-	isEnemyOn = "";
 }
 
 //▼커서 이닛
@@ -201,7 +200,7 @@ void Cursor::Render()
 	IMAGEMANAGER->FindImage("타일커서")->SetSize({ TILESIZE, TILESIZE });
 	IMAGEMANAGER->FindImage("타일커서")->RelativeFrameRender(index.x * TILESIZE, index.y * TILESIZE, cursorFrame, 0);
 
-	IMAGEMANAGER->FindImage("CursorBattle")->SetAlpha(isEnemyOn!="");
+	IMAGEMANAGER->FindImage("CursorBattle")->SetAlpha(isOtherUnitOn.name!="");
 	IMAGEMANAGER->FindImage("CursorBattle")->SetSize({32,32});
 	IMAGEMANAGER->FindImage("CursorBattle")->RelativeRender(index.x * TILESIZE +8, (index.y * TILESIZE)-30);
 

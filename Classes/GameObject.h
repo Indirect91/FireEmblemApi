@@ -4,6 +4,8 @@
 class GameObject : public GameNode
 {
 protected:
+
+protected:
 	RECT position;  //모든 게임상의 물체는 포지션을 가진다
 	POINT index;	//실제 포지션이 아닌 인덱스로 이동하기도 한다
 public:

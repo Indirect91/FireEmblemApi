@@ -67,14 +67,6 @@ public:
 		INT Move = 0;		//이동력
 	};
 
-	//▼소유주
-	enum class OwnedBy
-	{
-		Enemy = 0,
-		Player = 4,
-		Ally = 8,
-	};
-
 private:
 
 	//▼통상

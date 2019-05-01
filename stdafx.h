@@ -45,9 +45,11 @@
 
 //▼내가 생성한 공용 자료형
 enum class Pivot : UINT
-{
-	LeftTop, Centre, Bottom
-};
+{LeftTop, Centre, Bottom};
+
+//▼소유주
+enum class OwnedBy
+{Enemy = 0,Player = 4,Ally = 8,Nobody};
 
 //▼내가 생성한 헤더
 #include "Classes/GameNode.h"

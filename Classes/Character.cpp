@@ -226,7 +226,7 @@ void Character::Update()
 			cursor->SetCursorOccupied("");
 			cursor->SetIndex({ index.x,index.y });
 			cursor->SetPositionViaIndex();
-			cursor->SetIsEnemyOn(false);
+			cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 
 			DATACENTRE.ClearObjects(ObjType::BlueTiles);
 			DATACENTRE.ClearObjects(ObjType::FoeTiles);
@@ -240,9 +240,14 @@ void Character::Update()
 		}
 
 		//▼시작 세팅
-		cursor->SetIsEnemyOn(false);
+		cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 		draggingIndex = cursor->GetIndex(); //플레이어 위치
 		draggingStarted = nullptr;			//시작지점 비워줌
+
+		//if (DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)))
+		//{
+		//
+		//}
 		if (DATACENTRE.CheckObjectExistance(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)))
 		{
 			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::BlueTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));
@@ -251,7 +256,15 @@ void Character::Update()
 		if (draggingStarted == nullptr)
 		{
 			draggingStarted = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::FoeTiles, TwoDimentionArrayToOneString(draggingIndex, TILECOLX)));
-			cursor->SetIsEnemyOn(true);
+			for (auto& toFind : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+			{
+				if (PointCompare(toFind.second->GetIndex(), draggingStarted->GetIndex()))
+				{
+					cursor->SetIsOtherUnitOn(toFind.first, OwnedBy::Enemy);
+					break;
+				}
+			}
+			assert(cursor->GetIsOtherUnit().name != "" && "타일 위에 적 있어야함..");
 		}
 		assert(draggingStarted!=nullptr);
 
@@ -406,7 +419,7 @@ void Character::Update()
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
 			//적이 만약 없는곳에 커서를 두고 A를 눌렀다면
-			if (!cursor->GetIsEnemyOn())
+			if ((cursor->GetIsOtherUnit().name==""))
 			{
 				this->charStatus = CharStatus::IsMoving;
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::selectionBox);
@@ -438,7 +451,7 @@ void Character::Update()
 		if (toMove.size() > 0)
 		{
 			//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
-			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
+			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX))|| DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
 			{
 				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
 				if (directionAngle == 0)
