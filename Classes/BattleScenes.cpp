@@ -3,17 +3,19 @@
 
 BattleScenes::BattleScenes()
 {
-	currentState = IngameStatus::PlayerTurn;
 	previousState = IngameStatus::StartPlacement;
-	escMenu = nullptr;
-	turnManager = nullptr;
+	currentState = IngameStatus::PlayerTurn;
+
+	startPlacement = nullptr;
+	battleManager = nullptr;
 	tileManager = nullptr;
+	selectionUI = nullptr;
+	turnManager = nullptr;
+	ingameUI = nullptr;
+	escMenu = nullptr;
+	cursor = nullptr;
 	player = nullptr;
 	enemy = nullptr;
-	startPlacement = nullptr;
-	cursor = nullptr;
-	selectionUI = nullptr;
-	ingameUI = nullptr;
 }
 
 void BattleScenes::ESCManage()

@@ -170,7 +170,6 @@ void Character::Update()
 			charStatus = CharStatus::IsDragging;
 
 			draggingIndex = cursor->GetIndex();
-			draggingIndexPrev = draggingIndex;
 		}
 		break;
 
@@ -219,7 +218,7 @@ void Character::Update()
 	//▼ 드래깅 상태일때
 	case CharStatus::IsDragging:
 	{
-		//▼우클릭이나 S를 누르면 픽상태 해지
+		//▼드래깅 도중 우클릭이나 S를 누르면 픽상태 해지
 		if (KEYMANAGER->IsOnceKeyDown('S'))
 		{
 			charStatus = CharStatus::IsCursorOn;
@@ -383,7 +382,7 @@ void Character::Update()
 							&& toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
 
 							toMove[i]->SetArrowtFrame({ 2,0 });
-						//TODO:추후 추가
+						//TODO:추후 없는방향 추가
 					}
 					else
 					{
@@ -426,6 +425,18 @@ void Character::Update()
 			}
 		}
 
+		if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove[0]->GetIndex(), TILECOLX)) || DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove[0]->GetIndex(), TILECOLX)))
+		{
+			draggingIndexPrev = toMove[1]->GetIndex();
+			//toMove[1]->SetArrowtFrame(toMove[0]->GetArrowFrame());
+			//toMove[0]->SetArrowT("");
+		}
+		else
+		{
+			draggingIndexPrev = draggingIndex;
+		}
+
+
 		//▼드래깅 도중 A키를 누르면 이동지역 확정지음
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
@@ -436,23 +447,29 @@ void Character::Update()
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::SelectionBox);
 				moveStartLocation = index; //출발하기 전에 원점 기억
 			}
-
+			//▼적 혹은 아군이 있는곳에 커서를 두고 A를 눌렀을때
 			else
 			{
+				if ((cursor->GetIsOtherUnit().whos == OwnedBy::Enemy))
+				{
+					cursor->SetCursorTurn(IngameStatus::SelectionUI);		//UI에게 턴을 넘김
+					cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);	//UI에게 이전 턴이 플레이었음을 저장
 
-				cursor->SetCursorTurn(IngameStatus::SelectionUI);
-				SelectionUI* toSelect = dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"));
-				toSelect->SetToShow(SelectionUI::ToShow::BattlePredict);
-				toSelect->SetBattlePredict(this, this);
-				toSelect->SetPhotoFrameAlphaZero();
-				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
-				SelectionUI;
+					//▼선택UI를 설정해줌
+					SelectionUI* toSelect = dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"));
+					toSelect->SetToShow(SelectionUI::ToShow::BattlePredict); //전투예측 화면을 보여주라고 세팅
+					toSelect->SetBattlePredict(this, dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::EnemyArmy, cursor->GetIsOtherUnit().name)));
+					toSelect->SetBattlePredictInwards();
+				}
+				else if ((cursor->GetIsOtherUnit().whos == OwnedBy::Player))
+				{
+					//TODO:아군 힐 예측
+				}
 			}
-			
 		}
-
 		break;
 	}
+	//보이지도 않고, 행동도 안하고, 그리지도 않고..
 	case CharStatus::Disable:
 
 		break;
@@ -468,7 +485,7 @@ void Character::Update()
 			//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
 			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX))|| DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
 			{
-				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
+				float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition()));
 				if (directionAngle == 0)
 					{movingDirection = MovingDirection::RIGHT;}
 				else if (directionAngle == 90)
@@ -544,9 +561,6 @@ void Character::Update()
 		assert((BOOL)charStatus || "missing character status"); //스탯 안만든거 있다는 뜻이니 오면 터뜨림
 		break;
 	}
-
-	//TODO
-	//GameObject::SetPositionViaIndex();
 }
 
 
@@ -1029,59 +1043,73 @@ void Character::SetOccupation(Occupation _job)
 	{
 	case Occupation::Swordsman:
 		occupationData.Range = 1;
+		occupationData.Speed = 5;
 		occupationData.Health = 25;
 		occupationData.Attack = 5;
 		occupationData.Defence = 5;
 		occupationData.Luck = 90;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
 		break;
 	case Occupation::Knight:
 		occupationData.Range = 1;
+		occupationData.Speed = 15;
 		occupationData.Health = 25;
 		occupationData.Attack = 5;
 		occupationData.Defence = 5;
 		occupationData.Luck = 90;
 		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Lance;
 		break;
 	case Occupation::Mage:
+		occupationData.Speed = 5;
 		occupationData.Range = 2;
 		occupationData.Health = 20;
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 80;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
 		break;
 	case Occupation::Assassin:
+		occupationData.Speed = 5;
 		occupationData.Range = 1;
 		occupationData.Health = 20;
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 95;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
 		break;
 	case Occupation::Archer:
+		occupationData.Speed = 5;
 		occupationData.Range = 2;
 		occupationData.Health = 15;
 		occupationData.Attack = 8;
 		occupationData.Defence = 2;
 		occupationData.Luck = 70;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Bow;
 		break;
 	case Occupation::Cleric:
+		occupationData.Speed = 5;
 		occupationData.Range = 1;
 		occupationData.Health = 15;
 		occupationData.Attack = 2;
 		occupationData.Defence = 1;
 		occupationData.Luck = 100;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Staff;
 		break;
 	case Occupation::Sniper:
+		occupationData.Speed = 1;
 		occupationData.Range = 3;
 		occupationData.Health = 15;
-		occupationData.Attack = 8;
+		occupationData.Attack = 10;
 		occupationData.Defence = 2;
 		occupationData.Luck = 70;
 		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Bow;
 		break;
 	default:
 		assert(false && "Occupation does not exist"); //존재하지 않는 직업 들어오면 터뜨림

@@ -127,6 +127,9 @@
     <Filter Include="MainGame\GameObject\UI\SelectionUI">
       <UniqueIdentifier>{63723c8d-7b9e-43be-aa28-95cb2ea66a8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\GameObject\Battle">
+      <UniqueIdentifier>{a239fa2c-4547-4ab4-a62d-207e750ad6e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\D2DRenderer.h">
@@ -258,6 +261,9 @@
     <ClInclude Include="Classes\SelectionUI.h">
       <Filter>MainGame\GameObject\UI\SelectionUI</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\ExecuteBattle.h">
+      <Filter>MainGame\GameObject\Battle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
@@ -382,6 +388,9 @@
     </ClCompile>
     <ClCompile Include="Classes\SelectionUI.cpp">
       <Filter>MainGame\GameObject\UI\SelectionUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\ExecuteBattle.cpp">
+      <Filter>MainGame\GameObject\Battle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,11 +7,11 @@
 //▼일단 비워서 출고
 Player::Player()
 {
+	enemyRangeCalculatedPrev = "";
+	enemyRangeCalculated = "";
+	enemyRangeDetector = false;
 	playerGold = nullptr;
 	cursor = nullptr;
-	enemyRangeDetector = false;
-	enemyRangeCalculated = "";
-	enemyRangeCalculatedPrev = "";
 }
 
 //▼이닛시 데이터센터와의 연결점을 만든다

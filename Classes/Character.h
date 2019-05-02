@@ -64,7 +64,9 @@ public:
 		INT Defence = 0;	//방어력
 		INT Health = 0;		//체력
 		FLOAT Luck = 0;		//행운, 명중률 및 크리율
+		INT Speed = 0;		//속도. 상대방과 5차이가 나면 두번 공격한다
 		INT Move = 0;		//이동력
+		WeaponType Weapon;	//무기종류
 	};
 
 private:
@@ -154,6 +156,17 @@ public:
 	const CharStatus& GetStatus() const { return charStatus; }
 	const POINT &GetFrame() const { return this->frame; }
 	const std::string& GetName() const { return this->name; }
+
+	//▼스탯 가져오는쪽
+	const INT GetDefence() const { return additionalData.Defence + occupationData.Defence + baseData.Defence; }
+	const INT GetAttackRange() const {return additionalData.Range + occupationData.Range + baseData.Range; }
+	const INT GetHealth() const { return additionalData.Health + occupationData.Health + baseData.Health; }
+	const INT GetDamage() const { return additionalData.Attack + occupationData.Attack + baseData.Attack; }
+	const INT GetMoveRange() const { return additionalData.Move + occupationData.Move + baseData.Move;}
+	const INT GetSpeed() const { return additionalData.Speed + occupationData.Speed + baseData.Speed; }
+	const FLOAT GetLuck() const { return additionalData.Luck + occupationData.Luck + baseData.Luck; }
+	const WeaponType &GetWeaponType() const { return occupationData.Weapon; }
+	const Item* GetItemPtr() const { return item; }
 
 
 	//▼범위표시요청관련

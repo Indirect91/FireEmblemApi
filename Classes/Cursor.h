@@ -51,6 +51,7 @@ public:
 	void SetCursorTurn(const IngameStatus &_turn) { cursorTurn = _turn; }							//턴 세팅
 	void SetCursorOccupied(std::string _target) { cursorOccupied = _target; }						//대상 설정
 	void SetCursorTurnPrev(const IngameStatus& _turnPrev) { cursorTurnPrev = _turnPrev; }			//턴 세팅
+	
 	void SetIsOtherUnitOn(std::string _name, OwnedBy _whos) { isOtherUnitOn.name = _name; isOtherUnitOn.whos = _whos; }
 
 	Cursor();

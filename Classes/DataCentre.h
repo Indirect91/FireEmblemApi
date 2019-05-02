@@ -6,6 +6,7 @@ enum class ObjType : UINT
 	UI,
 	Tile,
 	Gold,
+	Battle,
 	FoeTiles,
 	BlueTiles,
 	EnemyArmy,

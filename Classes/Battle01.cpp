@@ -11,6 +11,7 @@
 #include "Cursor.h"
 #include "UserInteface.h"
 #include "SelectionUI.h"
+#include "ExecuteBattle.h"
 
 Battle01::Battle01()
 {
@@ -43,6 +44,11 @@ void Battle01::Init()
 	cursor->Init();
 	DATACENTRE.AddObj(ObjType::UI, "Cursor", cursor);
 
+	//▼전투 매니져를 만들고 등록시킴
+	battleManager = new ExecuteBattle;	//전투매니져
+	battleManager->Init();
+	DATACENTRE.AddObj(ObjType::Battle, "BattleManager", battleManager);
+
 	//▼플레이어를 만들고 이닛시킴
 	player = new Player;
 	player->Init();
@@ -57,7 +63,9 @@ void Battle01::Init()
 
 	//▼통상 UI 제작
 	ingameUI = new UserInteface;
+	ingameUI->Init();
 
+	//▼선택 UI 제작
 	selectionUI = new SelectionUI;
 	selectionUI->Init();
 	DATACENTRE.AddObj(ObjType::UI, "SelectionUI", selectionUI);
@@ -124,6 +132,9 @@ void Battle01::Update()
 	case IngameStatus::TurnChanging:
 		turnManager->Update();
 		break;
+	case IngameStatus::ExecutingBattle:
+		battleManager->Update();
+		break;
 	case IngameStatus::ESCMenu:
 		escMenu->Update();
 		break;
@@ -161,7 +172,6 @@ void Battle01::Render()
 	bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight()); 
 	
 	tileManager->Render();
-	IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
 
 	player->Render();
 	enemy->Render();
@@ -170,4 +180,6 @@ void Battle01::Render()
 	{
 		selectionUI->Render();
 	}
+	IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
+	//인게임UI
 }

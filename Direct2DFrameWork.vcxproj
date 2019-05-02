@@ -150,6 +150,7 @@
     <ClInclude Include="Classes\Direct2DFrameWork.h" />
     <ClInclude Include="Classes\Enemy.h" />
     <ClInclude Include="Classes\ESCMenu.h" />
+    <ClInclude Include="Classes\ExecuteBattle.h" />
     <ClInclude Include="Classes\GameNode.h" />
     <ClInclude Include="Classes\GameObject.h" />
     <ClInclude Include="Classes\Gold.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Classes\Direct2DFrameWork.cpp" />
     <ClCompile Include="Classes\Enemy.cpp" />
     <ClCompile Include="Classes\ESCMenu.cpp" />
+    <ClCompile Include="Classes\ExecuteBattle.cpp" />
     <ClCompile Include="Classes\GameNode.cpp" />
     <ClCompile Include="Classes\GameObject.cpp" />
     <ClCompile Include="Classes\Gold.cpp" />

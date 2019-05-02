@@ -264,5 +264,5 @@ inline float GetAngleDegree(POINT _start, POINT _end)
 			angle -= PI * 2.0f;
 	}
 
-	return ToDegree(angle);
+	return floor(ToDegree(angle) + 0.5f);
 }
