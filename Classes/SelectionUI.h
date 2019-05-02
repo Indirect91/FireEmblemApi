@@ -33,34 +33,27 @@ public:
 		POINT allyRenderPosition = { 0 };
 	};
 
+	struct toRender
+	{
+		Character* charPtr = nullptr;								//적 캐릭터 포인터
+		POINT RenderPortrait = { 0 };									//적 초상화 그릴 위치
+		POINT RenderPortraitOriginal = { 758,100 };					//적 초상화 원위치
+		POINT RenderPortraitToMove = { 500,100 };						//적 초상화 이동하고자 하
+		POINT RenderName = { 0 };										//적 이름 그릴 위치
+		POINT RenderHealthPredict = { 0 };								//적 체력 예상 그릴 위치
+		POINT RenderHitRatePredict = { 0 };							//적 명중 예상 그릴 위치
+		POINT RenderWeaponAdvantage = { 0 };							//적 무기 상성 그릴 위치
+	};
+
 	//▼전투 예측화면일시
 	struct BattlePredict
 	{
 		//▼통상
-		//BOOL isMovingOutwards = false;
-		//BOOL isMovingInwards = false;
-		//BOOL isBattleReady = false;
 		BattleUIState battleUIState;
-
 		//▼적관련
-		class Character* enemyPtr = nullptr;								//적 캐릭터 포인터
-		POINT enemyRenderPortrait = { 0 };									//적 초상화 그릴 위치
-		POINT enemyRenderPortraitOriginal = { 758,100 };					//적 초상화 원위치
-		POINT enemyRenderPortraitToMove = { 500,100 };						//적 초상화 이동하고자 하는 위치
-		POINT enemyRenderName = { 0 };										//적 이름 그릴 위치
-		POINT enemyRenderHealthPredict = { 0 };								//적 체력 예상 그릴 위치
-		POINT enemyRenderHitRatePredict = { 0 };							//적 명중 예상 그릴 위치
-		POINT enemyRenderWeaponAdvantage = { 0 };							//적 무기 상성 그릴 위치
-
+		toRender enemyRender;
 		//▼공격한 캐릭터 관련
-		class Character* thisCharacterPtr = nullptr;						//현재 캐릭터 포인터
-		POINT thisCharacterRenderPortrait = { 0 };							//현재 캐릭터 초상화 그릴 위치
-		POINT thisCharacterRenderPortraitOriginal = { -158,100 };			//현재 캐릭터 원위치
-		POINT thisCharacterRenderPortraitToMove = { 100,100 };				//현재 캐릭터 이동하고자 하는 위치
-		POINT thisCharacterRenderName = { 0 };								//현재 캐릭터 이름 그릴 위치
-		POINT thisCharacterRenderHealthPredict = { 0 };						//현재 캐릭터 체력 예상 그릴 위치
-		POINT thisCharacterRenderHitRatePredict = { 0 };					//현재 캐릭터 명중 예상 그릴 위치
-		POINT thisCharacterRenderWeaponAdvantage = { 0 };					//현재 캐릭터 무기 상성 그릴 위치
+		toRender thisCharRender;
 	};
 
 	//▼행동 들어왔을시
@@ -85,7 +78,7 @@ public:
 	void Render()override;
 	void Init() override;
 
-	void SetBattlePredict(Character* _thisCharacter, Character* _enemy) { battlePredict.thisCharacterPtr = _thisCharacter; battlePredict.enemyPtr = _enemy; }
+	void SetBattlePredict(Character* _thisCharacter, Character* _enemy) { battlePredict.thisCharRender.charPtr = _thisCharacter; battlePredict.enemyRender.charPtr = _enemy; }
 	void SetHealPredict(Character* _thisCharacter, Character* _ally) { healPredict.thisCharacter = _thisCharacter; healPredict.allyCharacter = _ally; }
 	void SetToShow(ToShow _whatToShow);  
 	void SetPhotoFrameAlphaZero() { photoFrameAlpha = 0; }

@@ -266,3 +266,21 @@ inline float GetAngleDegree(POINT _start, POINT _end)
 
 	return floor(ToDegree(angle) + 0.5f);
 }
+
+//▼렉트 움직인거 반환하는 인라인들
+inline RECT moveLeft(RECT _toMove, INT _amount)
+{return{_toMove.left - _amount,_toMove.top,_toMove.right - _amount ,_toMove.bottom };}
+inline RECT moveRight(RECT _toMove, INT _amount)
+{return{ _toMove.left + _amount,_toMove.top,_toMove.right + _amount ,_toMove.bottom };}
+inline RECT moveUp(RECT _toMove, INT _amount)
+{return{ _toMove.left,_toMove.top - _amount,_toMove.right ,_toMove.bottom - _amount };}
+inline RECT moveDown(RECT _toMove, INT _amount)
+{return{ _toMove.left,_toMove.top + _amount,_toMove.right ,_toMove.bottom + _amount };}
+inline RECT moveDownLeft(RECT _toMove, INT _amount)
+{return{ _toMove.left- _amount,_toMove.top + _amount,_toMove.right-_amount ,_toMove.bottom + _amount };}
+inline RECT moveDownRight(RECT _toMove, INT _amount)
+{return{ _toMove.left+ _amount,_toMove.top + _amount,_toMove.right+_amount ,_toMove.bottom + _amount };}
+inline RECT moveUpLeft(RECT _toMove, INT _amount)
+{return{ _toMove.left- _amount,_toMove.top - _amount,_toMove.right- _amount ,_toMove.bottom - _amount };}
+inline RECT moveUpRight(RECT _toMove, INT _amount)
+{return{ _toMove.left+ _amount,_toMove.top - _amount,_toMove.right+ _amount ,_toMove.bottom - _amount };}

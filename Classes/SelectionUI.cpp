@@ -8,12 +8,28 @@ SelectionUI::SelectionUI()
 {
 	
 	selectionBox.selectionBoxList = { 500,200,600,300 };
-	selectionBox.selectionBoxTomove = {};
-	//battlePredict.thisCharacterRenderPortrait = {100,100};
-	//battlePredict.enemyRenderPortrait = { 500,100 };
+	selectionBox.selectionBoxTomove = { 500,200,600,300 };
 	cursor = nullptr;
 	photoFrameAlpha = 0;
 	toShow = ToShow::Idle;
+
+	battlePredict.enemyRender.charPtr = nullptr;
+	battlePredict.enemyRender.RenderPortrait = { 0 };									//적 초상화 그릴 위치
+	battlePredict.enemyRender.RenderPortraitOriginal = { 758,100 };						//적 초상화 원위치
+	battlePredict.enemyRender.RenderPortraitToMove = { 500,100 };						//적 초상화 이동하고자 하는 위치
+	battlePredict.enemyRender.RenderName = { 0 };										//적 이름 그릴 위치
+	battlePredict.enemyRender.RenderHealthPredict = { 0 };								//적 체력 예상 그릴 위치
+	battlePredict.enemyRender.RenderHitRatePredict = { 0 };								//적 명중 예상 그릴 위치
+	battlePredict.enemyRender.RenderWeaponAdvantage = { 0 };							//적 무기 상성 그릴 위치
+
+	battlePredict.thisCharRender.charPtr = nullptr;										//현재 캐릭터 포인터
+	battlePredict.thisCharRender.RenderPortrait = { 0 };								//현재 캐릭터 초상화 그릴 위치
+	battlePredict.thisCharRender.RenderPortraitOriginal = { -158,100 };					//현재 캐릭터 원위치
+	battlePredict.thisCharRender.RenderPortraitToMove = { 100,100 };					//현재 캐릭터 이동하고자 하는 위치
+	battlePredict.thisCharRender.RenderName = { 0 };									//현재 캐릭터 이름 그릴 위치
+	battlePredict.thisCharRender.RenderHealthPredict = { 0 };							//현재 캐릭터 체력 예상 그릴 위치
+	battlePredict.thisCharRender.RenderHitRatePredict = { 0 };							//현재 캐릭터 명중 예상 그릴 위치
+	battlePredict.thisCharRender.RenderWeaponAdvantage = { 0 };							//현재 캐릭터 무기 상성 그릴 위치
 }
 
 void SelectionUI::Init()
@@ -67,8 +83,6 @@ void SelectionUI::Update()
 			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->DisableMoveRange();
 			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->SetActionTaken(true);
 
-			//DATACENTRE.ClearObjects(ObjType::FoeTiles);
-			//DATACENTRE.ClearObjects(ObjType::AllyTiles);
 			cursor->SetCursorOccupied("");
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 			cursor->SetCursorTurnPrev(IngameStatus::SelectionUI);
@@ -101,15 +115,15 @@ void SelectionUI::Update()
 
 			if (photoFrameAlpha > 0.f) photoFrameAlpha -= 0.2f;
 
-			if (!PointCompare(battlePredict.thisCharacterRenderPortrait, battlePredict.thisCharacterRenderPortraitOriginal))
+			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitOriginal))
 			{
-				battlePredict.thisCharacterRenderPortrait.x -= 43;
+				battlePredict.thisCharRender.RenderPortrait.x -= 43;
 			}
-			if (!PointCompare(battlePredict.enemyRenderPortrait, battlePredict.enemyRenderPortraitOriginal))
+			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitOriginal))
 			{
-				battlePredict.enemyRenderPortrait.x += 43;
+				battlePredict.enemyRender.RenderPortrait.x += 43;
 			}
-			if (battlePredict.thisCharacterRenderPortrait.x == battlePredict.thisCharacterRenderPortraitOriginal.x && battlePredict.enemyRenderPortrait.x == battlePredict.enemyRenderPortraitOriginal.x)
+			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitOriginal.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitOriginal.x)
 			{
 				
 				cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
@@ -124,17 +138,17 @@ void SelectionUI::Update()
 			//▼사진 안으로 이동하라는 지시 들어왔을시
 			if (photoFrameAlpha < 1.f) photoFrameAlpha += 0.2f;
 			//▼플레이어캐릭터 이미지가 아직 이미지 보여주는 지점에 도달하지 못하였다면
-			if (!PointCompare(battlePredict.thisCharacterRenderPortrait, battlePredict.thisCharacterRenderPortraitToMove))
+			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitToMove))
 			{
-				battlePredict.thisCharacterRenderPortrait.x += 43;
+				battlePredict.thisCharRender.RenderPortrait.x += 43;
 			}
 			//▼적 캐릭터 이미지가 아직 이미지 보여주는 지점에 도달하지 못하였다면
-			if (!PointCompare(battlePredict.enemyRenderPortrait, battlePredict.enemyRenderPortraitToMove))
+			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitToMove))
 			{
-				battlePredict.enemyRenderPortrait.x -= 43;
+				battlePredict.enemyRender.RenderPortrait.x -= 43;
 			}
 			//▼플레이어캐릭터, 적 캐릭터 모두 정위치에 도달하였다면
-			if (battlePredict.thisCharacterRenderPortrait.x == battlePredict.thisCharacterRenderPortraitToMove.x && battlePredict.enemyRenderPortrait.x == battlePredict.enemyRenderPortraitToMove.x)
+			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitToMove.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitToMove.x)
 			{
 				battlePredict.battleUIState = BattleUIState::IsWaitingForInput;
 			}
@@ -144,19 +158,22 @@ void SelectionUI::Update()
 		case SelectionUI::BattleUIState::IsBattleReady:
 			if (photoFrameAlpha > 0.f) photoFrameAlpha -= 0.2f;
 
-			if (!PointCompare(battlePredict.thisCharacterRenderPortrait, battlePredict.thisCharacterRenderPortraitOriginal))
+			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitOriginal))
 			{
-				battlePredict.thisCharacterRenderPortrait.x -= 43;
+				battlePredict.thisCharRender.RenderPortrait.x -= 43;
 			}
-			if (!PointCompare(battlePredict.enemyRenderPortrait, battlePredict.enemyRenderPortraitOriginal))
+			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitOriginal))
 			{
-				battlePredict.enemyRenderPortrait.x += 43;
+				battlePredict.enemyRender.RenderPortrait.x += 43;
 			}
-			if (battlePredict.thisCharacterRenderPortrait.x == battlePredict.thisCharacterRenderPortraitOriginal.x && battlePredict.enemyRenderPortrait.x == battlePredict.enemyRenderPortraitOriginal.x)
+			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitOriginal.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitOriginal.x)
 			{
 				//cursor->SetCursorTurnPrev(cursor->GetCursorTurnPrev());
 				cursor->SetCursorTurn(IngameStatus::ExecutingBattle);
-				dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetWhoBattles(battlePredict.thisCharacterPtr, battlePredict.enemyPtr);
+				dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetWhoBattles(battlePredict.thisCharRender.charPtr, battlePredict.enemyRender.charPtr);
+				
+				//battlePredict.thisCharRender.charPtr->SetStatus(Character::CharStatus::IsAttacking);
+				
 			}
 			
 
@@ -201,15 +218,15 @@ void SelectionUI::Update()
 void SelectionUI::SetBattlePredictInwards()
 {
 	battlePredict.battleUIState = BattleUIState::IsMovingInwards;
-	battlePredict.enemyRenderPortrait = battlePredict.enemyRenderPortraitOriginal;					//적은 우측 외각서부터 출발
-	battlePredict.thisCharacterRenderPortrait = battlePredict.thisCharacterRenderPortraitOriginal;	//아군 이미지는 좌측 외각서부터 출발
+	battlePredict.enemyRender.RenderPortrait = battlePredict.enemyRender.RenderPortraitOriginal;					//적은 우측 외각서부터 출발
+	battlePredict.thisCharRender.RenderPortrait = battlePredict.thisCharRender.RenderPortraitOriginal;	//아군 이미지는 좌측 외각서부터 출발
 }
 
 void SelectionUI::SetBattlePredictOutwards()
 {
 	battlePredict.battleUIState = BattleUIState::IsMovingOutwards;
-	battlePredict.enemyRenderPortrait = battlePredict.enemyRenderPortraitToMove;					//적 이미지는 100지점에서부터
-	battlePredict.thisCharacterRenderPortrait = battlePredict.thisCharacterRenderPortraitToMove;	//아군 이미지는 500지점에서부터
+	battlePredict.enemyRender.RenderPortrait = battlePredict.enemyRender.RenderPortraitToMove;					//적 이미지는 100지점에서부터
+	battlePredict.thisCharRender.RenderPortrait = battlePredict.thisCharRender.RenderPortraitToMove;	//아군 이미지는 500지점에서부터
 }
 
 
@@ -224,8 +241,8 @@ void SelectionUI::Render()
 
 		break;
 	case SelectionUI::ToShow::BattlePredict:
-		IMAGEMANAGER->FindImage("초상화" + battlePredict.thisCharacterPtr->GetName())->Render(battlePredict.thisCharacterRenderPortrait.x, battlePredict.thisCharacterRenderPortrait.y);
-		IMAGEMANAGER->FindImage("초상화" + battlePredict.enemyPtr->GetName())->Render(battlePredict.enemyRenderPortrait.x, battlePredict.enemyRenderPortrait.y);
+		IMAGEMANAGER->FindImage("초상화" + battlePredict.thisCharRender.charPtr->GetName())->Render(battlePredict.thisCharRender.RenderPortrait.x, battlePredict.thisCharRender.RenderPortrait.y);
+		IMAGEMANAGER->FindImage("초상화" + battlePredict.enemyRender.charPtr->GetName())->Render(battlePredict.enemyRender.RenderPortrait.x, battlePredict.enemyRender.RenderPortrait.y);
 
 		break;
 	default:

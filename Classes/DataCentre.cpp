@@ -125,11 +125,11 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
-	AddObj(ObjType::PlayerArmy, "Chrome", new Character(Occupation::Swordsman, "Chrome", { 5,2 }, OwnedBy::Player));
-	AddObj(ObjType::PlayerArmy, "Anna", new Character(Occupation::Swordsman, "Anna", { 3,4 }, OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Chrome", new Character(GameObject::Occupation::Swordsman, "Chrome", { 5,2 }, OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Anna", new Character(GameObject::Occupation::Swordsman, "Anna", { 3,4 }, OwnedBy::Player));
 
-	AddObj(ObjType::EnemyArmy, "Olivia", new Character(Occupation::Assassin, "Olivia", { 6,6 }, OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Lucina", new Character(Occupation::Sniper, "Lucina", { 8,8 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Olivia", new Character(GameObject::Occupation::Assassin, "Olivia", { 6,6 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Lucina", new Character(GameObject::Occupation::Sniper, "Lucina", { 8,8 }, OwnedBy::Enemy));
 
 	return S_OK;
 }

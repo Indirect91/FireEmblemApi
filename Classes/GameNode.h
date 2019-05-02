@@ -29,6 +29,8 @@ protected:
 		Staff,				//지팡이
 	};
 
+
+
 public:
 	GameNode() {};
 	virtual ~GameNode() {}; //가상 소멸자를 통해, 자식의 소멸자가 씹히는걸 방지한다

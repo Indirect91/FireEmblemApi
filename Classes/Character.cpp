@@ -4,10 +4,13 @@
 #include "Tiles.h"
 #include "Cursor.h"
 #include "SelectionUI.h"
+#include "ExecuteBattle.h"
+
 
 //▼생성자
 Character::Character()
 {
+	isInBattle = false;
 	moveSpeed = 8;
 	whosChar = OwnedBy::Ally;
 	draggingIndex = index;
@@ -28,7 +31,7 @@ Character::Character()
 	frameCounter = 0;
 	frameInterval = 5;
 	name = "";
-	occupationData = { 0 };
+	ZeroMemory(&occupationData, sizeof(occupationData)); ;
 	ZeroMemory(&additionalData, sizeof(additionalData));
 	memset(&baseData, 0, sizeof(baseData));
 	draggingIndexPrev = {0};
@@ -43,6 +46,7 @@ Character::Character()
 //▼편리한 캐릭 생성을 위한 생성자 오버로딩
 Character::Character(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos) : whosChar(_whos)
 {
+	isInBattle = false;
 	name = _charName;
 	moveSpeed = 8;
 	index = _index;
@@ -63,7 +67,7 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	frameCounter = 0;
 	frameInterval = 5;
 
-	occupationData = { 0 };
+	ZeroMemory(&occupationData, sizeof(occupationData)); ;
 	ZeroMemory(&additionalData, sizeof(additionalData));
 	memset(&baseData, 0, sizeof(baseData));
 
@@ -327,12 +331,12 @@ void Character::Update()
 					else if (toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
 					{
 						toMove[i]->SetArrowtFrame({ 3,2 });
-						draggindDirection = DraggingDirection::UP;
+						draggindDirection = DraggingDirection::TOP;
 					}
 					else
 					{
 						toMove[i]->SetArrowtFrame({ 2,2 });
-						draggindDirection = DraggingDirection::DOWN;
+						draggindDirection = DraggingDirection::BOTTOM;
 					}
 				}
 				else if ((i - 1 >= 0) && i == toMove.size() - 1)
@@ -491,9 +495,9 @@ void Character::Update()
 				else if (directionAngle == 90)
 					{movingDirection = MovingDirection::LEFT;}
 				else if (directionAngle == 180)
-					{movingDirection = MovingDirection::UP;}
+					{movingDirection = MovingDirection::TOP;}
 				else if (directionAngle == 270)
-					{movingDirection = MovingDirection::DOWN;}
+					{movingDirection = MovingDirection::BOTTOM;}
 				this->toMove.pop_back();
 			}
 			//▼만약 백터 끝자락에 담긴 좌표로 이동 완료가 되었을시
@@ -505,43 +509,80 @@ void Character::Update()
 			else
 			{
 				assert(TILESIZE % moveSpeed == 0); //이동속도가 48의 약수가 아니면 터뜨림
-				float directionAngle = floor(GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition())) + 0.5f);
-				if(directionAngle==0)
+				float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition()));
+
+				if (directionAngle >= 337.5 && directionAngle <= 360.f || directionAngle >= 0 && directionAngle < 22.5f)
 				{
 					position.left += moveSpeed;
 					position.right += moveSpeed;
 					movingDirection = MovingDirection::RIGHT;
 				}
-				else if(directionAngle ==90)
+				else if (directionAngle >= 22.5f && directionAngle < 67.5f)
 				{ 
+					movingDirection = MovingDirection::RIGHTTOP;
+					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+				}
+				else if (directionAngle >= 67.5f && directionAngle < 112.5f)
+				{
 					position.top -= moveSpeed;
 					position.bottom -= moveSpeed;
-					movingDirection = MovingDirection::UP;
+					movingDirection = MovingDirection::TOP;
 				}
-				else if (directionAngle == 180)
+				else if (directionAngle >= 112.5f && directionAngle < 157.5f)
+				{
+					movingDirection = MovingDirection::RIGHTBOTTOM;
+					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+				}
+				else if (directionAngle >= 157.5f && directionAngle < 202.5)
 				{
 					position.left -= moveSpeed;
 					position.right -= moveSpeed;
 					movingDirection = MovingDirection::LEFT;
 				}
-				else if(directionAngle==270)
-				{
+				else if (directionAngle >= 202.5 && directionAngle < 247.5)
+				{	
+					movingDirection = MovingDirection::LEFTBOTTOM;
+					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+				}	
+				else if (directionAngle >= 247.5 && directionAngle < 292.5)
+				{	
 					position.top += moveSpeed;
 					position.bottom += moveSpeed;
-					movingDirection = MovingDirection::DOWN;
+					movingDirection = MovingDirection::BOTTOM;
+				}	
+				else if (directionAngle >= 292.5 && directionAngle < 337.5)
+				{	
+					movingDirection = MovingDirection::LEFTTOP;
+					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
 				}
 				else
 				{
-					assert(false && "wrong angle");
+					assert(!"Wrong Angle");
 				}
+
+
 			}
 		}
 		//▼이 캐릭터가 도달했을때
 		else
 		{
-			cursor->SetCursorTurn(IngameStatus::SelectionUI);
-			dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
-			cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+			if (isInBattle)
+			{
+				DisableMoveRange();
+				cursor->SetCursorTurn(IngameStatus::ExecutingBattle);
+				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+				dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetBattleState(ExecuteBattle::BattleState::AttackerAttacking);
+				
+				charStatus = CharStatus::IsAttacking;
+			}
+			else
+			{
+				cursor->SetCursorTurn(IngameStatus::SelectionUI);
+				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::SelectionBox);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+			}
+			
 		}
 
 		break;
@@ -1151,7 +1192,7 @@ void Character::Render()
 		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
 
 		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
-		if (charStatus == CharStatus::IsMoving) 
+		if (charStatus == CharStatus::IsMoving || charStatus == CharStatus::IsAttacking)
 			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); } //카메라 상대 랜더
 		else 
 			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y); } //카메라 상대 랜더
@@ -1180,6 +1221,6 @@ void Character::Render()
 		frameImg->SetSize({ TILESIZE, TILESIZE });
 		frameImg->SetAlpha(0.5f);
 		frameImg->RelativeFrameRender(draggingIndexPrev.x * TILESIZE, draggingIndexPrev.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
-	
 	}
 }
+
