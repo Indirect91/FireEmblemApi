@@ -327,6 +327,19 @@ void D2DRenderer::FillRectangle( RECT  rc,  DefaultBrush  defaultBrush)
 	mD2DRenderTarget->FillRectangle(D2D1::RectF((float)rc.left, (float)rc.top, (float)rc.right, (float)rc.bottom),
 		mDefaultBrushList[(UINT)defaultBrush]);
 }
+//▼카메라 영향의 FillRect
+void D2DRenderer::RelativeFillRectangle(RECT  rc, DefaultBrush  defaultBrush)
+{
+	rc.left -= CAMERA.GetCameraRc().left;
+	rc.top -= CAMERA.GetCameraRc().top;
+	rc.right -= CAMERA.GetCameraRc().left;
+	rc.bottom -= CAMERA.GetCameraRc().top;
+
+	mD2DRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+
+	mD2DRenderTarget->FillRectangle(D2D1::RectF((float)rc.left, (float)rc.top, (float)rc.right, (float)rc.bottom),
+		mDefaultBrushList[(UINT)defaultBrush]);
+}
 /**********************************************************************************************
 ## FillEllipse ##
 @@ POINTFLOAT origin : 중점 좌표

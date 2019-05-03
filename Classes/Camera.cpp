@@ -11,7 +11,7 @@ Camera::Camera()
 	followSpeed = 0.5f;
 	maxFollowSpd = 15;
 	prevRc = cRc;
-	cStatus = CameraStatus::Idle;
+	cameraStatus = CameraStatus::Idle;
 	cursor = nullptr;
 	maxDistance = 100;
 	minDistance = 5;
@@ -28,21 +28,45 @@ void Camera::Init()
 void Camera::Update()
 {
 	//▼움직일 대상을 보고 카메라의 상태를 정함
-	if (!PointCompare(toFollow, GetRectCentre(cRc)))
+	if (cameraStatus == CameraStatus::Shaking) //카메라 쉐이킹중이었으면
 	{
-		cStatus = CameraStatus::Moving;
+		cameraStatus = CameraStatus::Shaking; //계속 쉐이킹 하게 냅둠
+	}
+	else if (!PointCompare(toFollow, GetRectCentre(cRc)))
+	{
+		cameraStatus = CameraStatus::Moving;
 	}
 	else
 	{
-		cStatus = CameraStatus::Idle;
+		cameraStatus = CameraStatus::Idle;
 	}
 
 
 
 	//▼주어진 상태에 따라 행동
-	switch (cStatus)
+	switch (cameraStatus)
 	{
 	case Camera::CameraStatus::Idle:
+		break;
+	case Camera::CameraStatus::Shaking:
+		if (shakingLeft)
+		{
+			cRc.left -= shakingTimer;
+			cRc.right -= shakingTimer;
+			shakingLeft = false;
+			shakingTimer -= 2;
+			if (shakingTimer <= 0) cameraStatus = CameraStatus::Moving;
+		}
+		else
+		{
+			cRc.left += shakingTimer;
+			cRc.right += shakingTimer;
+			shakingLeft = true;
+			shakingTimer -= 2;
+			if (shakingTimer <= 0) cameraStatus = CameraStatus::Moving;
+		}
+
+
 		break;
 	case Camera::CameraStatus::Moving:
 		SmoothenCamera();	//부드러운 이동은 이동시에만 실행

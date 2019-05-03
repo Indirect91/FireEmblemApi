@@ -269,18 +269,55 @@ inline float GetAngleDegree(POINT _start, POINT _end)
 
 //▼렉트 움직인거 반환하는 인라인들
 inline RECT moveLeft(RECT _toMove, INT _amount)
-{return{_toMove.left - _amount,_toMove.top,_toMove.right - _amount ,_toMove.bottom };}
+{
+	return{ _toMove.left - _amount,_toMove.top,_toMove.right - _amount ,_toMove.bottom };
+}
 inline RECT moveRight(RECT _toMove, INT _amount)
-{return{ _toMove.left + _amount,_toMove.top,_toMove.right + _amount ,_toMove.bottom };}
+{
+	return{ _toMove.left + _amount,_toMove.top,_toMove.right + _amount ,_toMove.bottom };
+}
 inline RECT moveUp(RECT _toMove, INT _amount)
-{return{ _toMove.left,_toMove.top - _amount,_toMove.right ,_toMove.bottom - _amount };}
+{
+	return{ _toMove.left,_toMove.top - _amount,_toMove.right ,_toMove.bottom - _amount };
+}
 inline RECT moveDown(RECT _toMove, INT _amount)
-{return{ _toMove.left,_toMove.top + _amount,_toMove.right ,_toMove.bottom + _amount };}
+{
+	return{ _toMove.left,_toMove.top + _amount,_toMove.right ,_toMove.bottom + _amount };
+}
 inline RECT moveDownLeft(RECT _toMove, INT _amount)
-{return{ _toMove.left- _amount,_toMove.top + _amount,_toMove.right-_amount ,_toMove.bottom + _amount };}
+{
+	return{ _toMove.left - _amount,_toMove.top + _amount,_toMove.right - _amount ,_toMove.bottom + _amount };
+}
 inline RECT moveDownRight(RECT _toMove, INT _amount)
-{return{ _toMove.left+ _amount,_toMove.top + _amount,_toMove.right+_amount ,_toMove.bottom + _amount };}
+{
+	return{ _toMove.left + _amount,_toMove.top + _amount,_toMove.right + _amount ,_toMove.bottom + _amount };
+}
 inline RECT moveUpLeft(RECT _toMove, INT _amount)
-{return{ _toMove.left- _amount,_toMove.top - _amount,_toMove.right- _amount ,_toMove.bottom - _amount };}
+{
+	return{ _toMove.left - _amount,_toMove.top - _amount,_toMove.right - _amount ,_toMove.bottom - _amount };
+}
 inline RECT moveUpRight(RECT _toMove, INT _amount)
-{return{ _toMove.left+ _amount,_toMove.top - _amount,_toMove.right+ _amount ,_toMove.bottom - _amount };}
+{
+	return{ _toMove.left + _amount,_toMove.top - _amount,_toMove.right + _amount ,_toMove.bottom - _amount };
+}
+
+//▼캐릭터 체력 백그라운드
+inline RECT HealthBarBackLocater(RECT _healthBar, RECT _character)
+{
+	LONG originalHeight = _healthBar.bottom - _healthBar.top;
+	_healthBar.left = _character.left;
+	_healthBar.top = _character.bottom;
+	_healthBar.right = _character.right;
+	_healthBar.bottom = _healthBar.top + originalHeight;
+	return _healthBar;
+}
+
+//▼캐릭터 실 체력
+inline RECT HealthBarFrontLocater(RECT _healthBarBack, INT _maxHp, INT _currentHp)
+{
+	if (_currentHp < 0) _currentHp = 0;
+	LONG originalWidth = (_healthBarBack.right-1) - (_healthBarBack.left +1) ;
+	LONG newWidth = originalWidth * _currentHp / _maxHp;
+	RECT toCalculate = { _healthBarBack.left + 1, _healthBarBack.top + 1, _healthBarBack.left+1 + newWidth, _healthBarBack.bottom + 1 };
+	return toCalculate;
+}

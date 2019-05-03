@@ -69,6 +69,7 @@ public:
 		  float strokeWidth = 1.f);
 	void FillRectangle( RECT rc,   D2D1::ColorF::Enum color,  float alpha);
 	void FillRectangle( RECT rc,  DefaultBrush defaultBrush = DefaultBrush::Black);
+	void RelativeFillRectangle(RECT  rc, DefaultBrush  defaultBrush);
 	void FiilEllipse( POINTFLOAT origin,  float radius,  D2D1::ColorF::Enum color,  float alpha);
 	void FiilEllipse( POINTFLOAT origin,  float radius,  DefaultBrush brush = DefaultBrush::Black);
 };

@@ -41,6 +41,9 @@ Character::Character()
 	cursor = nullptr;
 	dragValidity = false;
 	isActionTaken = false;
+	healthBarBackground = { 0,0,TILESIZE,TILESIZE / 5 };
+	healthBarFront = { 0,0,TILESIZE * 5 / 6,TILESIZE / 6 };
+	currentHealth = GetHealth();
 }
 
 //▼편리한 캐릭 생성을 위한 생성자 오버로딩
@@ -81,6 +84,9 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	SetOccupation(_job);
 	SetImgAuto(_charName);
 	SetPositionViaIndex();
+	healthBarBackground = { 0,0,TILESIZE, TILESIZE / 5 };
+	healthBarFront = { 0,0,TILESIZE * 5/6, TILESIZE / 6 };
+	currentHealth = GetHealth();
 }
 
 //▼먼저 커서를 활성화 시키고 이닛을 통해 연결
@@ -1193,9 +1199,33 @@ void Character::Render()
 
 		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
 		if (charStatus == CharStatus::IsMoving || charStatus == CharStatus::IsAttacking)
-			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); } //카메라 상대 랜더
+		{ 
+			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); //카메라 상대 랜더
+			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::Black);
+			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
+			assert(toCalculate < 1.01);
+			if (toCalculate > 0.6)
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground,GetHealth(),currentHealth), D2DRenderer::DefaultBrush::Green);}
+			else if (toCalculate > 0.3)
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);}
+			else
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
+		} 
 		else 
-			{ frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y); } //카메라 상대 랜더
+		{ 
+			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);  //카메라 상대 랜더
+			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::Black);
+			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
+			assert(toCalculate < 1.01);
+			if (toCalculate > 0.6)
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Green);}
+			else if (toCalculate > 0.3)
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);}
+			else
+				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
+		}
 
 		if (isActionTaken) //행동을 취했었다면
 		{

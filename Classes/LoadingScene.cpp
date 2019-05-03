@@ -114,15 +114,32 @@ void LoadingScene::LoadingImage()
 
 }
 
-//▼원래 사용하던 로딩방법
+//▼사운드
 void LoadingScene::LoadingSound()
 {
-	//▼맵툴용
-	_loading->LoadSound("맵툴BGM", "SOUND/FE/MapTool_Road Taken.mp3", true, true);
-	//▼타이틀용
-	_loading->LoadSound("타이틀BGM", "SOUND/FE/TitleBgm.mp3", true, true);
-	//▼인게임용
-	_loading->LoadSound("인게임BGM", "SOUND/FE/InGame_March to Deliverance.mp3", true, true); 
+	//▼BGM
+	_loading->LoadSound("맵툴BGM", "SOUND/FE/BGM/MapTool_Road Taken.mp3", true, true);//맵툴용
+	_loading->LoadSound("타이틀BGM", "SOUND/FE/BGM/TitleBgm.mp3", true, true);//타이틀용
+	_loading->LoadSound("인게임BGM", "SOUND/FE/BGM/InGame_March to Deliverance.mp3", true, true); //인게임용
+
+	//▼SFX
+	_loading->LoadSound("SelectionTitleComplete", "SOUND/FE/SFX/SelectionTitleComplete.wav");
+	_loading->LoadSound("SelectionTitle", "SOUND/FE/SFX/SelectionTitle.wav");
+	_loading->LoadSound("SelectionSmall", "SOUND/FE/SFX/SelectionSmall.wav");
+	_loading->LoadSound("NormalAttack", "SOUND/FE/SFX/NormalAttack.wav");
+	_loading->LoadSound("LevelUp", "SOUND/FE/SFX/LevelUp.wav");
+	_loading->LoadSound("CharacterDead", "SOUND/FE/SFX/CharacterDead.wav");
+	_loading->LoadSound("IntoFullBattle", "SOUND/FE/SFX/IntoFullBattle.wav");
+	_loading->LoadSound("CriticalAttack", "SOUND/FE/SFX/CriticalAttack.wav");
+	_loading->LoadSound("CharacterDamage0", "SOUND/FE/SFX/CharacterDamage0.wav");
+	_loading->LoadSound("ChangeClass", "SOUND/FE/SFX/ChangeClass.wav");
+	_loading->LoadSound("Cancel", "SOUND/FE/SFX/Cancel.wav");
+	_loading->LoadSound("MissAttack", "SOUND/FE/SFX/Miss.mp3");
+	_loading->LoadSound("CriticalInit", "SOUND/FE/SFX/CriticalInit.mp3");
+	_loading->LoadSound("PlayerTurn", "SOUND/FE/SFX/PlayerTurn.wav");
+	_loading->LoadSound("EnemyTurn", "SOUND/FE/SFX/EnemyTurn.wav");
+
+	
 }
 
 //▼로딩방법

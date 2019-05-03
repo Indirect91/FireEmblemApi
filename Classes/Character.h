@@ -11,43 +11,46 @@ public:
 	{
 		Idle,
 		IsActed,
-		IsCursorOn,
-		IsClicked,
-		IsMoving,
-		IsAttacking,
-		IsDragging,
-		IsCheckingOut,
 		Disable,
+		IsMoving,
+		IsClicked,
+		IsDragging,
+		IsCursorOn,
+		IsAttacking,
+		IsCheckingOut,
 	};
 
 	//▼캐릭터 데이터
 	struct CharData
 	{
 		CharData() { Weapon = WeaponType::Axe; }
-		INT Range = 0;		//행동 범위
-		INT Attack = 0;		//공격력
-		INT Defence = 0;	//방어력
-		INT Health = 0;		//체력
-		FLOAT Luck = 0;		//행운, 명중률 및 크리율
-		INT Speed = 0;		//속도. 상대방과 5차이가 나면 두번 공격한다
 		INT Move = 0;		//이동력
+		INT Range = 0;		//행동 범위
+		INT Speed = 0;		//속도. 상대방과 5차이가 나면 두번 공격한다
+		INT Attack = 0;		//공격력
+		FLOAT Luck = 0;		//행운, 명중률 및 크리율
+		INT Health = 0;		//체력
+		INT Defence = 0;	//방어력
 		WeaponType Weapon;	//무기종류
 	};
 
 private:
 
 	//▼통상
-	std::string name;
 	class Item *item = nullptr;				//보유중인 아이템
 	CharStatus charStatus;					//캐릭터 상태
 	Occupation occupation;					//직업
-	class Cursor* cursor;
-	OwnedBy whosChar;
+	class Cursor* cursor;					//커서는 너무 커서
+	std::string name;						//캐릭터명
+	OwnedBy whosChar;						//누구의 캐릭터인지
+	
 	Image* frameImg;						//프레임 이미지
 	BOOL isInCamera;						//카메라 안에 있어야만 업데이트/랜더됨
 	BOOL isInBattle;
 
 	//▼이미지쪽 변수
+	RECT healthBarBackground;	//모든 캐릭터는 체력바를 가진다
+	RECT healthBarFront;		//모든 캐릭터는 실 체력을 가진다
 	Image * portraitImg;		//초상화 이미지
 	FLOAT portraitAlpha;		//초상화 알파값
 	BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
@@ -60,6 +63,7 @@ private:
 	CharData occupationData;
 	CharData additionalData;
 	CharData baseData;
+	INT currentHealth;
 
 	//▼이동관련 변수
 	std::set<class Tiles*> AvailableTiles;	//행동가능 타일들 모아둠
@@ -112,9 +116,11 @@ public:
 	void SetAdditionalLuck(FLOAT _luck) { this->additionalData.Luck = _luck; }
 	void SetAdditionalMove(INT _move) { this->additionalData.Move = _move; }
 
-	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
 	void SetMovingDirection(MovingDirection _movingDirection) { movingDirection = _movingDirection; }
-
+	void SetCurrentHpSubtractByValue(INT _changedValue) { currentHealth -= _changedValue; }
+	void SetCurrentHpAddByValue(INT _changedValue) { currentHealth +=_changedValue; }
+	void SetCurrentHealth(INT _currentHealth) { currentHealth = _currentHealth; }
+	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
 
 	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 	const MovingDirection & GetMovingDirection() const { return movingDirection; }
@@ -134,6 +140,7 @@ public:
 	const INT GetSpeed() const { return additionalData.Speed + occupationData.Speed + baseData.Speed; }
 	const FLOAT GetLuck() const { return additionalData.Luck + occupationData.Luck + baseData.Luck; }
 	const WeaponType &GetWeaponType() const { return occupationData.Weapon; }
+	const INT &GetCurrentHealth() const { return currentHealth; }
 	const Item* GetItemPtr() const { return item; }
 
 	//▼전투관련
