@@ -180,6 +180,7 @@ void Battle01::Render()
 	{
 		selectionUI->Render();
 	}
+	battleManager->Render();
 	IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
 	//¿Œ∞‘¿”UI
 }

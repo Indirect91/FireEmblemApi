@@ -27,6 +27,7 @@ public:
 		INT moveCounter = 0;				//공격 이동수치
 		INT criticalCounter = 0;			//공격 이동수치
 		BOOL isActionDone = false;			//공격 다 했는지
+		BOOL isCritMotion = false;
 		INT attackMotionSpeed = 3;
 		INT hitDistinguisher;				//힛,미스,크리 판단
 

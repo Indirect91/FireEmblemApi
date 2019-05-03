@@ -111,7 +111,9 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("BattleUIBg", L"IMAGE/ETC/BattleUIBg.png");
 	_loading->LoadImg("BattleBg", L"IMAGE/ETC/BattleBg.png");
 	_loading->LoadImg("PhotoFrame", L"IMAGE/ETC/PhotoFrame.png");
-
+	
+	//▼이펙트용
+	_loading->LoadFrameImage("Blink", L"IMAGE/Tiles/Blink.png",8,1);
 }
 
 //▼사운드

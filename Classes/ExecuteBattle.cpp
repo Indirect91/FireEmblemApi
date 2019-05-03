@@ -34,6 +34,8 @@ void ExecuteBattle::Update()
 
 			attacker.charPtr->SetStatus(Character::CharStatus::IsMoving);
 			attacker.charPtr->SetIsInBattle(true);
+			attacker.criticalCounter = 0;
+			attacker.moveCounter = 0;
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 
 			break;
@@ -133,11 +135,9 @@ void ExecuteBattle::Update()
 						if (attacker.attackStatus == AttackStatue::Critical)
 						{
 							SOUNDMANAGER->play("CriticalInit");
-							if(attacker.criticalCounter>10)
-
-
-							Sleep(500);
-							asd
+							//if(attacker.criticalCounter>10)
+							//Sleep(500);
+							
 						}
 						attacker.moveCounter = 0;
 						attacker.phase++; //다음단계 이동
@@ -147,7 +147,28 @@ void ExecuteBattle::Update()
 						attacker.moveCounter++;
 					}
 				}
+
+
 				if (attacker.phase == 1)
+				{
+					if (attacker.attackStatus == AttackStatue::Critical)
+					{
+						attacker.moveCounter++;
+						if (attacker.moveCounter % 2 == 0)
+						{
+							attacker.criticalCounter++;
+						}
+						if (attacker.criticalCounter > 7)
+						{
+							attacker.criticalCounter = 9;
+							attacker.phase++;
+						}
+					}
+					else
+						attacker.phase++;
+				}
+
+				else if (attacker.phase == 2)
 				{
 					switch (attacker.attackingDirection)
 					{
@@ -188,7 +209,7 @@ void ExecuteBattle::Update()
 				}
 
 				//▼ 데미지 계산부분
-				else if (attacker.phase == 2)
+				else if (attacker.phase == 3)
 				{
 					if (attacker.attackStatus==AttackStatue::Critical) //크리일때
 					{
@@ -367,5 +388,9 @@ void ExecuteBattle::Update()
 
 void ExecuteBattle::Render()
 {
-	
+	if (attacker.attackStatus == AttackStatue::Critical && attacker.criticalCounter<8)
+	{
+		IMAGEMANAGER->FindImage("Blink")->SetSize(IMAGEMANAGER->FindImage("Blink")->GetFrameSize());
+		IMAGEMANAGER->FindImage("Blink")->RelativeFrameRender(attacker.charPtr->GetPosition().left-80, attacker.charPtr->GetPosition().top-80, attacker.criticalCounter, 0);
+	}
 }
