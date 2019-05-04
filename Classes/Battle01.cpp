@@ -23,6 +23,17 @@ Battle01::Battle01()
 
 void Battle01::Init()
 {
+	//▼윈도우 및 커버 초기화
+	SCENEMANAGER->RefCoverSpeed() = 0.035f;
+	SetCoverStatue::FadeIn;
+
+	//▼음악 초기화
+	SOUNDMANAGER->pause("타이틀BGM");
+	SOUNDMANAGER->play("인게임BGM");
+	//SOUNDMANAGER->pause("SelectionTitleComplete");
+	//SOUNDMANAGER->setFadeIn();
+
+
 	DATACENTRE.LoadFromFile();
 	//▼ESC메뉴를 만들고 UI로 등록시킴
 	escMenu = new ESCMenu; //ESC UI를 뉴할당받음
@@ -31,9 +42,6 @@ void Battle01::Init()
 	//▼턴매니져를 만들고 UI로 등록시킴
 	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
 	DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
-
-	SOUNDMANAGER->pause("타이틀BGM");
-	//SOUNDMANAGER->play("인게임BGM");
 
 
 	//▼맵에 맞게 카메라를 세팅함
@@ -122,6 +130,7 @@ void Battle01::Update()
 	//▼커서에게 누구턴인지 물어봄
 	currentState = cursor->GetCursorTurn();
 
+	checkDeadUnit();
 
 	//▼게임의 상태에 따라 업데이트 대상이 달라짐
 	switch (currentState)

@@ -1,5 +1,8 @@
 #include "../stdafx.h"
 #include "BattleScenes.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Character.h"
 
 BattleScenes::BattleScenes()
 {
@@ -33,3 +36,37 @@ void BattleScenes::ESCManage()
 		}
 	}
 }
+
+void BattleScenes::checkDeadUnit()
+{
+	
+	for (auto playerItr = DATACENTRE.RefObjects(ObjType::PlayerArmy).begin(); playerItr != DATACENTRE.RefObjects(ObjType::PlayerArmy).end();)
+	{
+		if (dynamic_cast<Character*> ((*playerItr).second)->GetStatus() == Character::CharStatus::IsDead)
+		{
+			(*playerItr).second->Release();
+			SAFE_DELETE((*playerItr).second);
+			playerItr = DATACENTRE.RefObjects(ObjType::PlayerArmy).erase(playerItr);
+		}
+		else
+		{
+			++playerItr;
+		}
+	}
+
+	for (auto enemyItr = DATACENTRE.RefObjects(ObjType::EnemyArmy).begin(); enemyItr != DATACENTRE.RefObjects(ObjType::EnemyArmy).end();)
+	{
+		if (dynamic_cast<Character*> ((*enemyItr).second)->GetStatus() == Character::CharStatus::IsDead)
+		{
+			if (player->RefEnemyRangeCalculatedPrev() == (*enemyItr).first) { player->RefEnemyRangeCalculatedPrev() = ""; }
+			(*enemyItr).second->Release();
+			SAFE_DELETE((*enemyItr).second);
+			enemyItr = DATACENTRE.RefObjects(ObjType::EnemyArmy).erase(enemyItr);
+		}
+		else
+		{
+			++enemyItr;
+		}
+	}
+}
+

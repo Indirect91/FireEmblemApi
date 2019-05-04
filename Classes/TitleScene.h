@@ -9,12 +9,14 @@ class TitleScene : public GameNode
 		UINT y;		//박스 좌표
 	};
 	
-	BOOL isMaptool;		//맵툴이 픽된 여부
-	BOOL isPlayPressed;	//플레이버튼 눌렸는지 여부
-	BOOL isDone;		//윈도우 재배치 끝났는지 여부
-	BOOL ascending;		//픽하는 빨간네모 알파값 상승중인지
-	UINT Tcounter;		//그냥 카운터
-	UINT falchionframeX;//팔시온 프레임 카운터X
+	BOOL isMaptool;			//맵툴이 픽된 여부
+	BOOL isNewPressed;		//New버튼 눌렸는지 여부
+	BOOL isContinuePressed;	//Continue 버튼 눌렸는지 여부
+	BOOL isDone;			//윈도우 재배치 끝났는지 여부
+	BOOL ascending;			//픽하는 빨간네모 알파값 상승중인지
+	UINT Tcounter;			//그냥 카운터
+	UINT falchionframeX;	//팔시온 프레임 카운터X
+	UINT Mcounter;			//메뉴용 카운터
 
 	float pickAlpha;		//픽하는 네모 알파값
 	float titleAlpha;		//픽하는 네모 알파값

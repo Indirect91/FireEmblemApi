@@ -12,6 +12,33 @@ ExecuteBattle::ExecuteBattle()
 }
 
 
+void ExecuteBattle::Revert()
+{
+	attacker.phase = 0;						
+	attacker.moveCounter = 0;				
+	attacker.criticalFrameRenderX = 0;		
+	attacker.critMotionCounter = 0;			
+	attacker.isActionDone = false;			
+	attacker.attackMotionSpeed = 3;			
+	attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
+	attacker.attackCount = 0;
+	attacker.charPtr = nullptr;	
+	attacker.attackingDirection = AttackingDirection::LEFT;
+	attacker.attackStatus = AttackStatue::Normal;
+
+	victim.phase = 0;
+	victim.moveCounter = 0;
+	victim.criticalFrameRenderX = 0;
+	victim.critMotionCounter = 0;
+	victim.isActionDone = false;
+	victim.attackMotionSpeed = 3;
+	victim.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
+	victim.attackCount = 0;
+	victim.charPtr = nullptr;
+	victim.attackingDirection = AttackingDirection::LEFT;
+	victim.attackStatus = AttackStatue::Normal;
+}
+
 void ExecuteBattle::Init()
 {
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
@@ -34,8 +61,10 @@ void ExecuteBattle::Update()
 
 			attacker.charPtr->SetStatus(Character::CharStatus::IsMoving);
 			attacker.charPtr->SetIsInBattle(true);
-			attacker.criticalCounter = 0;
+			attacker.criticalFrameRenderX = 0;
+			attacker.critMotionCounter = 0;
 			attacker.moveCounter = 0;
+			attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 
 			break;
@@ -53,14 +82,14 @@ void ExecuteBattle::Update()
 				{
 					FLOAT accuracy = attacker.charPtr->GetLuck();	//명중률
 					FLOAT critical = 100 - accuracy;				//크리율
-					attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
 					
-					attacker.hitDistinguisher = 5;		//테스트용. 크리
-					//hitDistinguisher = 95;	//테스트용. 미스
-					//hitDistinguisher = 80;	//테스트용. 통상
+
+					//attacker.hitDistinguisher = 5;	//테스트용. 크리
+					//attacker.hitDistinguisher = 95;	//테스트용. 미스
+					//attacker.hitDistinguisher = 80;	//테스트용. 통상
 
 					if (attacker.hitDistinguisher < critical)//나온 랜덤값이 크리범위 이내면
-					{ 
+					{
 						attacker.attackStatus = AttackStatue::Critical;
 					}
 					else if (attacker.hitDistinguisher < accuracy)//나온 랜덤값이 크리티컬보단 크고 회피보단 낮을땐
@@ -124,48 +153,62 @@ void ExecuteBattle::Update()
 						victim.attackingDirection = AttackingDirection::LEFTTOP;
 					}
 					else
-						{assert(!"Wrong Angle");}
-					
+					{
+						assert(!"Wrong Angle");
+					}
+
 					victim.charPtr->SetMovingDirection(victim.attackingDirection);
 					victim.charPtr->SetStatus(Character::CharStatus::IsAttacking);
-					
-					//이동 완료 후 일정 시간 후에 때림
-					if (attacker.moveCounter > 20)
+
+					//▼크리티컬이 아니면 이동 완료 후 일정 시간 후에 때림
+					if (attacker.moveCounter > 20 && !(attacker.attackStatus == AttackStatue::Critical))
 					{
-						if (attacker.attackStatus == AttackStatue::Critical)
-						{
-							SOUNDMANAGER->play("CriticalInit");
-							//if(attacker.criticalCounter>10)
-							//Sleep(500);
-							
-						}
 						attacker.moveCounter = 0;
 						attacker.phase++; //다음단계 이동
 					}
+					//▼크리티컬이면 다음 단계로 넘김
+					else if (attacker.attackStatus == AttackStatue::Critical)
+					{
+						SOUNDMANAGER->play("CriticalInit"); //크리티컬 사운드 1회만 재생해주고
+						attacker.phase++; //다음단계 이동
+					}
+					//▼아까 말한 크리티컬 상태 외 일정시간
 					else
 					{
 						attacker.moveCounter++;
 					}
 				}
 
-
 				if (attacker.phase == 1)
 				{
+					//▼크리티컬 상태일때만 발동하는 코드
 					if (attacker.attackStatus == AttackStatue::Critical)
 					{
-						attacker.moveCounter++;
-						if (attacker.moveCounter % 2 == 0)
+						if (attacker.critMotionCounter < 20)
 						{
-							attacker.criticalCounter++;
+							attacker.moveCounter++;
+							if (attacker.moveCounter % 2 == 0)
+							{
+								attacker.criticalFrameRenderX++;
+							}
+							if (attacker.criticalFrameRenderX > 6)
+							{
+								attacker.criticalFrameRenderX = 9;
+								attacker.critMotionCounter++;
+							}
 						}
-						if (attacker.criticalCounter > 7)
+						else
 						{
-							attacker.criticalCounter = 9;
+							attacker.moveCounter = 0;
 							attacker.phase++;
 						}
 					}
+					//▼크리티컬이 아닌 상태면 다음단계로 넘김
 					else
+					{
 						attacker.phase++;
+						attacker.moveCounter = 0;
+					}
 				}
 
 				else if (attacker.phase == 2)
@@ -175,7 +218,7 @@ void ExecuteBattle::Update()
 					case GameObject::DraggingDirection::IDLE:
 						break;
 					case GameObject::DraggingDirection::LEFT:
-						attacker.charPtr->SetPosition(moveLeft(attacker.charPtr->GetPosition(),attacker.attackMotionSpeed));
+						attacker.charPtr->SetPosition(moveLeft(attacker.charPtr->GetPosition(), attacker.attackMotionSpeed));
 						break;
 					case GameObject::DraggingDirection::RIGHT:
 						attacker.charPtr->SetPosition(moveRight(attacker.charPtr->GetPosition(), attacker.attackMotionSpeed));
@@ -211,11 +254,12 @@ void ExecuteBattle::Update()
 				//▼ 데미지 계산부분
 				else if (attacker.phase == 3)
 				{
-					if (attacker.attackStatus==AttackStatue::Critical) //크리일때
+					if (attacker.attackStatus == AttackStatue::Critical) //크리일때
 					{
 						//▼ 크리티컬, 데미지 2배
 						FLOAT calculateDamage = (attacker.charPtr->GetDamage() * 2) - (victim.charPtr->GetDefence());
 						//calculateDamage = 0; //테스트용
+						//calculateDamage = 100; //테스트용
 						if (calculateDamage <= 0)
 						{
 							calculateDamage = 0;
@@ -252,15 +296,19 @@ void ExecuteBattle::Update()
 							SOUNDMANAGER->play("CriticalAttack");
 							CAMERA.SetShake(16);
 						}
-						
+
 
 						victim.charPtr->SetCurrentHpSubtractByValue(calculateDamage);
-						
+
 					}
 					else if (attacker.attackStatus == AttackStatue::Normal) //일반공격일때
 					{
 						//▼나온 랜덤값이 명중률 범위 이내면 힛. 통상 데미지 1배
 						FLOAT calculateDamage = (attacker.charPtr->GetDamage()) - (victim.charPtr->GetDefence());
+
+						//calculateDamage = 0; //테스트용
+						//calculateDamage = 100; //테스트용
+
 						if (calculateDamage <= 0)
 						{
 							calculateDamage = 0;
@@ -299,7 +347,7 @@ void ExecuteBattle::Update()
 						victim.charPtr->SetCurrentHpSubtractByValue(calculateDamage);
 
 					}
-					else if(attacker.attackStatus == AttackStatue::Miss)	//이외 조건은 빗나감
+					else if (attacker.attackStatus == AttackStatue::Miss)	//이외 조건은 빗나감
 					{
 						SOUNDMANAGER->play("MissAttack");
 					}
@@ -313,7 +361,7 @@ void ExecuteBattle::Update()
 				}
 
 				//▼돌아오는 코드
-				else if (attacker.phase==3)
+				else if (attacker.phase == 4)
 				{
 					switch (attacker.attackingDirection)
 					{
@@ -350,24 +398,46 @@ void ExecuteBattle::Update()
 					if (attacker.moveCounter >= 0) attacker.moveCounter--;
 					else attacker.phase++;
 				}
-				else if (attacker.phase ==4)
+				else if (attacker.phase == 5)
 				{
-					//갔다왔다 모션 끝난 후
+					if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() >= attacker.charPtr->GetAttackRange())
+					{
+						battleState = BattleState::VictimAttacking;
+					}
+					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed()>=victim.charPtr->GetSpeed()+5 && attacker.attackCount == 0)
+					{
 
-
-					//exit(0);
+					}
+					else if (victim.charPtr->GetCurrentHealth() == 0)
+					{
+						victim.charPtr->SetStatus(Character::CharStatus::IsDying);
+						cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
+						SOUNDMANAGER->play("CharacterDead"); 
+						battleState = BattleState::BattleEnd;
+						//attacker.phase++;
+					}
 				}
 			}
 			//▼공격이 끝났다면
 			else
 			{
-
+				assert(!"공격자 턴에 문제있음");
 			}
 
 
 			break;
 		}
 		case ExecuteBattle::BattleState::VictimAttacking:
+
+			
+
+			break;
+		case ExecuteBattle::BattleState::BattleEnd:
+			attacker.charPtr->SetStatus(Character::CharStatus::IsActed);
+			cursor->SetCursorOccupied("");
+			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
+
+			Revert();
 
 
 
@@ -388,9 +458,9 @@ void ExecuteBattle::Update()
 
 void ExecuteBattle::Render()
 {
-	if (attacker.attackStatus == AttackStatue::Critical && attacker.criticalCounter<8)
+	if (attacker.attackStatus == AttackStatue::Critical && attacker.criticalFrameRenderX < 8)
 	{
 		IMAGEMANAGER->FindImage("Blink")->SetSize(IMAGEMANAGER->FindImage("Blink")->GetFrameSize());
-		IMAGEMANAGER->FindImage("Blink")->RelativeFrameRender(attacker.charPtr->GetPosition().left-80, attacker.charPtr->GetPosition().top-80, attacker.criticalCounter, 0);
+		IMAGEMANAGER->FindImage("Blink")->RelativeFrameRender(attacker.charPtr->GetPosition().left - 80, attacker.charPtr->GetPosition().top - 80, attacker.criticalFrameRenderX, 0);
 	}
 }

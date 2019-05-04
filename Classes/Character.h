@@ -10,6 +10,8 @@ public:
 	enum class CharStatus : UINT
 	{
 		Idle,
+		IsDead,
+		IsDying,
 		IsActed,
 		Disable,
 		IsMoving,
@@ -50,10 +52,11 @@ private:
 
 	//▼이미지쪽 변수
 	RECT healthBarBackground;	//모든 캐릭터는 체력바를 가진다
+	FLOAT characterAlpha;		//캐릭터 알파값
 	RECT healthBarFront;		//모든 캐릭터는 실 체력을 가진다
 	Image * portraitImg;		//초상화 이미지
 	FLOAT portraitAlpha;		//초상화 알파값
-	BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
+	//BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
 	UINT frameCounter;			//업데이트별 프레임 제어자
 	INT frameInterval;			//프레임 도는 빈도
 	UINT frameLoop;				//프레임 추가어치
@@ -105,7 +108,7 @@ public:
 	void Init() override;
 
 	void SetInitialChar(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos);
-	void SetActionTaken(BOOL _actionTaken) { this->isActionTaken = _actionTaken; }
+//	void SetActionTaken(BOOL _actionTaken) { this->isActionTaken = _actionTaken; }
 	void SetFrame(POINT _frame) { this->frame = _frame; }
 	void SetFrameAuto(Occupation _job, OwnedBy _whos);
 	void SetImgAuto(std::string _CharName);
@@ -117,15 +120,15 @@ public:
 	void SetAdditionalMove(INT _move) { this->additionalData.Move = _move; }
 
 	void SetMovingDirection(MovingDirection _movingDirection) { movingDirection = _movingDirection; }
-	void SetCurrentHpSubtractByValue(INT _changedValue) { currentHealth -= _changedValue; }
-	void SetCurrentHpAddByValue(INT _changedValue) { currentHealth +=_changedValue; }
-	void SetCurrentHealth(INT _currentHealth) { currentHealth = _currentHealth; }
+	void SetCurrentHpSubtractByValue(INT _changedValue);
+	void SetCurrentHpAddByValue(INT _changedValue);
+	void SetCurrentHealth(INT _currentHealth);
 	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
 
 	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 	const MovingDirection & GetMovingDirection() const { return movingDirection; }
 	const POINT& GetMoveStartLocation() const { return moveStartLocation; }
-	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
+//	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
 	const Occupation &GetOccupation() const { return this->occupation; }
 	const CharStatus& GetStatus() const { return charStatus; }
 	const std::string& GetName() const { return this->name; }

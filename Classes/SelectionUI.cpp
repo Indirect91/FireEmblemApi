@@ -81,7 +81,7 @@ void SelectionUI::Update()
 		{
 
 			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->DisableMoveRange();
-			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->SetActionTaken(true);
+			dynamic_cast<Character*>(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetCursorOccupied()))->SetStatus(Character::CharStatus::IsActed);
 
 			cursor->SetCursorOccupied("");
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
@@ -209,6 +209,11 @@ void SelectionUI::Update()
 
 		break;
 	}
+	case SelectionUI::ToShow::AllyDead:
+	{
+
+		break;
+	}
 	default:
 		assert(false && "SelectionUI not made yet");
 		break;
@@ -245,6 +250,11 @@ void SelectionUI::Render()
 		IMAGEMANAGER->FindImage("초상화" + battlePredict.enemyRender.charPtr->GetName())->Render(battlePredict.enemyRender.RenderPortrait.x, battlePredict.enemyRender.RenderPortrait.y);
 
 		break;
+	case SelectionUI::ToShow::AllyDead:
+		//IMAGEMANAGER->FindImage(charDead.deadCharacter->GetName()
+
+	break;
+
 	default:
 		assert(false && "보여주는 UI에 에러있음");
 		break;

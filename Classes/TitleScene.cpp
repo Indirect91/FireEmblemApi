@@ -4,10 +4,12 @@
 TitleScene::TitleScene()
 {
 	isMaptool=0;
-	isPlayPressed=0;
+	isNewPressed=0;
+	isContinuePressed = 0;
 	isDone=0;
 	ascending=0;
 	Tcounter=0;
+	Mcounter = 0;
 	falchionframeX=0;
 					
 	 pickAlpha=0;
@@ -40,14 +42,16 @@ void TitleScene::Init()
 	SCENEMANAGER->RefcoverAlpha() = 1;
 	SetCoverStatue::FadeIn;
 	selectionBox.x = ((WINSIZEX) / 2 - IMAGEMANAGER->FindImage("타이틀선택박스")->GetWidth() / 2); //픽박스 위치 초기화
-	selectionBox.y = 385;	//픽박스 위치 초기화
-	isMaptool = false;		//맵툴선택여부 false
-	isPlayPressed = false;	//인게임 선택여부 false
-	isDone = false;			//윈도우창 재조정이 끝났는지 여부 false
+	selectionBox.y = 385;		//픽박스 위치 초기화
+	isMaptool = false;			//맵툴선택여부 false
+	isNewPressed = false;		//뉴게임 선택여부 false
+	isContinuePressed = false;	//컨티뉴 여부
+	isDone = false;				//윈도우창 재조정이 끝났는지 여부 false
 	Tcounter = 0;		
-	falchionframeX = 0;		//팔시온프레임카운터 초기 0 설정
-	pickAlpha = 0.f;		//픽창 알파값 초기 0 설정
-	titleAlpha = 0.f;		//타이틀 알파값 초기 0 설정
+	Mcounter = 0;
+	falchionframeX = 0;			//팔시온프레임카운터 초기 0 설정
+	pickAlpha = 0.f;			//픽창 알파값 초기 0 설정
+	titleAlpha = 0.f;			//타이틀 알파값 초기 0 설정
 }
 
 void TitleScene::Release()
@@ -59,20 +63,37 @@ void TitleScene::Update()
 {
 	Tcounter++;
 	//▼아래키 입력받았을때
-	if (KEYMANAGER->IsOnceKeyDown(VK_DOWN) || KEYMANAGER->IsOnceKeyDown('W'))
+	if ((KEYMANAGER->IsOnceKeyDown(VK_DOWN) || KEYMANAGER->IsOnceKeyDown('W'))&&SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
 	{
-		if (selectionBox.y == 385)	selectionBox.y = 450;
-		else if (selectionBox.y == 450) selectionBox.y = 520;
+
+		if (selectionBox.y == 385)
+		{
+			selectionBox.y = 450;
+			SOUNDMANAGER->play("SelectionTitle");
+		}
+		else if (selectionBox.y == 450) 
+		{ 
+			selectionBox.y = 520; 
+			SOUNDMANAGER->play("SelectionTitle");
+		}
 	}
 	//▼업 키 입력받았을때
-	else if (KEYMANAGER->IsOnceKeyDown(VK_UP) || KEYMANAGER->IsOnceKeyDown('S'))
+	else if ((KEYMANAGER->IsOnceKeyDown(VK_UP) || KEYMANAGER->IsOnceKeyDown('S')) && SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
 	{
-		if (selectionBox.y == 450) selectionBox.y = 385;
-		else if (selectionBox.y == 520) selectionBox.y = 450;
+		if (selectionBox.y == 450)
+		{
+			selectionBox.y = 385;
+			SOUNDMANAGER->play("SelectionTitle");
+		}
+		else if (selectionBox.y == 520)
+		{
+			selectionBox.y = 450;
+			SOUNDMANAGER->play("SelectionTitle");
+		}
 	}
 
 	//▼엔터키 입력받았을때. 알파값이 변동중이라면 씹음
-	else if (KEYMANAGER->IsOnceKeyDown(VK_RETURN) && SCENEMANAGER->RefAlphaStatue()==SceneManager::tagCoverStatue::Idle)
+	else if ((KEYMANAGER->IsOnceKeyDown('A')||KEYMANAGER->IsOnceKeyDown(VK_RETURN)) && SCENEMANAGER->RefAlphaStatue()==SceneManager::tagCoverStatue::Idle)
 	{
 		//▼맵툴이 골라졌을때
 		if (selectionBox.y == 520) 
@@ -84,19 +105,18 @@ void TitleScene::Update()
 			resizeWindowRateY = 0;
 			SCENEMANAGER->RefCoverSpeed() = 0.04f;	//페이드아웃 속도 제어
 			SetCoverStatue::FadeOut; //페이드아웃상태로 변환
-			SOUNDMANAGER->setFadeOut();
+			SOUNDMANAGER->play("SelectionTitleComplete");
+			//SOUNDMANAGER->setFadeOut();
 		}
 
 		//▼인겜이 골라졌을때
 		else if (selectionBox.y == 385) 
 		{
-			//isPlayPressed = true; //인게임 골라진상태..로 바꿀 필요 없이 바로 세이브로드 씬으로
-			//moveWindowRateX = 0;
-			//moveWindowRateY = 10;
-			//SCENEMANAGER->RefCoverSpeed() = 0.04f;
-			//SetCoverStatue::FadeOut;
+			isNewPressed = true;
+			SCENEMANAGER->RefCoverSpeed() = 0.04f;
+			SetCoverStatue::FadeOut;
+			SOUNDMANAGER->play("SelectionTitleComplete");
 			//SOUNDMANAGER->setFadeOut();
-			SCENEMANAGER->LoadScene("SaveloadScene");
 
 		}
 	}
@@ -142,9 +162,17 @@ void TitleScene::Update()
 			SCENEMANAGER->LoadScene("MapToolScene");
 		}
 	}
-	else if (isPlayPressed)
+	else if (isNewPressed)
 	{
-
+		Mcounter++;
+		if (Mcounter > 50)
+		SCENEMANAGER->LoadScene("Battle01");
+	}
+	else if (isContinuePressed)
+	{
+		Mcounter++;
+		if(Mcounter>50)
+		SCENEMANAGER->LoadScene("Battle01");
 	}
 
 	//▼파이어엠블렘 시리즈 대대로 내려오는 명검 팔시온의 프레임

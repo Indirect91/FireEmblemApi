@@ -22,10 +22,10 @@ Character::Character()
 	occupation = Occupation::Archer;
 	portraitImg = nullptr;
 	portraitAlpha = 0.f;
+	characterAlpha = 1.f;
 	frameImg = nullptr;
 	item = nullptr;
 	draggingStarted = nullptr;
-	isActionTaken = false;
 	frame = { 0 };
 	frameLoop = 0;
 	frameCounter = 0;
@@ -40,7 +40,6 @@ Character::Character()
 	isRangeCalculated = false;
 	cursor = nullptr;
 	dragValidity = false;
-	isActionTaken = false;
 	healthBarBackground = { 0,0,TILESIZE,TILESIZE / 5 };
 	healthBarFront = { 0,0,TILESIZE * 5 / 6,TILESIZE / 6 };
 	currentHealth = GetHealth();
@@ -61,9 +60,9 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	occupation = _job;
 	portraitImg = nullptr;
 	portraitAlpha = 0.f;
+	characterAlpha = 1.f;
 	frameImg = nullptr;
 	item = nullptr;
-	isActionTaken = false;
 	frame.x = static_cast<UINT>(_whos);
 	frame.y = static_cast<UINT>(_job);
 	frameLoop = 0;
@@ -79,7 +78,6 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	isRangeCalculated = false;
 	cursor = nullptr;
 	dragValidity = false;
-	isActionTaken = false;
 
 	SetOccupation(_job);
 	SetImgAuto(_charName);
@@ -94,7 +92,7 @@ void Character::Init()
 {
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
 	assert(cursor != nullptr); //커서 제대로 안들어왔으면 터뜨림
-	isActionTaken = false;
+	//isActionTaken = false;
 }
 
 void Character::Release()
@@ -109,10 +107,14 @@ void Character::Update()
 	if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && whosChar == OwnedBy::Player)
 	{
 		//▼먼저 상태를 준다
-		if (isActionTaken) //행동을 취한적이 있는 캐릭터라면
+		if (charStatus == CharStatus::IsActed) //행동을 취한적이 있는 캐릭터라면
 		{
 			charStatus = CharStatus::IsActed;
 		} //행동한 상태로 유지
+		else if (charStatus == CharStatus::IsDying)
+		{
+			charStatus = CharStatus::IsDying;
+		}
 		else if(charStatus == CharStatus::IsMoving)
 		{
 			charStatus = CharStatus::IsMoving;
@@ -144,9 +146,13 @@ void Character::Update()
 			}
 		}
 	}
-	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && whosChar == OwnedBy::Enemy)
+	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && whosChar == OwnedBy::Enemy && (this->charStatus != CharStatus::IsDying) && this->charStatus != CharStatus::IsDead)
 	{
 		charStatus = CharStatus::IsCheckingOut;
+	}
+	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && (charStatus == CharStatus::IsDying || this->charStatus == CharStatus::IsDead))
+	{
+
 	}
 	else if (cursor->GetCursorTurn() == IngameStatus::EnemyTurn)
 	{
@@ -160,7 +166,12 @@ void Character::Update()
 	//▼상태에 따른 행동
 	switch (charStatus)
 	{
-		//▼클릭된 상태라면. 
+	case CharStatus::IsDying:
+		break;
+
+	case CharStatus::IsDead:
+		break;
+	//▼클릭된 상태라면. 
 	case CharStatus::IsClicked:
 		//▼우클릭이나 S를 누르면 픽상태 해지
 		if (KEYMANAGER->IsOnceKeyDown('S'))
@@ -195,6 +206,9 @@ void Character::Update()
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
 			charStatus = CharStatus::IsClicked; //눌렸다면 상태를 클릭된 상태로 바꿈
+
+			INT random = (rand() % 3)+1;	//음성 랜덤시킴
+			SOUNDMANAGER->play(name + std::to_string(random));//랜덤 나온 음성으로 재생
 
 			for (auto& toThickenRed : redTiles)
 			{
@@ -985,7 +999,7 @@ void Character::AdjustFrame()
 		frameInterval = 2; //정말 빠르게 움직인다
 	}
 	//▼액션을 이미 취한 상태라면
-	else if (isActionTaken)
+	else if (charStatus == CharStatus::IsActed)
 	{
 		frameInterval = 16;
 	}
@@ -1164,6 +1178,24 @@ void Character::SetOccupation(Occupation _job)
 	}
 }
 
+void Character::SetCurrentHpSubtractByValue(INT _changedValue)
+{
+	 currentHealth -= _changedValue; 
+	 if (currentHealth <= 0) currentHealth = 0;
+}
+
+void Character::SetCurrentHpAddByValue(INT _changedValue)
+{
+	 currentHealth += _changedValue;
+	 if (currentHealth <= 0) currentHealth = 0;
+}
+
+void Character::SetCurrentHealth(INT _currentHealth)
+{
+	 currentHealth = _currentHealth; 
+	 if (currentHealth <= 0) currentHealth = 0;
+}
+
 //▼소유주와 직업에 따라서 알아서 넣어짐
 void Character::SetFrameAuto(Occupation _job, OwnedBy _whos)
 {
@@ -1202,7 +1234,7 @@ void Character::Render()
 		{ 
 			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); //카메라 상대 랜더
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
-			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::Black);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
 			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
 			assert(toCalculate < 1.01);
 			if (toCalculate > 0.6)
@@ -1212,11 +1244,54 @@ void Character::Render()
 			else
 				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
 		} 
-		else 
-		{ 
+		else if (charStatus == CharStatus::IsDying || charStatus == CharStatus::IsDead)
+		{
+			if (characterAlpha > 0)
+			{
+				characterAlpha -= 0.02f;
+			}
+			else
+			{
+				characterAlpha = 0;
+				charStatus = CharStatus::IsDead;
+			}
+			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
+			healthBarBackground.right = healthBarBackground.left + ((healthBarBackground.right- healthBarBackground.left)* characterAlpha);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
+
+			frameImg->SetAlpha(characterAlpha);
+			frameImg->RelativeFrameRender(position.left, position.top, frame.x, frame.y + (INT)movingDirection); //카메라 상대 랜더
+
+		}
+		else if (charStatus == CharStatus::IsActed) //행동을 취했었다면
+		{
 			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);  //카메라 상대 랜더
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
-			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::Black);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
+			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
+			assert(toCalculate < 1.01);
+			if (toCalculate > 0.6)
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Green);
+			}
+			else if (toCalculate > 0.3)
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);
+			}
+			else
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);
+			}
+			IMAGEMANAGER->FindImage("ActionTaken")->SetAlpha(0.5f);
+			IMAGEMANAGER->FindImage("ActionTaken")->SetSize({ TILESIZE, TILESIZE });
+			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top); //어두운 그림자로 덮어버림
+		}
+		else 
+		{ 
+
+			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);  //카메라 상대 랜더
+			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
+			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
 			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
 			assert(toCalculate < 1.01);
 			if (toCalculate > 0.6)
@@ -1227,12 +1302,7 @@ void Character::Render()
 				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
 		}
 
-		if (isActionTaken) //행동을 취했었다면
-		{
-			IMAGEMANAGER->FindImage("ActionTaken")->SetAlpha(0.5f);
-			IMAGEMANAGER->FindImage("ActionTaken")->SetSize({ TILESIZE, TILESIZE });
-			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top); //어두운 그림자로 덮어버림
-		}
+
 
 		//▼추후 UI로 뺼 부분
 		portraitImg->SetAlpha(portraitAlpha);

@@ -22,6 +22,7 @@ protected:
 	
 	//▼ESC 메뉴 관련
 	void ESCManage();
+	void checkDeadUnit();
 
 public:
 	BattleScenes();

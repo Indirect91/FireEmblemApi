@@ -318,6 +318,6 @@ inline RECT HealthBarFrontLocater(RECT _healthBarBack, INT _maxHp, INT _currentH
 	if (_currentHp < 0) _currentHp = 0;
 	LONG originalWidth = (_healthBarBack.right-1) - (_healthBarBack.left +1) ;
 	LONG newWidth = originalWidth * _currentHp / _maxHp;
-	RECT toCalculate = { _healthBarBack.left + 1, _healthBarBack.top + 1, _healthBarBack.left+1 + newWidth, _healthBarBack.bottom + 1 };
+	RECT toCalculate = { _healthBarBack.left + 1, _healthBarBack.top + 1, _healthBarBack.left+1 + newWidth, _healthBarBack.bottom - 1 };
 	return toCalculate;
 }

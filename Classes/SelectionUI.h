@@ -11,6 +11,7 @@ public:
 		SelectionBox,
 		BattlePredict,
 		HealPredict,
+		AllyDead,
 
 	};
 
@@ -24,25 +25,17 @@ public:
 		IsWaitingForInput,
 	};
 
-	//▼힐 예측화면일시
-	struct HealPredict
-	{
-		class Character* thisCharacter = nullptr;
-		class Character* allyCharacter = nullptr;
-		POINT thisCharacterRenderPosition = { 0 };
-		POINT allyRenderPosition = { 0 };
-	};
-
+	//▼예측화면서 사용할 그림 그릴 위치
 	struct toRender
 	{
-		Character* charPtr = nullptr;								//적 캐릭터 포인터
-		POINT RenderPortrait = { 0 };									//적 초상화 그릴 위치
+		class Character* charPtr = nullptr;								//적 캐릭터 포인터
+		POINT RenderPortrait = { 0 };								//적 초상화 그릴 위치
 		POINT RenderPortraitOriginal = { 758,100 };					//적 초상화 원위치
-		POINT RenderPortraitToMove = { 500,100 };						//적 초상화 이동하고자 하
-		POINT RenderName = { 0 };										//적 이름 그릴 위치
-		POINT RenderHealthPredict = { 0 };								//적 체력 예상 그릴 위치
+		POINT RenderPortraitToMove = { 500,100 };					//적 초상화 이동하고자 하
+		POINT RenderName = { 0 };									//적 이름 그릴 위치
+		POINT RenderHealthPredict = { 0 };							//적 체력 예상 그릴 위치
 		POINT RenderHitRatePredict = { 0 };							//적 명중 예상 그릴 위치
-		POINT RenderWeaponAdvantage = { 0 };							//적 무기 상성 그릴 위치
+		POINT RenderWeaponAdvantage = { 0 };						//적 무기 상성 그릴 위치
 	};
 
 	//▼전투 예측화면일시
@@ -56,10 +49,28 @@ public:
 		toRender thisCharRender;
 	};
 
+	//▼힐 예측화면일시
+	struct HealPredict
+	{
+		class Character* thisCharacter = nullptr;
+		class Character* allyCharacter = nullptr;
+		POINT thisCharacterRenderPosition = { 0 };
+		POINT allyRenderPosition = { 0 };
+	};
+
+	//▼사망 화면일시
+	struct CharDead
+	{
+		class Character* deadCharacter = nullptr;
+		POINT deadPortraitPosition;
+	};
+
 	//▼행동 들어왔을시
 	struct SelectionBox
-	{RECT selectionBoxList;			//선택 옵션에 따른 고르는 박스
-	RECT selectionBoxTomove;};		//선택 옵션에 따른 고르는 박스
+	{
+		RECT selectionBoxList;			//선택 옵션에 따른 고르는 박스
+		RECT selectionBoxTomove;		//선택 옵션에 따른 고르는 박스
+	};		
 	
 private:
 
@@ -69,7 +80,7 @@ private:
 	HealPredict healPredict;		//힐 예측 상태일때 사용하는 변수들 모음
 	SelectionBox selectionBox;		//고르는박스 상태일때 사용하는 변수들 모음
 	BattlePredict battlePredict;	//전투예측 상태일때 사용하는 변수들 모음
-
+	CharDead charDead;
 
 public:
 
@@ -84,6 +95,7 @@ public:
 	void SetPhotoFrameAlphaZero() { photoFrameAlpha = 0; }
 	void SetBattlePredictInwards();
 	void SetBattlePredictOutwards();
+	void SetDeadChar(Character* _dead) { charDead.deadCharacter = _dead; }
 
 	const ToShow & GetToShow() const { return toShow; }
 

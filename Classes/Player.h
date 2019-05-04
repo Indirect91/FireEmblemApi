@@ -20,6 +20,8 @@ public:
 	void Update()override;
 	void Render()override;
 
+	std::string &RefEnemyRangeCalculatedPrev() { return enemyRangeCalculatedPrev; }
+
 	Player();
 	~Player() {};
 };
