@@ -70,9 +70,6 @@
     <Filter Include="MainGame\Scene들\WorldScene">
       <UniqueIdentifier>{e1acfce8-f0ee-4cd6-ac2d-22639b53d2c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\Scene들\SaveLoadScene">
-      <UniqueIdentifier>{42706399-aa28-4940-addc-73385f46a462}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\GameObject\Character">
       <UniqueIdentifier>{21c5a2a1-8505-4e29-b470-5345c7b4c83d}</UniqueIdentifier>
     </Filter>
@@ -204,9 +201,6 @@
     <ClInclude Include="Classes\WorldScene.h">
       <Filter>MainGame\Scene들\WorldScene</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\SaveloadScene.h">
-      <Filter>MainGame\Scene들\SaveLoadScene</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\Player.h">
       <Filter>MainGame\GameObject\Lords\Player</Filter>
     </ClInclude>
@@ -331,9 +325,6 @@
     </ClCompile>
     <ClCompile Include="Classes\WorldScene.cpp">
       <Filter>MainGame\Scene들\WorldScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\SaveloadScene.cpp">
-      <Filter>MainGame\Scene들\SaveLoadScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Player.cpp">
       <Filter>MainGame\GameObject\Lords\Player</Filter>

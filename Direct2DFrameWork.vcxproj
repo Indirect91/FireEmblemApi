@@ -166,7 +166,6 @@
     <ClInclude Include="Classes\Pathfinder.h" />
     <ClInclude Include="Classes\Player.h" />
     <ClInclude Include="Classes\Resource.h" />
-    <ClInclude Include="Classes\SaveloadScene.h" />
     <ClInclude Include="Classes\SceneManager.h" />
     <ClInclude Include="Classes\SelectionUI.h" />
     <ClInclude Include="Classes\SingletonBase.h" />
@@ -212,7 +211,6 @@
     <ClCompile Include="Classes\MapToolScene.cpp" />
     <ClCompile Include="Classes\Pathfinder.cpp" />
     <ClCompile Include="Classes\Player.cpp" />
-    <ClCompile Include="Classes\SaveloadScene.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />
     <ClCompile Include="Classes\SelectionUI.cpp" />
     <ClCompile Include="Classes\SoundManager.cpp" />

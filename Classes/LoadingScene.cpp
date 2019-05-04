@@ -5,7 +5,6 @@
 #include "testScene.h"
 #include "WorldScene.h"
 #include "Battle01.h"
-#include "SaveloadScene.h"
 
 void LoadingScene::Init()
 {
@@ -268,7 +267,6 @@ void LoadingScene::LoadScenes()
 	_loading->LoadScene("test", new testScene);
 	_loading->LoadScene("WorldScene", new WorldScene);
 	_loading->LoadScene("Battle01", new Battle01);
-	_loading->LoadScene("SaveloadScene", new SaveloadScene);
 }
 
 
