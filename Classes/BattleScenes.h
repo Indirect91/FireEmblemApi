@@ -22,7 +22,10 @@ protected:
 	
 	//▼ESC 메뉴 관련
 	void ESCManage();
+	//▼죽은 유닛 제거
 	void checkDeadUnit();
+	//▼턴 종료 체크
+	void checkTurnEnd();
 
 public:
 	BattleScenes();

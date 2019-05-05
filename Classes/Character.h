@@ -19,6 +19,7 @@ public:
 		IsDragging,
 		IsCursorOn,
 		IsAttacking,
+		IsDeadTalking,
 		IsCheckingOut,
 	};
 
@@ -67,6 +68,8 @@ private:
 	CharData additionalData;
 	CharData baseData;
 	INT currentHealth;
+	BOOL deadTalkInit = false;
+	BOOL deadTalkEnd = false;
 
 	//▼이동관련 변수
 	std::set<class Tiles*> AvailableTiles;	//행동가능 타일들 모아둠
@@ -108,7 +111,6 @@ public:
 	void Init() override;
 
 	void SetInitialChar(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos);
-//	void SetActionTaken(BOOL _actionTaken) { this->isActionTaken = _actionTaken; }
 	void SetFrame(POINT _frame) { this->frame = _frame; }
 	void SetFrameAuto(Occupation _job, OwnedBy _whos);
 	void SetImgAuto(std::string _CharName);
@@ -120,15 +122,15 @@ public:
 	void SetAdditionalMove(INT _move) { this->additionalData.Move = _move; }
 
 	void SetMovingDirection(MovingDirection _movingDirection) { movingDirection = _movingDirection; }
+	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
+	void SetDeadTalkEnd(BOOL _deadTalkEnd) { deadTalkEnd = _deadTalkEnd; }
 	void SetCurrentHpSubtractByValue(INT _changedValue);
 	void SetCurrentHpAddByValue(INT _changedValue);
 	void SetCurrentHealth(INT _currentHealth);
-	void SetStatus(CharStatus _toChange) { this->charStatus = _toChange; }
 
 	const BOOL GetIsClicked() const { return charStatus == CharStatus::IsClicked; }
 	const MovingDirection & GetMovingDirection() const { return movingDirection; }
 	const POINT& GetMoveStartLocation() const { return moveStartLocation; }
-//	const BOOL & GetIsActionTaken() const { return this->isActionTaken; }
 	const Occupation &GetOccupation() const { return this->occupation; }
 	const CharStatus& GetStatus() const { return charStatus; }
 	const std::string& GetName() const { return this->name; }

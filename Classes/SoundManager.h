@@ -37,6 +37,7 @@ public:
 
 	//사운드 재생
 	void play(std::string keyName); 
+	void play(std::string keyName, FLOAT volume);
 	//사운드 정지
 	void stop(std::string keyName);
 	//사운드 일시정지

@@ -62,7 +62,12 @@ public:
 	struct CharDead
 	{
 		class Character* deadCharacter = nullptr;
-		POINT deadPortraitPosition;
+		POINT deadPortraitPosition = {0,0};
+		std::wstring randomText = L"";
+		std::wstring toShow = L"";
+		INT randomTextCounter = 0;
+		INT randomTextInterval = 0;
+		INT phase = 0;
 	};
 
 	//▼행동 들어왔을시
@@ -72,8 +77,9 @@ public:
 		RECT selectionBoxTomove;		//선택 옵션에 따른 고르는 박스
 	};		
 	
-private:
 
+private:
+	std::vector<std::wstring> DeadDialogs;
 	ToShow toShow;					//어느 상호작용을 요구하는지 체크하는 옵션
 	class Cursor *cursor;			//커서는 너무 커서
 	FLOAT photoFrameAlpha;			//포토프레임 서서히 밝아짐

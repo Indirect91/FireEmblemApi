@@ -41,7 +41,7 @@ void LoadingScene::Update()
 }
 
 
-//▼원래 사용하던 이미지 로딩방법
+//▼이미지 로딩
 void LoadingScene::LoadingImage()
 {
 	//▼커서
@@ -161,6 +161,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("BattleUIBg", L"IMAGE/ETC/BattleUIBg.png");
 	_loading->LoadImg("BattleBg", L"IMAGE/ETC/BattleBg.png");
 	_loading->LoadImg("PhotoFrame", L"IMAGE/ETC/PhotoFrame.png");
+	_loading->LoadImg("DialogBox", L"IMAGE/ETC/dialogBox.png");
 	
 	//▼이펙트용
 	_loading->LoadFrameImage("Blink", L"IMAGE/Tiles/Blink.png",8,1);
@@ -174,6 +175,7 @@ void LoadingScene::LoadingSound()
 	_loading->LoadSound("맵툴BGM", "SOUND/FE/BGM/MapTool_Road Taken.mp3", true, true);//맵툴용
 	_loading->LoadSound("타이틀BGM", "SOUND/FE/BGM/TitleBgm.mp3", true, true);//타이틀용
 	_loading->LoadSound("인게임BGM", "SOUND/FE/BGM/InGame_March to Deliverance.mp3", true, true); //인게임용
+	_loading->LoadSound("DeadBGM", "SOUND/FE/BGM/DeadBGM.mp3", true, true); //인게임용
 
 	//▼SFX
 	_loading->LoadSound("SelectionTitleComplete", "SOUND/FE/SFX/SelectionTitleComplete.wav");
@@ -270,7 +272,7 @@ void LoadingScene::LoadScenes()
 }
 
 
-//▼퍼센테이지 화면에 그려줌. 
+//▼로딩 이미지 그리기
 void LoadingScene::Render()
 {
 	float num = static_cast<float>(_loading->GetLoadItem().size());

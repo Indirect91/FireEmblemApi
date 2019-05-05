@@ -6,7 +6,7 @@
 
 SelectionUI::SelectionUI()
 {
-	
+
 	selectionBox.selectionBoxList = { 500,200,600,300 };
 	selectionBox.selectionBoxTomove = { 500,200,600,300 };
 	cursor = nullptr;
@@ -36,6 +36,21 @@ void SelectionUI::Init()
 {
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
 	assert(cursor != nullptr); //커서 제대로 안들어왔으면 터뜨림
+	DeadDialogs.clear();
+	DeadDialogs.emplace_back(L"집에.. 돌봐야 할 가족이 있는데..");
+	DeadDialogs.emplace_back(L"전 죽어도 괜찮지만..다른 사람은 안돼요..");
+	DeadDialogs.emplace_back(L"앞이..잘.. 안보여요.. 조금만 쉴게요..");
+	DeadDialogs.emplace_back(L"돌아가면..결혼하겠다는 약속..미안해..");
+	DeadDialogs.emplace_back(L"죽을때만큼은..웃고싶었는데..눈물이 나네..");
+	DeadDialogs.emplace_back(L"저..이번엔 안 도망가고..잘했죠?..");
+	DeadDialogs.emplace_back(L"죄송하지만..집에는..못갈거같아요..");
+	DeadDialogs.emplace_back(L"이번건..좀..많이 아프네..");
+	DeadDialogs.emplace_back(L"이번..전투..후..전역이었는데..");
+	DeadDialogs.emplace_back(L"죽음이..두렵지..않다는건..역시 거짓말이야");
+	DeadDialogs.emplace_back(L"딸의.. 생일선물을..대신 전해줘..");
+	DeadDialogs.emplace_back(L"주말..데이트 약속이 있었는데..");
+	DeadDialogs.emplace_back(L"여기가..제..여정이 끝나는..곳이군요..");
+	//DeadDialogs.emplace_back(L"가..크롬..어서..");
 }
 
 void SelectionUI::SetToShow(ToShow _whatToShow)
@@ -57,7 +72,7 @@ void SelectionUI::Update()
 
 
 	switch (toShow)
-	
+
 	{
 	case SelectionUI::ToShow::Idle: //둘중 어느 하나도 아닐때 혹시나 들어올떄를 방지한 안전장치
 		assert(!"머지 아직 아이들 준적 없는데??");
@@ -104,13 +119,13 @@ void SelectionUI::Update()
 
 		break;
 
-	//▼전투 예측 UI 보여주라고 요청 들어와있을시
+		//▼전투 예측 UI 보여주라고 요청 들어와있을시
 	case SelectionUI::ToShow::BattlePredict:
 	{
 		//▼전투예측 UI 내에서 상태에 따라 달리 실행
 		switch (battlePredict.battleUIState)
 		{
-		//▼초상화 밖으로 이동하라고 지시 들어올경우
+			//▼초상화 밖으로 이동하라고 지시 들어올경우
 		case SelectionUI::BattleUIState::IsMovingOutwards:
 
 			if (photoFrameAlpha > 0.f) photoFrameAlpha -= 0.2f;
@@ -125,14 +140,14 @@ void SelectionUI::Update()
 			}
 			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitOriginal.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitOriginal.x)
 			{
-				
+
 				cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 				cursor->SetCursorTurnPrev(IngameStatus::SelectionUI);
 			}
 
 			break;
 
-		//▼초상화 안으로 이동하라고 지시 들어올경우
+			//▼초상화 안으로 이동하라고 지시 들어올경우
 		case SelectionUI::BattleUIState::IsMovingInwards:
 
 			//▼사진 안으로 이동하라는 지시 들어왔을시
@@ -154,7 +169,7 @@ void SelectionUI::Update()
 			}
 			break;
 
-		//▼전투 예측이 끝나고 전투 하라고 최종 확인이 떨어졌을때
+			//▼전투 예측이 끝나고 전투 하라고 최종 확인이 떨어졌을때
 		case SelectionUI::BattleUIState::IsBattleReady:
 			if (photoFrameAlpha > 0.f) photoFrameAlpha -= 0.2f;
 
@@ -171,11 +186,11 @@ void SelectionUI::Update()
 				//cursor->SetCursorTurnPrev(cursor->GetCursorTurnPrev());
 				cursor->SetCursorTurn(IngameStatus::ExecutingBattle);
 				dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetWhoBattles(battlePredict.thisCharRender.charPtr, battlePredict.enemyRender.charPtr);
-				
+
 				//battlePredict.thisCharRender.charPtr->SetStatus(Character::CharStatus::IsAttacking);
-				
+
 			}
-			
+
 
 
 			break;
@@ -183,11 +198,15 @@ void SelectionUI::Update()
 
 			//▼예측화면서 취소 누르면 초기화
 			if (KEYMANAGER->IsOnceKeyDown('S'))
-				{battlePredict.battleUIState = BattleUIState::IsMovingOutwards;}
+			{
+				battlePredict.battleUIState = BattleUIState::IsMovingOutwards;
+			}
 
 			//▼A를 누르면 공격 확정지음
 			else if (KEYMANAGER->IsOnceKeyDown('A'))
-				{battlePredict.battleUIState = BattleUIState::IsBattleReady;}
+			{
+				battlePredict.battleUIState = BattleUIState::IsBattleReady;
+			}
 
 			break;
 
@@ -211,7 +230,61 @@ void SelectionUI::Update()
 	}
 	case SelectionUI::ToShow::AllyDead:
 	{
+		if (charDead.phase == 0)
+		{
+			charDead.randomText = DeadDialogs[rand() % DeadDialogs.size()];
+			charDead.phase++;
+		}
+		else if (charDead.phase == 1)
+		{
+			if (photoFrameAlpha < 1.f)
+			{
+				photoFrameAlpha += 0.1f;
+			}
+			else
+			{
+				if (charDead.randomTextCounter < charDead.randomText.size())
+				{
+					charDead.randomTextInterval++;
+					if (charDead.randomTextInterval % 5 == 0)
+					{
+						charDead.randomTextCounter++;
+					}
+				}
+				charDead.toShow = charDead.randomText.substr(0, charDead.randomTextCounter);
 
+
+				if (KEYMANAGER->IsOnceKeyDown('A') || KEYMANAGER->IsOnceKeyDown('S'))
+				{
+					SOUNDMANAGER->play("SelectionSmall");
+					charDead.phase++;
+				}
+			}
+		}
+		else if (charDead.phase == 2)
+		{
+			if (photoFrameAlpha > 0.f)
+			{
+				photoFrameAlpha -= 0.2f;
+			}
+			else
+			{
+				toShow = ToShow::Idle;
+				cursor->SetCursorOccupied("");
+				cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
+				cursor->SetCursorTurnPrev(IngameStatus::SelectionUI);
+				charDead.deadCharacter->SetDeadTalkEnd(true);
+				SOUNDMANAGER->pause("DeadBGM");
+				SOUNDMANAGER->play("인게임BGM");
+
+				charDead.deadCharacter = nullptr;
+				charDead.randomText = L"";
+				charDead.toShow = L"";
+				charDead.randomTextCounter = 0;
+				charDead.randomTextInterval = 0;
+				charDead.phase = 0;
+			}
+		}
 		break;
 	}
 	default:
@@ -251,10 +324,26 @@ void SelectionUI::Render()
 
 		break;
 	case SelectionUI::ToShow::AllyDead:
-		//IMAGEMANAGER->FindImage(charDead.deadCharacter->GetName()
+	{
+		std::wstring charName = L"";
+		charName.assign(charDead.deadCharacter->GetName().begin(), charDead.deadCharacter->GetName().end());
 
-	break;
+		IMAGEMANAGER->FindImage("사망풀사이즈" + charDead.deadCharacter->GetName())->SetAlpha(photoFrameAlpha);
+		IMAGEMANAGER->FindImage("사망풀사이즈" + charDead.deadCharacter->GetName())->SetScale(0.6f);
+		IMAGEMANAGER->FindImage("사망풀사이즈" + charDead.deadCharacter->GetName())->Render(charDead.deadPortraitPosition.x, charDead.deadPortraitPosition.y);
+		IMAGEMANAGER->FindImage("DialogBox")->SetAlpha(photoFrameAlpha);
+		IMAGEMANAGER->FindImage("DialogBox")->SetScale(1.35);
+		IMAGEMANAGER->FindImage("DialogBox")->Render(charDead.deadPortraitPosition.x + 50, charDead.deadPortraitPosition.y + 450);
+		D2DRENDERER->RenderText(charDead.deadPortraitPosition.x + 110, charDead.deadPortraitPosition.y + 448, charName, 30, D2DRenderer::DefaultBrush::White,DWRITE_TEXT_ALIGNMENT::DWRITE_TEXT_ALIGNMENT_CENTER);
+		D2DRENDERER->RenderText(charDead.deadPortraitPosition.x + 70, charDead.deadPortraitPosition.y + 500, charDead.toShow, 25, D2DRenderer::DefaultBrush::White);
 
+
+		break;
+	}
+	case SelectionUI::ToShow::Idle:
+	{
+		break;
+	}
 	default:
 		assert(false && "보여주는 UI에 에러있음");
 		break;

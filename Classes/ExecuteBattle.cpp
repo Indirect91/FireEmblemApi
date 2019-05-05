@@ -67,6 +67,13 @@ void ExecuteBattle::Update()
 			attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 
+			
+			victim.charPtr->SetIsInBattle(true);
+			victim.criticalFrameRenderX = 0;
+			victim.critMotionCounter = 0;
+			victim.moveCounter = 0;
+			victim.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
+
 			break;
 		case ExecuteBattle::BattleState::AttackerAttacking:
 		{
@@ -395,19 +402,65 @@ void ExecuteBattle::Update()
 						assert(!"안만든거 있는가 체크");
 						break;
 					}
-					if (attacker.moveCounter >= 0) attacker.moveCounter--;
-					else attacker.phase++;
+					if (attacker.moveCounter >= 0) 
+					{ 
+						attacker.moveCounter--; 
+					}
+					else
+					{
+						attacker.phase++;
+						attacker.charPtr->SetPositionViaIndex();
+					}
 				}
 				else if (attacker.phase == 5)
 				{
+					//▼피격자가 반격상태일때
 					if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() >= attacker.charPtr->GetAttackRange())
+					//if (false) //테스트
 					{
+						if(attacker.charPtr->GetSpeed() >= victim.charPtr->GetSpeed() + 5)
+						{
+							//▼상대 공격 후에 한번 더 쳐야하니 아직 액션 안끝났다고 false
+							attacker.isActionDone = false;
+						}
+						else
+						{
+							//▼이번 공격이 마지막 공격
+							attacker.isActionDone = true;
+						}
 						battleState = BattleState::VictimAttacking;
 					}
-					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed()>=victim.charPtr->GetSpeed()+5 && attacker.attackCount == 0)
+
+					//▼피격자가 사거리만 딸릴시
+					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed() < victim.charPtr->GetSpeed() + 5)
 					{
+						victim.charPtr->SetStatus(Character::CharStatus::Idle);
+						battleState = BattleState::BattleEnd;
+					}
+
+					//▼피격자가 사거리도 딸리고 속도도5이상 딸릴시, 공격자 2타 때리게 되돌려보냄
+					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed()>=victim.charPtr->GetSpeed()+5 && attacker.attackCount == 0)
+					//else if (attacker.attackCount==0) //테스트
+					{
+						attacker.hitDistinguisher = (rand() % 100) + 1;
+						attacker.attackCount++;
+						attacker.phase = 0;
+						attacker.moveCounter = 0;
+						attacker.criticalFrameRenderX = 0;
+						attacker.critMotionCounter = 0;
+						attacker.isActionDone = false;
+						attacker.attackStatus = AttackStatue::Normal;
 
 					}
+					//▼피격자가 사거리, 속도가 딸리고 2타가 이미 진행되었을시
+					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.attackCount == 1)
+					//else if (attacker.attackCount == 1) //테스트
+					{
+						victim.charPtr->SetStatus(Character::CharStatus::Idle);
+						battleState = BattleState::BattleEnd;
+					}
+
+					//▼피격자 뒤졌을시
 					else if (victim.charPtr->GetCurrentHealth() == 0)
 					{
 						victim.charPtr->SetStatus(Character::CharStatus::IsDying);
@@ -429,12 +482,405 @@ void ExecuteBattle::Update()
 		}
 		case ExecuteBattle::BattleState::VictimAttacking:
 
-			
+			//▼만약 피격자의 액션이 끝나지 않았다면
+			if (!victim.isActionDone)
+			{
+				//▼페이즈 0
+				if (victim.phase == 0)
+				{
+					FLOAT accuracy = victim.charPtr->GetLuck();	//명중률
+					FLOAT critical = 100 - accuracy;				//크리율
+
+
+					//attacker.hitDistinguisher = 5;	//테스트용. 크리
+					//attacker.hitDistinguisher = 95;	//테스트용. 미스
+					//attacker.hitDistinguisher = 80;	//테스트용. 통상
+
+					if (victim.hitDistinguisher < critical)//나온 랜덤값이 크리범위 이내면
+					{
+						victim.attackStatus = AttackStatue::Critical;
+					}
+					else if (victim.hitDistinguisher < accuracy)//나온 랜덤값이 크리티컬보단 크고 회피보단 낮을땐
+					{
+						victim.attackStatus = AttackStatue::Normal;
+					}
+					else
+					{
+						victim.attackStatus = AttackStatue::Miss;
+					}
+
+
+					FLOAT faceEachOther = GetAngleDegree(attacker.charPtr->GetIndex(), victim.charPtr->GetIndex());
+
+					if (faceEachOther >= 337.5 && faceEachOther <= 360.f || faceEachOther >= 0 && faceEachOther < 22.5f)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::RIGHT);
+						attacker.attackingDirection = AttackingDirection::RIGHT;
+						victim.attackingDirection = AttackingDirection::LEFT;
+					}
+					else if (faceEachOther >= 22.5f && faceEachOther < 67.5f)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::RIGHTTOP);
+						attacker.attackingDirection = AttackingDirection::RIGHTTOP;
+						victim.attackingDirection = AttackingDirection::LEFTBOTTOM;
+					}
+					else if (faceEachOther >= 67.5f && faceEachOther < 112.5f)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::TOP);
+						attacker.attackingDirection = AttackingDirection::TOP;
+						victim.attackingDirection = AttackingDirection::BOTTOM;
+					}
+					else if (faceEachOther >= 112.5f && faceEachOther < 157.5f)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::LEFTTOP);
+						attacker.attackingDirection = AttackingDirection::LEFTTOP;
+						victim.attackingDirection = AttackingDirection::RIGHTBOTTOM;
+					}
+					else if (faceEachOther >= 157.5f && faceEachOther < 202.5)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::LEFT);
+						attacker.attackingDirection = AttackingDirection::LEFT;
+						victim.attackingDirection = AttackingDirection::RIGHT;
+					}
+					else if (faceEachOther >= 202.5 && faceEachOther < 247.5)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::RIGHTBOTTOM);
+						attacker.attackingDirection = AttackingDirection::RIGHTBOTTOM;
+						victim.attackingDirection = AttackingDirection::LEFTTOP;
+					}
+					else if (faceEachOther >= 247.5 && faceEachOther < 292.5)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::BOTTOM);
+						attacker.attackingDirection = AttackingDirection::BOTTOM;
+						victim.attackingDirection = AttackingDirection::TOP;
+					}
+					else if (faceEachOther >= 292.5 && faceEachOther < 337.5)
+					{
+						attacker.charPtr->SetMovingDirection(MovingDirection::RIGHTBOTTOM);
+						attacker.attackingDirection = AttackingDirection::RIGHTBOTTOM;
+						victim.attackingDirection = AttackingDirection::LEFTTOP;
+					}
+					else
+					{
+						assert(!"Wrong Angle");
+					}
+
+					//victim.charPtr->SetMovingDirection(victim.attackingDirection);
+					//victim.charPtr->SetStatus(Character::CharStatus::IsAttacking);
+
+					//▼크리티컬이 아니면 이동 완료 후 일정 시간 후에 때림
+					if (victim.moveCounter > 20 && !(victim.attackStatus == AttackStatue::Critical))
+					{
+						victim.moveCounter = 0;
+						victim.phase++; //다음단계 이동
+					}
+					//▼크리티컬이면 다음 단계로 넘김
+					else if (victim.attackStatus == AttackStatue::Critical)
+					{
+						SOUNDMANAGER->play("CriticalInit"); //크리티컬 사운드 1회만 재생해주고
+						victim.phase++; //다음단계 이동
+					}
+					//▼아까 말한 크리티컬 상태 외 일정시간
+					else
+					{
+						victim.moveCounter++;
+					}
+				}
+
+				if (victim.phase == 1)
+				{
+					//▼크리티컬 상태일때만 발동하는 코드
+					if (victim.attackStatus == AttackStatue::Critical)
+					{
+						if (victim.critMotionCounter < 20)
+						{
+							victim.moveCounter++;
+							if (victim.moveCounter % 2 == 0)
+							{
+								victim.criticalFrameRenderX++;
+							}
+							if (victim.criticalFrameRenderX > 6)
+							{
+								victim.criticalFrameRenderX = 9;
+								victim.critMotionCounter++;
+							}
+						}
+						else
+						{
+							victim.moveCounter = 0;
+							victim.phase++;
+						}
+					}
+					//▼크리티컬이 아닌 상태면 다음단계로 넘김
+					else
+					{
+						victim.phase++;
+						victim.moveCounter = 0;
+					}
+				}
+
+				else if (victim.phase == 2)
+				{
+					switch (victim.attackingDirection)
+					{
+					case GameObject::DraggingDirection::IDLE:
+						break;
+					case GameObject::DraggingDirection::LEFT:
+						victim.charPtr->SetPosition(moveLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHT:
+						victim.charPtr->SetPosition(moveRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::BOTTOM:
+						victim.charPtr->SetPosition(moveDown(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::TOP:
+						victim.charPtr->SetPosition(moveUp(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::LEFTBOTTOM:
+						victim.charPtr->SetPosition(moveDownLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHTBOTTOM:
+						victim.charPtr->SetPosition(moveDownRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::LEFTTOP:
+						victim.charPtr->SetPosition(moveUpLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHTTOP:
+						victim.charPtr->SetPosition(moveUpRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					default:
+						assert(!"안만든거 있는가 체크");
+						break;
+					}
+
+					//▼여기 무브카운터 건드리면 이동거리 조절가능
+					if (victim.moveCounter < 8) victim.moveCounter++;
+					else victim.phase++;//다음단계 이동
+				}
+
+				//▼ 데미지 계산부분
+				else if (victim.phase == 3)
+				{
+					if (victim.attackStatus == AttackStatue::Critical) //크리일때
+					{
+						//▼ 크리티컬, 데미지 2배
+						FLOAT calculateDamage = (victim.charPtr->GetDamage() * 2) - (attacker.charPtr->GetDefence());
+						//calculateDamage = 0; //테스트용
+						//calculateDamage = 100; //테스트용
+						if (calculateDamage <= 0)
+						{
+							calculateDamage = 0;
+							SOUNDMANAGER->play("CharacterDamage0");
+						}
+						else
+						{
+							//▼무기상성 //Swords > Axes //Axes > Lances //Lances > Swords
+							if (victim.charPtr->GetWeaponType() == WeaponType::Axe && attacker.charPtr->GetWeaponType() == WeaponType::Sword)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Axe && attacker.charPtr->GetWeaponType() == WeaponType::Lance)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Sword && attacker.charPtr->GetWeaponType() == WeaponType::Lance)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Sword && attacker.charPtr->GetWeaponType() == WeaponType::Axe)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Lance && attacker.charPtr->GetWeaponType() == WeaponType::Axe)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Lance && attacker.charPtr->GetWeaponType() == WeaponType::Sword)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+
+							SOUNDMANAGER->play("CriticalAttack");
+							CAMERA.SetShake(16);
+						}
+
+
+						attacker.charPtr->SetCurrentHpSubtractByValue(calculateDamage);
+
+					}
+					else if (victim.attackStatus == AttackStatue::Normal) //일반공격일때
+					{
+						//▼나온 랜덤값이 명중률 범위 이내면 힛. 통상 데미지 1배
+						FLOAT calculateDamage = (victim.charPtr->GetDamage()) - (attacker.charPtr->GetDefence());
+
+						//calculateDamage = 0; //테스트용
+						//calculateDamage = 100; //테스트용
+
+						if (calculateDamage <= 0)
+						{
+							calculateDamage = 0;
+							SOUNDMANAGER->play("CharacterDamage0");
+						}
+						else
+						{
+							//▼무기상성 //Swords > Axes //Axes > Lances //Lances > Swords
+							if (victim.charPtr->GetWeaponType() == WeaponType::Axe && attacker.charPtr->GetWeaponType() == WeaponType::Sword)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Axe && attacker.charPtr->GetWeaponType() == WeaponType::Lance)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Sword && attacker.charPtr->GetWeaponType() == WeaponType::Lance)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Sword && attacker.charPtr->GetWeaponType() == WeaponType::Axe)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Lance && attacker.charPtr->GetWeaponType() == WeaponType::Axe)
+							{
+								calculateDamage = calculateDamage * 0.8f;
+							}
+							else if (victim.charPtr->GetWeaponType() == WeaponType::Lance && attacker.charPtr->GetWeaponType() == WeaponType::Sword)
+							{
+								calculateDamage = calculateDamage * 1.2f;
+							}
+							SOUNDMANAGER->play("NormalAttack");
+							CAMERA.SetShake(8);
+						}
+						attacker.charPtr->SetCurrentHpSubtractByValue(calculateDamage);
+
+					}
+					else if (victim.attackStatus == AttackStatue::Miss)	//이외 조건은 빗나감
+					{
+						SOUNDMANAGER->play("MissAttack");
+					}
+					else
+					{
+						assert(!"공격상태 문제있음");
+					}
+
+					//▼TODO 액션 후에 페이즈 증가
+					victim.phase++;
+				}
+
+				//▼돌아오는 코드
+				else if (victim.phase == 4)
+				{
+					switch (victim.attackingDirection)
+					{
+					case GameObject::DraggingDirection::IDLE:
+						break;
+					case GameObject::DraggingDirection::LEFT:
+						victim.charPtr->SetPosition(moveRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHT:
+						victim.charPtr->SetPosition(moveLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::BOTTOM:
+						victim.charPtr->SetPosition(moveUp(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::TOP:
+						victim.charPtr->SetPosition(moveDown(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::LEFTBOTTOM:
+						victim.charPtr->SetPosition(moveUpRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHTBOTTOM:
+						victim.charPtr->SetPosition(moveUpLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::LEFTTOP:
+						victim.charPtr->SetPosition(moveDownRight(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					case GameObject::DraggingDirection::RIGHTTOP:
+						victim.charPtr->SetPosition(moveDownLeft(victim.charPtr->GetPosition(), victim.attackMotionSpeed));
+						break;
+					default:
+						assert(!"안만든거 있는가 체크");
+						break;
+					}
+					if (victim.moveCounter >= 0)
+					{
+						victim.moveCounter--;
+					}
+					else
+					{
+						victim.phase++;
+						victim.charPtr->SetPositionViaIndex();
+					}
+				}
+				else if (victim.phase == 5)
+				{
+					//▼반격자의 공격 대상이 살았고, 반격대상이 재공격을 안해온다면
+					if (attacker.charPtr->GetCurrentHealth() > 0 && attacker.isActionDone && attacker.charPtr->GetSpeed() + 5 > victim.charPtr->GetSpeed() && victim.attackCount == 0)
+					{
+						battleState = BattleState::BattleEnd;
+					}
+					//▼반격자의 공격 대상이 살았고, 반격대상이 재공격을 한다면
+					else if (attacker.charPtr->GetCurrentHealth() > 0 && !(attacker.isActionDone) && victim.attackCount == 0)
+					{
+						attacker.phase = 0;
+						attacker.attackCount=1;
+						attacker.moveCounter = 0;
+						attacker.criticalFrameRenderX = 0;
+						attacker.critMotionCounter = 0;
+						attacker.hitDistinguisher = (rand() % 100) + 1;
+						attacker.isActionDone = false;
+						attacker.attackStatus = AttackStatue::Normal;
+						victim.phase++;
+						battleState = BattleState::AttackerAttacking;
+					}
+					
+					//▼반격자의 공격 대상이 살았고, 반격대상의 속도가 원 공격자보다 5이상 빠를때
+					else if (attacker.charPtr->GetCurrentHealth() > 0 && attacker.charPtr->GetSpeed()+5 <= victim.charPtr->GetSpeed() && victim.attackCount == 0)
+					{
+						victim.phase = 0;
+						victim.attackCount++;
+						victim.moveCounter = 0;
+						victim.criticalFrameRenderX = 0;
+						victim.critMotionCounter = 0;
+						victim.hitDistinguisher = (rand() % 100) + 1;
+						victim.isActionDone = false;
+						victim.attackStatus = AttackStatue::Normal;
+
+					}
+					//▼반격자의 공격 대상이 살았고, 반격자가 2타 모두 때렸을때
+					else if (attacker.charPtr->GetCurrentHealth() > 0 && attacker.charPtr->GetSpeed() + 5 <= victim.charPtr->GetSpeed() && victim.attackCount == 1)
+					{
+						battleState = BattleState::BattleEnd;
+					}
+					//▼공격자가 뒤졌을시
+					else if (attacker.charPtr->GetCurrentHealth() <= 0)
+					{
+						attacker.charPtr->SetStatus(Character::CharStatus::IsDying);
+						cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
+						SOUNDMANAGER->play("CharacterDead");
+						battleState = BattleState::BattleEnd;
+					}
+				}
+				else if (victim.phase == 6)
+				{
+				battleState = BattleState::BattleEnd;
+ }
+			}
+			//▼공격이 끝났다면
+			else
+			{
+				assert(!"공격자 턴에 문제있음");
+			}
 
 			break;
 		case ExecuteBattle::BattleState::BattleEnd:
-			attacker.charPtr->SetStatus(Character::CharStatus::IsActed);
+			if (attacker.charPtr->GetStatus() != Character::CharStatus::IsDying)
+			{
+				attacker.charPtr->SetStatus(Character::CharStatus::IsActed);
+			}
 			cursor->SetCursorOccupied("");
+			cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 
 			Revert();

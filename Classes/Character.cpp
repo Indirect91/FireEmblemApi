@@ -10,6 +10,8 @@
 //▼생성자
 Character::Character()
 {
+	deadTalkEnd = false;
+	deadTalkInit = false;
 	isInBattle = false;
 	moveSpeed = 8;
 	whosChar = OwnedBy::Ally;
@@ -34,7 +36,7 @@ Character::Character()
 	ZeroMemory(&occupationData, sizeof(occupationData)); ;
 	ZeroMemory(&additionalData, sizeof(additionalData));
 	memset(&baseData, 0, sizeof(baseData));
-	draggingIndexPrev = {0};
+	draggingIndexPrev = { 0 };
 	RangeCalculator = 0;
 	isMoveCalculated = false;
 	isRangeCalculated = false;
@@ -48,6 +50,8 @@ Character::Character()
 //▼편리한 캐릭 생성을 위한 생성자 오버로딩
 Character::Character(Occupation _job, std::string _charName, POINT _index, OwnedBy _whos) : whosChar(_whos)
 {
+	deadTalkEnd = false;
+	deadTalkInit = false;
 	isInBattle = false;
 	name = _charName;
 	moveSpeed = 8;
@@ -83,7 +87,7 @@ Character::Character(Occupation _job, std::string _charName, POINT _index, Owned
 	SetImgAuto(_charName);
 	SetPositionViaIndex();
 	healthBarBackground = { 0,0,TILESIZE, TILESIZE / 5 };
-	healthBarFront = { 0,0,TILESIZE * 5/6, TILESIZE / 6 };
+	healthBarFront = { 0,0,TILESIZE * 5 / 6, TILESIZE / 6 };
 	currentHealth = GetHealth();
 }
 
@@ -111,11 +115,16 @@ void Character::Update()
 		{
 			charStatus = CharStatus::IsActed;
 		} //행동한 상태로 유지
+		else if (charStatus == CharStatus::IsDeadTalking) //행동을 취한적이 있는 캐릭터라면
+		{
+			charStatus = CharStatus::IsDeadTalking;
+		}
+
 		else if (charStatus == CharStatus::IsDying)
 		{
 			charStatus = CharStatus::IsDying;
 		}
-		else if(charStatus == CharStatus::IsMoving)
+		else if (charStatus == CharStatus::IsMoving)
 		{
 			charStatus = CharStatus::IsMoving;
 		}
@@ -171,7 +180,7 @@ void Character::Update()
 
 	case CharStatus::IsDead:
 		break;
-	//▼클릭된 상태라면. 
+		//▼클릭된 상태라면. 
 	case CharStatus::IsClicked:
 		//▼우클릭이나 S를 누르면 픽상태 해지
 		if (KEYMANAGER->IsOnceKeyDown('S'))
@@ -194,7 +203,7 @@ void Character::Update()
 		}
 		break;
 
-	//▼커서가 올라와있는 상태라면.
+		//▼커서가 올라와있는 상태라면.
 	case CharStatus::IsCursorOn:
 		if (!isMoveCalculated) //한번도 범위를 계산한적 없다면
 		{
@@ -207,7 +216,7 @@ void Character::Update()
 		{
 			charStatus = CharStatus::IsClicked; //눌렸다면 상태를 클릭된 상태로 바꿈
 
-			INT random = (rand() % 3)+1;	//음성 랜덤시킴
+			INT random = (rand() % 3) + 1;	//음성 랜덤시킴
 			SOUNDMANAGER->play(name + std::to_string(random));//랜덤 나온 음성으로 재생
 
 			for (auto& toThickenRed : redTiles)
@@ -234,12 +243,12 @@ void Character::Update()
 		}
 		break;
 
-	//▼ 아이들 상태일때
+		//▼ 아이들 상태일때
 	case CharStatus::Idle:
 		DisableMoveRange();
 		break;
 
-	//▼ 드래깅 상태일때
+		//▼ 드래깅 상태일때
 	case CharStatus::IsDragging:
 	{
 		//▼드래깅 도중 우클릭이나 S를 누르면 픽상태 해지
@@ -284,8 +293,10 @@ void Character::Update()
 					break;
 				}
 			}
-			if(!checkAlly) 
-			{draggingIndexPrev = draggingIndex;}
+			if (!checkAlly)
+			{
+				draggingIndexPrev = draggingIndex;
+			}
 		}
 		if (draggingStarted == nullptr)
 		{
@@ -300,7 +311,7 @@ void Character::Update()
 			}
 			assert(cursor->GetIsOtherUnit().name != "" && "타일 위에 적 있어야함..");
 		}
-		assert(draggingStarted!=nullptr);
+		assert(draggingStarted != nullptr);
 
 		auto MoveContainer = DATACENTRE.RefObjects(ObjType::BlueTiles);
 		for (auto& arrowTiles : toMove)
@@ -308,7 +319,7 @@ void Character::Update()
 			arrowTiles->SetArrowT("");
 		}
 		toMove.clear();
-		
+
 		//▼구현 
 		while (!PointCompare(draggingStarted->GetIndex(), this->index))
 		{
@@ -318,10 +329,10 @@ void Character::Update()
 			{
 				assert((dynamic_cast<Tiles*>(availableTile.second)) != nullptr);
 				if ((dynamic_cast<Tiles*>(availableTile.second)->GetRouteNum() == toFind + 1)
-					&& (((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x+1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
-					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x-1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
-					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y-1 == draggingStarted->GetIndex().y))
-					|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y+1 == draggingStarted->GetIndex().y))))
+					&& (((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x + 1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
+						|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x - 1) && (availableTile.second->GetIndex().y == draggingStarted->GetIndex().y))
+						|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y - 1 == draggingStarted->GetIndex().y))
+						|| ((availableTile.second->GetIndex().x == draggingStarted->GetIndex().x) && (availableTile.second->GetIndex().y + 1 == draggingStarted->GetIndex().y))))
 				{
 					draggingStarted = dynamic_cast<Tiles*>(availableTile.second);
 					break;
@@ -372,7 +383,7 @@ void Character::Update()
 				}
 				else
 				{
-					if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x && toMove[i + 1]->GetIndex().x== toMove[i]->GetIndex().x)
+					if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x && toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x)
 						toMove[i]->SetArrowtFrame({ 3,1 });
 					else if (toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y && toMove[i + 1]->GetIndex().y == toMove[i]->GetIndex().y)
 						toMove[i]->SetArrowtFrame({ 0,1 });
@@ -380,18 +391,18 @@ void Character::Update()
 					if (index.y > cursor->GetIndex().y)
 					{
 						if (toMove[i - 1]->GetIndex().x > toMove[i]->GetIndex().x
-						&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
-						&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
-						&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
+							&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
 
-						toMove[i]->SetArrowtFrame({ 0,0 });
+							toMove[i]->SetArrowtFrame({ 0,0 });
 
 						else if (toMove[i - 1]->GetIndex().x < toMove[i]->GetIndex().x
-						&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
-						&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
-						&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
-					
-						toMove[i]->SetArrowtFrame({ 1,0 });
+							&& toMove[i - 1]->GetIndex().y == toMove[i]->GetIndex().y
+							&& toMove[i + 1]->GetIndex().x == toMove[i]->GetIndex().x
+							&& toMove[i + 1]->GetIndex().y > toMove[i]->GetIndex().y)
+
+							toMove[i]->SetArrowtFrame({ 1,0 });
 
 						else if (toMove[i - 1]->GetIndex().x == toMove[i]->GetIndex().x
 							&& toMove[i - 1]->GetIndex().y < toMove[i]->GetIndex().y
@@ -465,7 +476,7 @@ void Character::Update()
 		if (KEYMANAGER->IsOnceKeyDown('A'))
 		{
 			//▼적이 만약 없는곳에, 즉 빈타일에 커서를 두고 A를 눌렀다면
-			if ((cursor->GetIsOtherUnit().name==""))
+			if ((cursor->GetIsOtherUnit().name == ""))
 			{
 				this->charStatus = CharStatus::IsMoving;
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::SelectionBox);
@@ -497,6 +508,15 @@ void Character::Update()
 	case CharStatus::Disable:
 
 		break;
+	case CharStatus::IsDeadTalking:
+		cursor->SetCursorTurn(IngameStatus::SelectionUI);
+		cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+		dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::AllyDead);
+		dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+		dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetDeadChar(this);
+
+		break;
+
 	case CharStatus::IsMoving:
 		//▼이동 도중에는 화살표를 꺼버린다
 		for (auto& arrowTiles : toMove)
@@ -507,17 +527,25 @@ void Character::Update()
 		if (toMove.size() > 0)
 		{
 			//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
-			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX))|| DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
+			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)) || DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
 			{
 				float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition()));
 				if (directionAngle == 0)
-					{movingDirection = MovingDirection::RIGHT;}
+				{
+					movingDirection = MovingDirection::RIGHT;
+				}
 				else if (directionAngle == 90)
-					{movingDirection = MovingDirection::LEFT;}
+				{
+					movingDirection = MovingDirection::LEFT;
+				}
 				else if (directionAngle == 180)
-					{movingDirection = MovingDirection::TOP;}
+				{
+					movingDirection = MovingDirection::TOP;
+				}
 				else if (directionAngle == 270)
-					{movingDirection = MovingDirection::BOTTOM;}
+				{
+					movingDirection = MovingDirection::BOTTOM;
+				}
 				this->toMove.pop_back();
 			}
 			//▼만약 백터 끝자락에 담긴 좌표로 이동 완료가 되었을시
@@ -538,7 +566,7 @@ void Character::Update()
 					movingDirection = MovingDirection::RIGHT;
 				}
 				else if (directionAngle >= 22.5f && directionAngle < 67.5f)
-				{ 
+				{
 					movingDirection = MovingDirection::RIGHTTOP;
 					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
 				}
@@ -560,18 +588,18 @@ void Character::Update()
 					movingDirection = MovingDirection::LEFT;
 				}
 				else if (directionAngle >= 202.5 && directionAngle < 247.5)
-				{	
+				{
 					movingDirection = MovingDirection::LEFTBOTTOM;
 					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
-				}	
+				}
 				else if (directionAngle >= 247.5 && directionAngle < 292.5)
-				{	
+				{
 					position.top += moveSpeed;
 					position.bottom += moveSpeed;
 					movingDirection = MovingDirection::BOTTOM;
-				}	
+				}
 				else if (directionAngle >= 292.5 && directionAngle < 337.5)
-				{	
+				{
 					movingDirection = MovingDirection::LEFTTOP;
 					assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
 				}
@@ -592,7 +620,7 @@ void Character::Update()
 				cursor->SetCursorTurn(IngameStatus::ExecutingBattle);
 				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
 				dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetBattleState(ExecuteBattle::BattleState::AttackerAttacking);
-				
+
 				charStatus = CharStatus::IsAttacking;
 			}
 			else
@@ -602,7 +630,7 @@ void Character::Update()
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::SelectionBox);
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
 			}
-			
+
 		}
 
 		break;
@@ -1039,7 +1067,7 @@ void Character::BlueRedShow(INT _actionRange)
 			{
 				//▼그린 참조갯수 증가
 				if (toCal->GetGreenAlpha() < 0.5f) toCal->SetGreenAlpha(0.4f);
-				toCal->IncreaseGreenNum();	
+				toCal->IncreaseGreenNum();
 				greenTiles.insert(toCal);
 				toCal->SetRouteNum(toCal->GetCheckedNum());
 				toCal->SetCheckedNum(0);
@@ -1056,7 +1084,7 @@ void Character::BlueRedShow(INT _actionRange)
 		{
 			//▼블루 참조 갯수 증가
 			if (toCal->GetBlueAlpha() < 0.5f) toCal->SetBlueAlpha(0.4f);
-			toCal->IncreaseBlueNum();	
+			toCal->IncreaseBlueNum();
 			toCal->SetRouteNum(toCal->GetCheckedNum());
 			toCal->SetCheckedNum(0);
 			blueTiles.insert(toCal);
@@ -1066,7 +1094,7 @@ void Character::BlueRedShow(INT _actionRange)
 	for (auto& redTile : redTiles)
 	{
 		if (redTile->GetRedAlpha() < 0.5f) redTile->SetRedAlpha(0.4f);
-		redTile->IncreaseRedNum();	
+		redTile->IncreaseRedNum();
 		redTile->SetRouteNum(redTile->GetCheckedNum());
 		redTile->SetCheckedNum(0);
 	}
@@ -1133,10 +1161,10 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Weapon = WeaponType::Tomb;
 		break;
 	case Occupation::Assassin:
-		occupationData.Speed = 5;
+		occupationData.Speed = 15;
 		occupationData.Range = 1;
 		occupationData.Health = 20;
-		occupationData.Attack = 8;
+		occupationData.Attack = 18;
 		occupationData.Defence = 2;
 		occupationData.Luck = 95;
 		occupationData.Move = 5;
@@ -1180,20 +1208,20 @@ void Character::SetOccupation(Occupation _job)
 
 void Character::SetCurrentHpSubtractByValue(INT _changedValue)
 {
-	 currentHealth -= _changedValue; 
-	 if (currentHealth <= 0) currentHealth = 0;
+	currentHealth -= _changedValue;
+	if (currentHealth <= 0) currentHealth = 0;
 }
 
 void Character::SetCurrentHpAddByValue(INT _changedValue)
 {
-	 currentHealth += _changedValue;
-	 if (currentHealth <= 0) currentHealth = 0;
+	currentHealth += _changedValue;
+	if (currentHealth <= 0) currentHealth = 0;
 }
 
 void Character::SetCurrentHealth(INT _currentHealth)
 {
-	 currentHealth = _currentHealth; 
-	 if (currentHealth <= 0) currentHealth = 0;
+	currentHealth = _currentHealth;
+	if (currentHealth <= 0) currentHealth = 0;
 }
 
 //▼소유주와 직업에 따라서 알아서 넣어짐
@@ -1231,32 +1259,55 @@ void Character::Render()
 
 		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
 		if (charStatus == CharStatus::IsMoving || charStatus == CharStatus::IsAttacking)
-		{ 
+		{
 			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); //카메라 상대 랜더
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
 			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
 			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
 			assert(toCalculate < 1.01);
 			if (toCalculate > 0.6)
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground,GetHealth(),currentHealth), D2DRenderer::DefaultBrush::Green);}
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Green);
+			}
 			else if (toCalculate > 0.3)
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);}
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);
+			}
 			else
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
-		} 
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);
+			}
+		}
 		else if (charStatus == CharStatus::IsDying || charStatus == CharStatus::IsDead)
 		{
-			if (characterAlpha > 0)
+
+			if (this->whosChar == OwnedBy::Player && !deadTalkInit)
 			{
-				characterAlpha -= 0.02f;
+				cursor->SetCursorTurn(IngameStatus::SelectionUI);
+				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::AllyDead);
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetDeadChar(this);
+				SOUNDMANAGER->pause("인게임BGM");
+				SOUNDMANAGER->play("DeadBGM");
+				//				charStatus = CharStatus::IsDeadTalking;
+				deadTalkInit = true;
 			}
+			else if (this->whosChar == OwnedBy::Player && deadTalkInit && !deadTalkEnd) {}
 			else
 			{
-				characterAlpha = 0;
-				charStatus = CharStatus::IsDead;
+				if (characterAlpha > 0)
+				{
+					characterAlpha -= 0.02f;
+				}
+				else
+				{
+					characterAlpha = 0;
+					charStatus = CharStatus::IsDead;
+				}
 			}
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
-			healthBarBackground.right = healthBarBackground.left + ((healthBarBackground.right- healthBarBackground.left)* characterAlpha);
+			healthBarBackground.right = healthBarBackground.left + ((healthBarBackground.right - healthBarBackground.left) * characterAlpha);
 			D2DRENDERER->RelativeFillRectangle(healthBarBackground, D2DRenderer::DefaultBrush::White);
 
 			frameImg->SetAlpha(characterAlpha);
@@ -1286,8 +1337,18 @@ void Character::Render()
 			IMAGEMANAGER->FindImage("ActionTaken")->SetSize({ TILESIZE, TILESIZE });
 			IMAGEMANAGER->FindImage("ActionTaken")->RelativeRender(position.left, position.top); //어두운 그림자로 덮어버림
 		}
-		else 
-		{ 
+		else if (charStatus == CharStatus::IsDeadTalking)
+		{
+			cursor->SetCursorTurn(IngameStatus::SelectionUI);
+			cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+			dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::AllyDead);
+			dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
+			dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetDeadChar(this);
+			SOUNDMANAGER->pause("인게임BGM");
+			SOUNDMANAGER->play("DeadBGM");
+		}
+		else
+		{
 
 			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y);  //카메라 상대 랜더
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
@@ -1295,12 +1356,20 @@ void Character::Render()
 			float toCalculate = static_cast<FLOAT>(currentHealth) / static_cast<FLOAT>(GetHealth());
 			assert(toCalculate < 1.01);
 			if (toCalculate > 0.6)
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Green);}
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Green);
+			}
 			else if (toCalculate > 0.3)
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);}
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Yellow);
+			}
 			else
-				{D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);}
+			{
+				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);
+			}
 		}
+
+
 
 
 

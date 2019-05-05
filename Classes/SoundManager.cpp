@@ -113,6 +113,22 @@ void SoundManager::play(std::string keyName)
 	}
 }
 
+void SoundManager::play(std::string keyName, FLOAT volume)
+{
+	int count = 0;
+	arrSoundIter iter = _mTotalSound.begin();
+	for (iter; iter != _mTotalSound.end(); ++iter, count++)
+	{
+		if (keyName == iter->first)
+		{
+			//사운드 플레이
+			_system->playSound(FMOD_CHANNEL_FREE, *iter->second, false, &_channel[count]);
+			//볼륨세팅
+			_channel[count]->setVolume(volume);
+		}
+	}
+}
+
 void SoundManager::stop(std::string keyName)
 {
 	int count = 0;

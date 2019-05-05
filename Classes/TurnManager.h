@@ -2,6 +2,10 @@
 #include "GameObject.h"
 class TurnManager : public GameObject
 {
+private:
+
+
+
 public:
 
 	void Init();

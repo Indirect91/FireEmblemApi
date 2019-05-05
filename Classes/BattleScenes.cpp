@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Character.h"
+#include "Cursor.h"
 
 BattleScenes::BattleScenes()
 {
@@ -66,6 +67,36 @@ void BattleScenes::checkDeadUnit()
 		else
 		{
 			++enemyItr;
+		}
+	}
+}
+
+void BattleScenes::checkTurnEnd()
+{
+	std::map<std::string, GameObject*>& playerTroop = DATACENTRE.RefObjects(ObjType::PlayerArmy); //플레이어 부대
+	std::map<std::string, GameObject*>& enemyTroop = DATACENTRE.RefObjects(ObjType::EnemyArmy); //적 부대
+	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
+	INT counter = 0;
+	if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn)
+	{
+		for (auto& playerEachUnit : playerTroop)
+		{
+			if (dynamic_cast<Character*>(playerEachUnit.second)->GetStatus() == Character::CharStatus::IsActed)
+			{
+				counter++;
+			}
+		}
+		if (counter == playerTroop.size())
+		{
+			DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
+			cursor->SetCursorTurn(IngameStatus::EnemyTurn);
+		}
+	}
+	else if (cursor->GetCursorTurn() == IngameStatus::EnemyTurn)
+	{
+		for (auto& enemyEachUnit : playerTroop)
+		{
+
 		}
 	}
 }

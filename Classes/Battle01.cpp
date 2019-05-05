@@ -29,7 +29,7 @@ void Battle01::Init()
 
 	//▼음악 초기화
 	SOUNDMANAGER->pause("타이틀BGM");
-	SOUNDMANAGER->play("인게임BGM");
+	SOUNDMANAGER->play("인게임BGM",0.4);
 	//SOUNDMANAGER->pause("SelectionTitleComplete");
 	//SOUNDMANAGER->setFadeIn();
 
@@ -86,7 +86,7 @@ void Battle01::Init()
 	CAMERA.Init();
 
 	player->SetTurnStart(); //TODO:수정
-	cursor->SetCursorTurn(IngameStatus::PlayerTurn);
+	cursor->SetCursorTurn(IngameStatus::TurnChanging);
 }
 
 	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거
@@ -127,10 +127,14 @@ void Battle01::Update()
 	cursor->Update();
 	tileManager->Update();
 	ingameUI->Update();
+	
+	checkDeadUnit();
+	checkTurnEnd();
+	
+
 	//▼커서에게 누구턴인지 물어봄
 	currentState = cursor->GetCursorTurn();
 
-	checkDeadUnit();
 
 	//▼게임의 상태에 따라 업데이트 대상이 달라짐
 	switch (currentState)
