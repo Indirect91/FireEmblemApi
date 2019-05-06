@@ -17,10 +17,22 @@ TileManager::TileManager()
 		for (int i = 0; i < TILECOLX; i++)
 		{
 			field[j * TILECOLX + i].Init(); //생성된 타일 초기화
-			//▼추후 불러오기로 대체
 			field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
 			field[j * TILECOLX + i].SetIndex({ i,j });
 			field[j * TILECOLX + i].SetPositionViaIndex();
+			
+			//▼4방향 이웃 추가
+			if (i > 0) //맨 우측 예외처리
+				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i - 1)]);
+			if (i < TILECOLX - 1) //맨 좌측 예외처리
+				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i + 1)]);
+			if (j > 0) //윗부분 예외처리
+				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
+			if (j < TILEROWY - 1) // 바닥 예외처리
+				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
+
+
+			//▼임시
 			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
 			{
 				field[j * TILECOLX + i].SetObjT("tmp");
@@ -28,6 +40,7 @@ TileManager::TileManager()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
+
 
 }
 

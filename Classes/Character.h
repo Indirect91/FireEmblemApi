@@ -17,7 +17,9 @@ public:
 		IsMoving,
 		IsClicked,
 		IsDragging,
+		EnemyPhase,
 		IsCursorOn,
+		IsSearching,
 		IsAttacking,
 		IsDeadTalking,
 		IsCheckingOut,
@@ -50,6 +52,9 @@ private:
 	Image* frameImg;						//프레임 이미지
 	BOOL isInCamera;						//카메라 안에 있어야만 업데이트/랜더됨
 	BOOL isInBattle;
+	INT enemyPhaseProc = 0;
+	BOOL attackable = false;
+
 
 	//▼이미지쪽 변수
 	RECT healthBarBackground;	//모든 캐릭터는 체력바를 가진다
@@ -57,7 +62,6 @@ private:
 	RECT healthBarFront;		//모든 캐릭터는 실 체력을 가진다
 	Image * portraitImg;		//초상화 이미지
 	FLOAT portraitAlpha;		//초상화 알파값
-	//BOOL isActionTaken;			//모든 캐릭터는 턴당 행동을 가진다
 	UINT frameCounter;			//업데이트별 프레임 제어자
 	INT frameInterval;			//프레임 도는 빈도
 	UINT frameLoop;				//프레임 추가어치
@@ -96,7 +100,9 @@ private:
 	UINT moveSpeed;							//이동 속도
 
 	//▼이동 관련
+	Tiles* searchStarted;					//검색 시작 노드
 	MovingDirection movingDirection;
+	std::vector<class Tiles*> enemyToPlayer;//적이 사용할 최단루트
 
 private:
 	BOOL CheckInCamera();					//카메라 속에 캐릭이 있는지 체크

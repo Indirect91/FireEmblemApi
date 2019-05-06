@@ -17,8 +17,6 @@ Battle01::Battle01()
 {
 	bg = nullptr;
 	bg2 = nullptr;
-	bg3 = nullptr;
-	bg4 = nullptr;
 }
 
 void Battle01::Init()
@@ -29,7 +27,7 @@ void Battle01::Init()
 
 	//▼음악 초기화
 	SOUNDMANAGER->pause("타이틀BGM");
-	SOUNDMANAGER->play("인게임BGM",0.4);
+	SOUNDMANAGER->play("인게임BGM",0.6);
 	//SOUNDMANAGER->pause("SelectionTitleComplete");
 	//SOUNDMANAGER->setFadeIn();
 
@@ -39,18 +37,21 @@ void Battle01::Init()
 	escMenu = new ESCMenu; //ESC UI를 뉴할당받음
 	DATACENTRE.AddObj(ObjType::UI, "escMenu", escMenu); //쓸 수 있게 등록함
 
+	//▼커서를 만들고 이닛시킴
+	cursor = new Cursor;
+	cursor->Init();
+	DATACENTRE.AddObj(ObjType::UI, "Cursor", cursor);
+
 	//▼턴매니져를 만들고 UI로 등록시킴
 	turnManager = new TurnManager; //턴관련 UI를 뉴할당받을
+	turnManager->Init();
 	DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
 
 
 	//▼맵에 맞게 카메라를 세팅함
 	CAMERA.SetCamera({ 0,0,800,800 });
 
-	//▼커서를 만들고 이닛시킴
-	cursor = new Cursor;
-	cursor->Init();
-	DATACENTRE.AddObj(ObjType::UI, "Cursor", cursor);
+
 
 	//▼전투 매니져를 만들고 등록시킴
 	battleManager = new ExecuteBattle;	//전투매니져
@@ -80,13 +81,14 @@ void Battle01::Init()
 
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
 	bg2 = IMAGEMANAGER->AddImage("tmp1", L"IMAGE/Tiles/temp2.png");
-	bg3 = IMAGEMANAGER->AddImage("tmp2", L"IMAGE/Tiles/temp3.png");
-	bg4 = IMAGEMANAGER->AddImage("tmp3", L"IMAGE/Tiles/temp4.png");
 
 	CAMERA.Init();
 
 	player->SetTurnStart(); //TODO:수정
 	cursor->SetCursorTurn(IngameStatus::TurnChanging);
+	gameoverInit = false;
+	gameEndReady = false;
+	gameOverPhase = 0;
 }
 
 	//▼현재 씬에서 뉴할당 받은 애들 역순으로 제거
@@ -130,6 +132,17 @@ void Battle01::Update()
 	
 	checkDeadUnit();
 	checkTurnEnd();
+
+	if (DATACENTRE.RefObjects(ObjType::PlayerArmy).size() == 0 || (DATACENTRE.RefObjects(ObjType::PlayerArmy).size() == 1 && dynamic_cast<Character*>((*(DATACENTRE.RefObjects(ObjType::PlayerArmy).begin())).second)->GetStatus()==Character::CharStatus::IsDying))
+	{
+		cursor->SetCursorTurn(IngameStatus::GameOver);
+
+	}
+	else if (DATACENTRE.RefObjects(ObjType::EnemyArmy).size() == 0)
+	{
+		cursor->SetCursorTurn(IngameStatus::PlayerWon);
+	}
+
 	
 
 	//▼커서에게 누구턴인지 물어봄
@@ -160,8 +173,42 @@ void Battle01::Update()
 	case IngameStatus::SelectionUI:
 		selectionUI->Update();
 		break;
+
+	case IngameStatus::GameOver:
+	case IngameStatus::PlayerWon:
+
+		switch (gameOverPhase)
+		{
+		case 0:
+			SetCoverStatue::FadeOut;
+			SOUNDMANAGER->FadeOut();
+			gameOverPhase++;
+			break;
+		case 1:
+			if (SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
+			{
+				gameEndReady = true;
+				SetCoverStatue::FadeIn;
+				gameOverPhase++;
+			}
+			break;
+		case 2:
+			if (SCENEMANAGER->RefAlphaStatue() == SceneManager::tagCoverStatue::Idle)
+			{
+				if (KEYMANAGER->IsOnceKeyDown('A') || KEYMANAGER->IsOnceKeyDown('S'))
+				{
+					SOUNDMANAGER->pause("인게임BGM");
+					SOUNDMANAGER->FadeIn();
+
+					SCENEMANAGER->LoadScene("TitleScene");
+				}
+			}
+			break;
+		}
+
+		break;
 	default:
-		assert(false && "인게임status 미작성");
+		assert(!"인게임status 미작성된거 있음");
 		break;
 
 	}
@@ -170,30 +217,46 @@ void Battle01::Update()
 
 void Battle01::Render()
 {
-	IMAGEMANAGER->FindImage("BattleBg")->Render(0, 0);
-	//▼랜더 순서를 결정지을 수 있음
-	bg->RelativeRender(0,0);
-	bg->RelativeRender(288, 0);
-	bg->RelativeRender(288+288, 0);
-	bg->RelativeRender(288+288+288, 0);
-	bg->RelativeRender(288 + 288 + 288 +288, 0);
-
-	bg2->RelativeRender(0, bg->GetHeight());
-	bg2->RelativeRender(bg2->GetWidth(), bg->GetHeight());
-	bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
-	bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight()); 
-	bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight()); 
-	
-	tileManager->Render();
-
-	player->Render();
-	enemy->Render();
-	cursor->Render();
-	if (currentState == IngameStatus::SelectionUI)
+	if (currentState == IngameStatus::GameOver && gameEndReady)
 	{
-		selectionUI->Render();
+		IMAGEMANAGER->FindImage("GameOver")->Render(WINSIZEX / 2, WINSIZEY / 2, Pivot::Centre);
 	}
-	battleManager->Render();
-	IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
-	//인게임UI
+	else if (currentState == IngameStatus::PlayerWon && gameEndReady)
+	{
+		IMAGEMANAGER->FindImage("PlayerWon")->Render(WINSIZEX / 2, WINSIZEY / 2, Pivot::Centre);
+	}
+	else
+	{
+		IMAGEMANAGER->FindImage("BattleBg")->Render(0, 0);
+		//▼랜더 순서를 결정지을 수 있음
+		bg->RelativeRender(0, 0);
+		bg->RelativeRender(288, 0);
+		bg->RelativeRender(288 + 288, 0);
+		bg->RelativeRender(288 + 288 + 288, 0);
+		bg->RelativeRender(288 + 288 + 288 + 288, 0);
+
+		bg2->RelativeRender(0, bg->GetHeight());
+		bg2->RelativeRender(bg2->GetWidth(), bg->GetHeight());
+		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
+		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
+		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
+
+		tileManager->Render();
+
+		player->Render();
+		enemy->Render();
+		cursor->Render();
+		if ((currentState != IngameStatus::GameOver) || (currentState != IngameStatus::PlayerWon))
+		{
+			turnManager->Render();
+		}
+		if (currentState == IngameStatus::SelectionUI)
+		{
+			selectionUI->Render();
+		}
+		battleManager->Render();
+		IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
+		//인게임UI
+
+	}
 }

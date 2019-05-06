@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Character.h"
 #include "Cursor.h"
+#include "TurnManager.h"
 
 BattleScenes::BattleScenes()
 {
@@ -40,7 +41,7 @@ void BattleScenes::ESCManage()
 
 void BattleScenes::checkDeadUnit()
 {
-	
+
 	for (auto playerItr = DATACENTRE.RefObjects(ObjType::PlayerArmy).begin(); playerItr != DATACENTRE.RefObjects(ObjType::PlayerArmy).end();)
 	{
 		if (dynamic_cast<Character*> ((*playerItr).second)->GetStatus() == Character::CharStatus::IsDead)
@@ -76,7 +77,9 @@ void BattleScenes::checkTurnEnd()
 	std::map<std::string, GameObject*>& playerTroop = DATACENTRE.RefObjects(ObjType::PlayerArmy); //플레이어 부대
 	std::map<std::string, GameObject*>& enemyTroop = DATACENTRE.RefObjects(ObjType::EnemyArmy); //적 부대
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
+
 	INT counter = 0;
+
 	if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn)
 	{
 		for (auto& playerEachUnit : playerTroop)
@@ -88,15 +91,32 @@ void BattleScenes::checkTurnEnd()
 		}
 		if (counter == playerTroop.size())
 		{
-			DATACENTRE.AddObj(ObjType::UI, "TurnManager", turnManager); //쓸 수 있게 등록함
-			cursor->SetCursorTurn(IngameStatus::EnemyTurn);
+			dynamic_cast<TurnManager*>(DATACENTRE.GetCertainObject(ObjType::UI, "TurnManager"))->changeToEnemy();
+			cursor->SetCursorTurn(IngameStatus::TurnChanging);
+			for (auto& playerEachUnit : playerTroop)
+			{
+				dynamic_cast<Character*>(playerEachUnit.second)->SetStatus(Character::CharStatus::Idle);
+			}
 		}
 	}
 	else if (cursor->GetCursorTurn() == IngameStatus::EnemyTurn)
 	{
-		for (auto& enemyEachUnit : playerTroop)
+		for (auto& enemyEachUnit : enemyTroop)
 		{
-
+			if (dynamic_cast<Character*>(enemyEachUnit.second)->GetStatus() == Character::CharStatus::IsActed)
+			{
+				counter++;
+			}
+		}
+		if (counter == enemyTroop.size())
+		{
+			dynamic_cast<TurnManager*>(DATACENTRE.GetCertainObject(ObjType::UI, "TurnManager"))->changeToPlayer();
+			cursor->SetCursorTurn(IngameStatus::TurnChanging);
+			cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
+			for (auto& enemyEachUnit : enemyTroop)
+			{
+				dynamic_cast<Character*>(enemyEachUnit.second)->SetStatus(Character::CharStatus::Idle);
+			}
 		}
 	}
 }

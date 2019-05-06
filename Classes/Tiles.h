@@ -44,13 +44,13 @@ private:
 	POINT arrowtFrame;	//화살표 프레임랜더용
 	
 	INT checkedNum;			//타일이 검사되었는지 여부
-	INT routeNum;				//적 위치 추적에만 사용될 숫자
+	INT routeNum;			//적 위치 추적에만 사용될 숫자
 
+	std::vector<Tiles*> neighbour;
 	colourTiles purpleTile;
 	colourTiles greenTile;
 	colourTiles blueTile;
 	colourTiles redTile;
-
 
 public:
 	//▼오버라이드된 함수들
@@ -120,6 +120,13 @@ public:
 	void SetCheckedNum(const INT _checked) { this->checkedNum = _checked;} //체크 여부 변경
 	void SetRouteNum(const INT _routeNum) { routeNum = _routeNum; }			//길 추적용 숫자
 
+	//▼에이스타용
+	BOOL isVisited = false;				//방문 여부
+	FLOAT fGlobalGoal = 0;				//목적지까지의 거리
+	FLOAT fLocalGoal = 0;				//시작점서부터의 거리
+	Tiles* parent = nullptr;			//가장 가까운 부모 찾아가기 위한 포인터
+
+
 	void IncreaseBlueNum();			//블루 참조갯수 증가
 	void IncreaseRedNum();			//레드 참조갯수 증가
 	void IncreaseGreenNum();		//그린 참조갯수 증가
@@ -139,6 +146,14 @@ public:
 	void SetGreenAlpha(const FLOAT _green) { greenTile.Alpha = _green; }			//초록알파값 세팅
 	void SetRedAlpha(const FLOAT _red) { redTile.Alpha = _red; }					//빨강알파값 세팅
 	void SetPurpleAlpha(const FLOAT _purple) {purpleTile.Alpha = _purple; }			//보라알파값 세팅
+
+	//▼에이스타 빠른 참조용
+	std::vector<Tiles*>& RefNeighbours() { return neighbour; }
+	BOOL& RefIsVisited() { return isVisited; }
+	FLOAT& RefGlobalGoal() { return fGlobalGoal; }
+	FLOAT& RefLocalGoal() { return fLocalGoal; }
+	Tiles* GetParentPtr() { return parent; }
+	void SetParentPtr(Tiles * _parentPtr) { parent = _parentPtr; }
 
 	Tiles();
 	~Tiles() {};

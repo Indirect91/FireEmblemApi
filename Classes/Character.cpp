@@ -1,4 +1,5 @@
 #include "../stdafx.h"
+#include "GameObject.h"
 #include "Character.h"
 #include "Item.h"
 #include "Tiles.h"
@@ -159,13 +160,12 @@ void Character::Update()
 	{
 		charStatus = CharStatus::IsCheckingOut;
 	}
-	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && (charStatus == CharStatus::IsDying || this->charStatus == CharStatus::IsDead))
-	{
-
-	}
+	else if (cursor->GetCursorTurn() == IngameStatus::PlayerTurn && (charStatus == CharStatus::IsDying || this->charStatus == CharStatus::IsDead)) {}
 	else if (cursor->GetCursorTurn() == IngameStatus::EnemyTurn)
 	{
-
+		//enemyPhase
+		//if(((charStatus != CharStatus::IsMoving) || (charStatus != CharStatus::IsAttacking) || (charStatus != CharStatus::IsActed)))
+		charStatus = CharStatus::EnemyPhase;
 	}
 	else
 	{
@@ -508,6 +508,661 @@ void Character::Update()
 	case CharStatus::Disable:
 
 		break;
+	case CharStatus::EnemyPhase:
+	{
+		switch (enemyPhaseProc)
+		{
+			//▼ 커서 옮겨둠
+		case 0:
+		{
+			attackable = false;
+			cursor->SetIndex(this->index);
+			cursor->GameObject::SetPositionViaIndex();
+			foeTiles.clear();
+			allyTiles.clear();
+			enemyToPlayer.clear();
+			enemyPhaseProc++;
+			break;
+		}
+		//▼본인 주변부터 검사
+		case 1:
+		{
+			INT ActionRange = additionalData.Range + occupationData.Range + baseData.Range;  //사거리 or 힐범위
+			INT MoveRange = additionalData.Move + occupationData.Move + baseData.Move;		//이동범위
+			RangeCalculator = ActionRange + MoveRange;										//행동+이동범위
+
+			//▼0이하의 수가 들어오면 터뜨림
+			assert(ActionRange > 0);
+			assert(MoveRange > 0);
+			assert(RangeCalculator > 0);
+
+			//▼연산용 임시 큐 생성. 큐 대신 스택 쓰면 Bfs(너비우선 알고리즘)가 아닌 Dfs()로 구현가능
+			std::queue<Tiles*> BfsFloodFill;
+
+			//▼시작 타일을 하나 넣어줌
+			Tiles* initTile = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(index.y * TILECOLX + index.x)));
+			initTile->SetCheckedNum(RangeCalculator);//검사대상에 아까 계산해둔 최초 이동값 넣어둠
+			initTile->SetRouteNum(RangeCalculator);//검사대상에 아까 계산해둔 최초 이동값 넣어둠
+			BfsFloodFill.push(initTile);			//시작 타일 하나 넣어주고 시작
+
+			while (!BfsFloodFill.empty())
+			{
+				//▼액션파트
+				auto toExamen = BfsFloodFill.front();   //큐의 첫째 요소 확인 후 담아둠
+				BfsFloodFill.pop();						//큐 첫째요소 터뜨림
+				AvailableTiles.insert(toExamen);		//사용 가능한 타일에 넣어둠
+
+				//▼위 검사
+				bool UpValidity = true;
+				UpValidity &= (0 <= toExamen->GetIndex().y - 1);
+				UpValidity &= toExamen->GetCheckedNum() > 1;
+				//▼첫째 조건이 참이라면
+				if (UpValidity)
+				{
+					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y - 1) * TILECOLX + toExamen->GetIndex().x)));
+					UpValidity &= !checkTarget->GetCheckedNum();	//체크넘버 가져옴
+					UpValidity &= checkTarget->GetObjT() == "";		//장애물 있는지 가져옴
+					//▼이번에도 참이라면
+					if (UpValidity)
+					{
+						//▼아군의 캐릭터였다면
+						if (whosChar == OwnedBy::Player)
+						{
+							//▼상대방을 마주쳤을시, 상대방 리스트에 담음
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									UpValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+						}
+						//▼캐릭터가 적의 소유일떈
+						else if (whosChar == OwnedBy::Enemy)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									UpValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+						}
+					}
+					//▼모든 조건이 맞으면, 검사 대상에 추가
+					if (UpValidity)
+					{
+						checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+						BfsFloodFill.push(checkTarget);
+					}
+				}
+
+				//▼좌 검사
+				bool LeftValidity = true;
+				LeftValidity &= (0 <= toExamen->GetIndex().x - 1);
+				LeftValidity &= toExamen->GetCheckedNum() > 1;
+				if (LeftValidity)
+				{
+					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x - 1)));
+					LeftValidity &= !checkTarget->GetCheckedNum();
+					LeftValidity &= checkTarget->GetObjT() == "";
+					if (LeftValidity)
+					{
+						if (whosChar == OwnedBy::Player)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									LeftValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+
+						}
+						//▼캐릭터가 적의 소유일떈
+						else if (whosChar == OwnedBy::Enemy)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									LeftValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+						}
+					}
+					//▼모든 조건이 맞으면, 검사 대상에 추가
+					if (LeftValidity)
+					{
+						checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+						BfsFloodFill.push(checkTarget);
+					}
+				}
+
+				//▼아래 검사
+				bool DownValidity = true;
+				DownValidity &= (toExamen->GetIndex().y + 1 < TILEROWY);
+				DownValidity &= toExamen->GetCheckedNum() > 1;
+				if (DownValidity)
+				{
+					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y + 1) * TILECOLX + toExamen->GetIndex().x)));
+					DownValidity &= !checkTarget->GetCheckedNum();
+					DownValidity &= checkTarget->GetObjT() == "";
+					if (DownValidity)
+					{
+						if (whosChar == OwnedBy::Player)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									DownValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+
+						}
+						//▼캐릭터가 적의 소유일떈
+						else if (whosChar == OwnedBy::Enemy)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									DownValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+						}
+					}
+					//▼모든 조건이 맞으면, 검사 대상에 추가
+					if (DownValidity)
+					{
+						checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+						BfsFloodFill.push(checkTarget);
+					}
+				}
+
+				//▼우 검사
+				bool RightValidity = true;
+				RightValidity &= (toExamen->GetIndex().x + 1 < TILECOLX);
+				RightValidity &= toExamen->GetCheckedNum() > 1;
+				if (RightValidity)
+				{
+					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x + 1)));
+					RightValidity &= !checkTarget->GetCheckedNum();
+					RightValidity &= checkTarget->GetObjT() == "";
+					if (RightValidity)
+					{
+						if (whosChar == OwnedBy::Player)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									RightValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+
+						}
+						//▼캐릭터가 적의 소유일떈
+						else if (whosChar == OwnedBy::Enemy)
+						{
+							for (auto& isEnemy : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
+								{
+									redTiles.insert(checkTarget);
+									foeTiles.insert(checkTarget);
+									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+									RightValidity &= false;
+								}
+							}
+							for (auto& isAlly : DATACENTRE.RefObjects(ObjType::EnemyArmy))
+							{
+								if (PointCompare(checkTarget->GetIndex(), isAlly.second->GetIndex()))
+								{
+									allyTiles.insert(checkTarget);
+								}
+							}
+						}
+					}
+					//▼모든 조건이 맞으면, 검사 대상에 추가
+					if (RightValidity)
+					{
+						checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
+						BfsFloodFill.push(checkTarget);
+					}
+				}
+			}
+
+			//▼범위 내에 상대방이 없다면 A스타로 이동
+			if (foeTiles.size() == 0)
+			{
+				//검색한거 뒤처리
+				for (auto& toClean : AvailableTiles)
+				{
+					toClean->SetCheckedNum(0);
+				}
+				purpleTiles.clear();
+				blueTiles.clear();
+				redTiles.clear();
+				greenTiles.clear();
+				AvailableTiles.clear();
+
+
+				enemyPhaseProc++;
+			}
+			else
+			{
+				//▼연산 통해 담긴 행동범위에 따라 액션
+				for (auto& toCal : AvailableTiles)
+				{
+					if (toCal->GetCheckedNum() <= ActionRange)
+					{
+						if (occupation == Occupation::Cleric || occupation == Occupation::WarCleric)
+						{
+							//▼그린 참조갯수 증가
+							toCal->SetRouteNum(toCal->GetCheckedNum());
+							toCal->SetCheckedNum(0);
+							greenTiles.insert(toCal);
+						}
+						else
+						{
+							//▼빨강 참조갯수 증가
+							redTiles.insert(toCal);
+						}
+					}
+					else
+					{
+						//▼블루 참조 갯수 증가
+						toCal->SetRouteNum(toCal->GetCheckedNum());
+						toCal->SetCheckedNum(0);
+						blueTiles.insert(toCal);
+					}
+				}
+				//▼추가적으로 들어온 레드타일에 대한 특별처리
+				for (auto& redTile : redTiles)
+				{
+					redTile->SetRouteNum(redTile->GetCheckedNum());
+					redTile->SetCheckedNum(0);
+				}
+
+				auto& MoveContainer = AvailableTiles;
+				enemyToPlayer.clear(); //플레이어 유닛까지 경로 일단 비우고
+				searchStarted = (*(foeTiles.begin())); //적중 가장 먼저 발견된 애를 타겟으로 삼음
+				assert(searchStarted != nullptr); //안전검사
+
+				//타겟 잡은거에 해당하는 플레이어 캐릭터 찾아냄
+				for (auto& toFind : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+				{
+					if (PointCompare(toFind.second->GetIndex(), searchStarted->GetIndex()))
+					{
+						cursor->SetIsOtherUnitOn(toFind.first, OwnedBy::Player);
+						break;
+					}
+				}
+				assert(cursor->GetIsOtherUnit().name != ""); //못찾을거 대비한 안전검사
+
+				//▼구동부
+				while (!PointCompare(searchStarted->GetIndex(), this->index))
+				{
+					if (dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, TwoDimentionArrayToOneString(searchStarted->GetIndex(), TILECOLX)))->GetRouteNum() > ActionRange)
+						enemyToPlayer.push_back(searchStarted);
+
+					int toFind = searchStarted->GetRouteNum();
+					for (auto& availableTile : MoveContainer)
+					{
+
+						assert((dynamic_cast<Tiles*>(availableTile)) != nullptr);
+						if ((dynamic_cast<Tiles*>(availableTile)->GetRouteNum() == toFind + 1)
+							&& (((availableTile->GetIndex().x == searchStarted->GetIndex().x + 1) && (availableTile->GetIndex().y == searchStarted->GetIndex().y))
+								|| ((availableTile->GetIndex().x == searchStarted->GetIndex().x - 1) && (availableTile->GetIndex().y == searchStarted->GetIndex().y))
+								|| ((availableTile->GetIndex().x == searchStarted->GetIndex().x) && (availableTile->GetIndex().y - 1 == searchStarted->GetIndex().y))
+								|| ((availableTile->GetIndex().x == searchStarted->GetIndex().x) && (availableTile->GetIndex().y + 1 == searchStarted->GetIndex().y))))
+						{
+							searchStarted = dynamic_cast<Tiles*>(availableTile);
+							break;
+						}
+					}
+				}
+
+				attackable = true;
+				enemyToPlayer.push_back(dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, TwoDimentionArrayToOneString(index, TILECOLX))));
+
+				std::reverse(enemyToPlayer.begin(), enemyToPlayer.end());
+
+				enemyPhaseProc += 2;
+			}
+			break;
+		}
+		//▼상대가 범위 내에 없어서 멀리 찾아가야 할 떄
+		case 2:
+		{
+			//▼시야 밖까지의 타일들을 사용해야 하니 이번엔 모든 타일을 가져와서 임시로 담아둠
+			auto& allTiles = DATACENTRE.RefObjects(ObjType::Tile);
+			Tiles* start = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, TwoDimentionArrayToOneString(index, TILECOLX)));
+
+			//▼먼저 도달범위 무관 가장 가까운 상대방을 찾아서 타겟으로 지정
+			FLOAT shortest = INFINITY;
+			std::string shortestChar = "";
+			for (auto& toExamineDistance : DATACENTRE.RefObjects(ObjType::PlayerArmy))
+			{
+				FLOAT calculated = GetDistance(this->index, toExamineDistance.second->GetIndex());
+				if (shortest > calculated)
+				{
+					shortest = calculated;
+					shortestChar = toExamineDistance.first;
+				}
+			}
+			Tiles* reach = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, TwoDimentionArrayToOneString(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, shortestChar)->GetIndex(), TILECOLX)));;
+
+			//▼타겟까지의 길 찾기 전에 전부 초기화
+			for (auto& eachTile : allTiles)
+			{
+				dynamic_cast<Tiles*>(eachTile.second)->RefIsVisited() = false; //검색 시작시 방문여부 전부 끄고
+				dynamic_cast<Tiles*>(eachTile.second)->RefGlobalGoal() = INFINITY; //시작할때 모든 타일들의 목적지까지의 거리에 큰 값 담아둠
+				dynamic_cast<Tiles*>(eachTile.second)->RefLocalGoal() = INFINITY; //시작할때 모든 타일들의 시작점부터의 거리에 큰 값 담아둠
+				dynamic_cast<Tiles*>(eachTile.second)->SetParentPtr(nullptr); //부모 포인터 비워둠
+			}
+
+			//▼거리 구하는 람다식
+			auto distance = [](Tiles * a, Tiles * b)
+			{
+				//return (float)sqrtf((a->GetIndex().x - b->GetIndex().x)*(a->GetIndex().x - b->GetIndex().x) + (a->GetIndex().y - b->GetIndex().y)*(a->GetIndex().y - b->GetIndex().y)); //피다고라스로 휴리스틱 계산
+				return (float)abs(a->GetIndex().x - b->GetIndex().x) + abs(a->GetIndex().y - b->GetIndex().y); //맨허튼 방식으로 휴리스틱 계산
+			};
+			//▼휴리스틱 구하는 람다식
+			auto heuristic = [distance](Tiles * a, Tiles * b)//휴리스틱 추정값 계산. 사실 그냥 디스턴스 던졌다
+			{
+				return (float)distance(a, b);
+			};
+
+			//▼현재 노드를 시작노드로 설정
+			Tiles * nodeCurrent = start;
+			start->fLocalGoal = 0.0f;
+			start->fGlobalGoal = heuristic(start, reach); //익명함수 람다식 방식
+
+			//▼타일 포인터들을 넣을 임시 리스트 생성
+			std::list<Tiles*> listNotTestedNodes;
+			listNotTestedNodes.push_back(start); //시작지점 넣어서 검사 시작
+
+			//▼여기서부턴 진행
+			while (!listNotTestedNodes.empty() && nodeCurrent != reach) //타일포인터들은 리스트가 비어있지 않고, 목적지에 도달하지 않았을경우
+			{
+				//▼현재 검사중인 포인터의 이웃타일들을 전부 검사 시작한다
+				for (auto& nodeNeighbour : nodeCurrent->RefNeighbours())
+				{
+					//▼지금 까보고 있는 이웃타일이 이미 방문한 타일이 아니거나 장애물이 아니라면, 
+					if (!(nodeNeighbour->RefIsVisited() || nodeNeighbour->GetObjT() != ""))
+						listNotTestedNodes.push_back(nodeNeighbour); //지금 검사중인 이웃타일을 미검사 리스트에 집어넣음
+
+					//▼(지금 검사중인 이웃타일)과 (이웃타일이 파생된 원본 타일)과의 거리 + 시작점으로부터의 거리 계산해서 잠시 저장해둠
+					float fPossiblyLowerGoal = nodeCurrent->fLocalGoal + distance(nodeCurrent, nodeNeighbour);
+
+					//▼위에서 계산한 값이, 이웃타일이 보유하던값보다 작으면 대체. 맨 첨엔 fLocal에 무한대 들어있었던거 기억하셈!
+					if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
+					{
+						nodeNeighbour->parent = nodeCurrent; //이웃 타일의 부모노드가 이젠 현재 검사중인 타일임
+						nodeNeighbour->fLocalGoal = fPossiblyLowerGoal; //로컬 계산값 변동
+						nodeNeighbour->fGlobalGoal = (float)nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, reach); //글로벌 게싼값 변경
+					}
+				}
+				//▼목표까지 가장 가까운 노드를 선택하기 위해 휴리스틱 가장 낮은 값으로 정렬
+				listNotTestedNodes.sort([](const Tiles * lhs, const Tiles * rhs) { return lhs->fGlobalGoal < rhs->fGlobalGoal; });
+
+				//▼목표까지 휴리스틱이 동일한 길이 있을수 있으므로 그 길 제거
+				while (!listNotTestedNodes.empty() && listNotTestedNodes.front()->RefIsVisited())
+					listNotTestedNodes.pop_front(); //예를들어 휴리스틱이 {8,8,8,9,9,9,9} 이런식이면 {8,9,9,9,9} 이렇게 최저치 하나만 냅두게
+
+				//▼더이상 까본 노드가 없을경우 루프 종료
+				if (listNotTestedNodes.empty())
+					break;
+
+				//▼휴리스틱 낮은순으로 정렬한거니, 그중 맨 앞에있는, 즉 휴리스틱 젤 낮은 노드로 이동 후 다시 반복문 돌기 시작
+				nodeCurrent = listNotTestedNodes.front();
+				nodeCurrent->RefIsVisited() = true;
+
+			}
+			listNotTestedNodes.clear(); //이번 검사는 다 했으니 비움
+
+
+
+
+			//▼목적지까지 구하는부분
+			if (reach != nullptr) //도착점이 존재한다면
+			{
+				Tiles* inspect = reach; //임시로 끝 노드를 담아두고
+				while (inspect->GetParentPtr() != nullptr) //현 노드서 부모가 존재한다면
+				{
+					enemyToPlayer.push_back(inspect);
+					inspect = inspect->parent; //색 찍고 부모 노드로 포인터를 바꿈
+				}
+			}
+			std::reverse(enemyToPlayer.begin(), enemyToPlayer.end());
+			int toPop = enemyToPlayer.size()+1;
+			for (UINT i = 0; i < toPop - this->GetMoveRange(); i++)
+			{
+				enemyToPlayer.pop_back();
+			}
+			
+			enemyPhaseProc++;
+			
+			break;
+		}
+		case 3:
+			
+			//▼이동하고자 하는 컨테이너가 하나라도 존재할때만 존재
+			if (enemyToPlayer.size() > 0)
+			{
+				//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
+				if (foeTiles.size()!=0&& PointCompare((*(foeTiles.begin()))->GetIndex(), enemyToPlayer.front()->GetIndex()) && enemyToPlayer.size() == 1)
+				{
+					float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(enemyToPlayer.front()->GetPosition()));
+					if (directionAngle == 0)
+					{
+						movingDirection = MovingDirection::RIGHT;
+					}
+					else if (directionAngle == 90)
+					{
+						movingDirection = MovingDirection::LEFT;
+					}
+					else if (directionAngle == 180)
+					{
+						movingDirection = MovingDirection::TOP;
+					}
+					else if (directionAngle == 270)
+					{
+						movingDirection = MovingDirection::BOTTOM;
+					}
+					assert(!enemyToPlayer.empty());
+					enemyToPlayer.erase(enemyToPlayer.begin());
+				}
+				//▼만약 백터 끝자락에 담긴 좌표로 이동 완료가 되었을시
+				else if (PointCompare(RectLeftTopOnly(position), RectLeftTopOnly(enemyToPlayer.front()->GetPosition())))
+				{
+					index = enemyToPlayer.front()->GetIndex(); //현 캐릭터의 인덱스 또한 갱신해주고
+					assert(!enemyToPlayer.empty());
+					enemyToPlayer.erase(enemyToPlayer.begin());
+				}
+				else
+				{
+					assert(TILESIZE % moveSpeed == 0); //이동속도가 48의 약수가 아니면 터뜨림
+					float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(enemyToPlayer.front()->GetPosition()));
+
+					if (directionAngle >= 337.5 && directionAngle <= 360.f || directionAngle >= 0 && directionAngle < 22.5f)
+					{
+						position.left += moveSpeed;
+						position.right += moveSpeed;
+						movingDirection = MovingDirection::RIGHT;
+					}
+					else if (directionAngle >= 22.5f && directionAngle < 67.5f)
+					{
+						movingDirection = MovingDirection::RIGHTTOP;
+						assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+					}
+					else if (directionAngle >= 67.5f && directionAngle < 112.5f)
+					{
+						position.top -= moveSpeed;
+						position.bottom -= moveSpeed;
+						movingDirection = MovingDirection::TOP;
+					}
+					else if (directionAngle >= 112.5f && directionAngle < 157.5f)
+					{
+						movingDirection = MovingDirection::RIGHTBOTTOM;
+						assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+					}
+					else if (directionAngle >= 157.5f && directionAngle < 202.5)
+					{
+						position.left -= moveSpeed;
+						position.right -= moveSpeed;
+						movingDirection = MovingDirection::LEFT;
+					}
+					else if (directionAngle >= 202.5 && directionAngle < 247.5)
+					{
+						movingDirection = MovingDirection::LEFTBOTTOM;
+						assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+					}
+					else if (directionAngle >= 247.5 && directionAngle < 292.5)
+					{
+						position.top += moveSpeed;
+						position.bottom += moveSpeed;
+						movingDirection = MovingDirection::BOTTOM;
+					}
+					else if (directionAngle >= 292.5 && directionAngle < 337.5)
+					{
+						movingDirection = MovingDirection::LEFTTOP;
+						assert(!"여기서 이 각도가 나오면 안되는디 ㄷㄷ");
+					}
+					else
+					{
+						assert(!"Wrong Angle");
+					}
+
+					cursor->SetPosition(position);
+				}
+			}
+			//▼이 캐릭터가 도달했을때
+			else
+			{
+				for (auto& toClean : AvailableTiles)
+				{
+					toClean->SetCheckedNum(0);
+				}
+
+				blueTiles.clear();
+				redTiles.clear();
+				greenTiles.clear();
+				AvailableTiles.clear();
+				foeTiles.clear();
+				allyTiles.clear();
+
+				DATACENTRE.ClearObjects(ObjType::BlueTiles);
+				DATACENTRE.ClearObjects(ObjType::FoeTiles);
+				DATACENTRE.ClearObjects(ObjType::AllyTiles);
+
+				if (attackable)
+				{
+					cursor->SetIndex(index);
+					cursor->SetPositionViaIndex();
+					enemyPhaseProc = 0;
+					cursor->SetCursorTurn(IngameStatus::ExecutingBattle);
+					cursor->SetCursorTurnPrev(IngameStatus::EnemyTurn);
+					charStatus = CharStatus::IsAttacking;
+					dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetBattleState(ExecuteBattle::BattleState::AttackerAttacking);
+					dynamic_cast<ExecuteBattle*> (DATACENTRE.GetCertainObject(ObjType::Battle, "BattleManager"))->SetWhoBattles(this ,dynamic_cast<Character *> (DATACENTRE.GetCertainObject(ObjType::PlayerArmy, cursor->GetIsOtherUnit().name)));
+				}
+				else
+				{
+					cursor->SetIndex(index);
+					cursor->SetPositionViaIndex();
+					enemyPhaseProc = 0;
+					charStatus = CharStatus::IsActed;
+					cursor->SetCursorOccupied("");
+				}
+			}
+
+			break;
+
+		default:
+			assert(!"에너미 AI 문제있음");
+			break;
+		}
+
+
+
+
+
+		break;
+	}
 	case CharStatus::IsDeadTalking:
 		cursor->SetCursorTurn(IngameStatus::SelectionUI);
 		cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
@@ -527,7 +1182,7 @@ void Character::Update()
 		if (toMove.size() > 0)
 		{
 			//▼이동하고자 하는 타일에 적이 있을땐, 이동하진 않고 바라보는 방향만 바꾼다
-			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)) || DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)))
+			if (DATACENTRE.CheckObjectExistance(ObjType::FoeTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)) || DATACENTRE.CheckObjectExistance(ObjType::AllyTiles, TwoDimentionArrayToOneString(toMove.back()->GetIndex(), TILECOLX)) && toMove.size() == 1)
 			{
 				float directionAngle = GetAngleDegree(RectLeftTopOnly(position), RectLeftTopOnly(toMove.back()->GetPosition()));
 				if (directionAngle == 0)
@@ -607,8 +1262,6 @@ void Character::Update()
 				{
 					assert(!"Wrong Angle");
 				}
-
-
 			}
 		}
 		//▼이 캐릭터가 도달했을때
@@ -1258,7 +1911,7 @@ void Character::Render()
 		AdjustFrame(); //프레임 돌리는 부분은 턴이 아닐떄도 돌아가야하니 랜더에 상주 
 
 		frameImg->SetSize({ TILESIZE, TILESIZE }); //프레임랜더라 사이즈 세팅
-		if (charStatus == CharStatus::IsMoving || charStatus == CharStatus::IsAttacking)
+		if (charStatus == CharStatus::IsMoving || charStatus == CharStatus::IsAttacking || charStatus == CharStatus::EnemyPhase)
 		{
 			frameImg->RelativeFrameRender(position.left, position.top, frame.x + frameLoop, frame.y + (INT)movingDirection); //카메라 상대 랜더
 			healthBarBackground = HealthBarBackLocater(healthBarBackground, this->position);
@@ -1284,7 +1937,7 @@ void Character::Render()
 			if (this->whosChar == OwnedBy::Player && !deadTalkInit)
 			{
 				cursor->SetCursorTurn(IngameStatus::SelectionUI);
-				cursor->SetCursorTurnPrev(IngameStatus::PlayerTurn);
+				cursor->SetCursorTurnPrev(cursor->GetCursorTurnPrev());
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetToShow(SelectionUI::ToShow::AllyDead);
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetPhotoFrameAlphaZero();
 				dynamic_cast<SelectionUI*>(DATACENTRE.GetCertainObject(ObjType::UI, "SelectionUI"))->SetDeadChar(this);
@@ -1391,5 +2044,7 @@ void Character::Render()
 		frameImg->SetAlpha(0.5f);
 		frameImg->RelativeFrameRender(draggingIndexPrev.x * TILESIZE, draggingIndexPrev.y * TILESIZE, frame.x + frameLoop, frame.y + (UINT)draggindDirection);
 	}
+	for (auto& asd : enemyToPlayer)
+		D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(asd->GetPosition()),D2D1::ColorF::Red, 0.5);
 }
 

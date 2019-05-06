@@ -29,8 +29,8 @@ void MapToolScene::Init()
 	//▼음악 초기화. 맵툴은 타이틀서부터밖에 못넘어온다
 	SOUNDMANAGER->pause("타이틀BGM");
 	SOUNDMANAGER->play("맵툴BGM");
-	SOUNDMANAGER->pause("SelectionTitleComplete");
-	SOUNDMANAGER->setFadeIn();
+	//SOUNDMANAGER->pause("SelectionTitleComplete");
+	//SOUNDMANAGER->setFadeIn();
 	
 	//▼눌린키 네모 초기화
 	RightLeft.pos = { -50,-50 };

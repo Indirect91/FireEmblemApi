@@ -6,8 +6,11 @@ private:
 
 	Image* bg = nullptr;
 	Image* bg2 = nullptr;
-	Image* bg3 = nullptr;
-	Image* bg4 = nullptr;
+	
+	BOOL gameoverInit = false;
+	BOOL gameEndReady = false;
+	INT gameOverPhase = 0;
+
 
 public:
 

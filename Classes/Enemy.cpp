@@ -29,16 +29,19 @@ void Enemy::Update()
 	}
 	else
 	{
-		for (auto& character : enemyTroop) //추후 배틀트룹으로 바꿀것
+		for (auto& character : enemyTroop) 
 		{
-			if (dynamic_cast<Character*>(character.second)->GetIsClicked())
+			if (dynamic_cast<Character*>(character.second)->GetStatus()!=Character::CharStatus::IsActed)
 			{
 				cursor->SetCursorOccupied(character.first);
 				break;
 			}
-			dynamic_cast<Character*>(character.second)->Update();
+			//dynamic_cast<Character*>(character.second)->Update();
 		}
 	}
+
+
+
 
 
 

@@ -66,7 +66,7 @@ void SelectionUI::Release()
 
 void SelectionUI::Update()
 {
-	//if (photoFrameAlpha < 1.f) photoFrameAlpha += 0.1f;
+	if (photoFrameAlpha < 1.f) photoFrameAlpha += 0.1f;
 
 
 

@@ -38,6 +38,7 @@ void TitleScene::Init()
 	resizeWindowRateAccY = 0;
 	
 	//▼각종 이닛
+	SOUNDMANAGER->FadeIn();
 	SOUNDMANAGER->play("타이틀BGM"); //타이틀 BGM 재생
 	SCENEMANAGER->RefcoverAlpha() = 1;
 	SetCoverStatue::FadeIn;

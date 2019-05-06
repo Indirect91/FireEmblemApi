@@ -44,6 +44,18 @@ void LoadingScene::Update()
 //▼이미지 로딩
 void LoadingScene::LoadingImage()
 {
+	//▼통상
+	_loading->LoadImg("GameOver", L"IMAGE/ETC/GameOver.png");
+	_loading->LoadImg("PlayerWon", L"IMAGE/ETC/PlayerWon.png");
+
+	//▼턴
+	_loading->LoadImg("PlayerTurnBack", L"IMAGE/ETC/PlayerTurnBack.png");
+	_loading->LoadImg("PlayerTurnRing", L"IMAGE/ETC/PlayerTurnRing.png");
+	_loading->LoadImg("PlayerTurnText", L"IMAGE/ETC/PlayerTurnText.png");
+	_loading->LoadImg("EnemyTurnRing", L"IMAGE/ETC/EnemyTurnRing.png");
+	_loading->LoadImg("EnemyTurnBack", L"IMAGE/ETC/EnemyTurnBack.png");
+	_loading->LoadImg("EnemyTurnText", L"IMAGE/ETC/EnemyTurnText.png");
+
 	//▼커서
 	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");
 	_loading->LoadImg("CursorRed", L"IMAGE/ETC/cursorRed.png");

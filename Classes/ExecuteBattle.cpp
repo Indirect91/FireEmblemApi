@@ -463,11 +463,17 @@ void ExecuteBattle::Update()
 					//▼피격자 뒤졌을시
 					else if (victim.charPtr->GetCurrentHealth() == 0)
 					{
+						cursor->SetCursorOccupied("");
+						attacker.charPtr->SetStatus(Character::CharStatus::IsActed);
 						victim.charPtr->SetStatus(Character::CharStatus::IsDying);
+						cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 						cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
+						battleState = BattleState::AttackerMoving;
 						SOUNDMANAGER->play("CharacterDead"); 
 						battleState = BattleState::BattleEnd;
 						//attacker.phase++;
+
+						Revert();
 					}
 				}
 			}
@@ -856,10 +862,19 @@ void ExecuteBattle::Update()
 					//▼공격자가 뒤졌을시
 					else if (attacker.charPtr->GetCurrentHealth() <= 0)
 					{
-						attacker.charPtr->SetStatus(Character::CharStatus::IsDying);
+						//attacker.charPtr->SetStatus(Character::CharStatus::IsDying);
+						//cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
+						//SOUNDMANAGER->play("CharacterDead");
+						//battleState = BattleState::AttackerMoving;
+						//battleState = BattleState::BattleEnd;
+						cursor->SetCursorOccupied("");
+						cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 						cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 						SOUNDMANAGER->play("CharacterDead");
-						battleState = BattleState::BattleEnd;
+						battleState = BattleState::AttackerMoving;
+						attacker.charPtr->SetStatus(Character::CharStatus::IsDying);
+
+						Revert();
 					}
 				}
 				else if (victim.phase == 6)
@@ -882,6 +897,7 @@ void ExecuteBattle::Update()
 			cursor->SetCursorOccupied("");
 			cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
+			battleState = BattleState::AttackerMoving;
 
 			Revert();
 

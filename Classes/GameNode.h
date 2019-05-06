@@ -10,7 +10,9 @@ protected:
 	enum class IngameStatus : UINT
 	{
 		ESCMenu,
+		GameOver,
 		EnemyTurn,
+		PlayerWon,
 		PlayerTurn,
 		SelectionUI,
 		TurnChanging,
