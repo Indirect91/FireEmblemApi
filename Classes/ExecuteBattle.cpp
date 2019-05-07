@@ -14,15 +14,15 @@ ExecuteBattle::ExecuteBattle()
 
 void ExecuteBattle::Revert()
 {
-	attacker.phase = 0;						
-	attacker.moveCounter = 0;				
-	attacker.criticalFrameRenderX = 0;		
-	attacker.critMotionCounter = 0;			
-	attacker.isActionDone = false;			
-	attacker.attackMotionSpeed = 3;			
+	attacker.phase = 0;
+	attacker.moveCounter = 0;
+	attacker.criticalFrameRenderX = 0;
+	attacker.critMotionCounter = 0;
+	attacker.isActionDone = false;
+	attacker.attackMotionSpeed = 3;
 	attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
 	attacker.attackCount = 0;
-	attacker.charPtr = nullptr;	
+	attacker.charPtr = nullptr;
 	attacker.attackingDirection = AttackingDirection::LEFT;
 	attacker.attackStatus = AttackStatue::Normal;
 
@@ -67,7 +67,7 @@ void ExecuteBattle::Update()
 			attacker.hitDistinguisher = (rand() % 100) + 1;					//1~100 랜덤값
 			cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 
-			
+
 			victim.charPtr->SetIsInBattle(true);
 			victim.criticalFrameRenderX = 0;
 			victim.critMotionCounter = 0;
@@ -89,7 +89,7 @@ void ExecuteBattle::Update()
 				{
 					FLOAT accuracy = attacker.charPtr->GetLuck();	//명중률
 					FLOAT critical = 100 - accuracy;				//크리율
-					
+
 
 					//attacker.hitDistinguisher = 5;	//테스트용. 크리
 					//attacker.hitDistinguisher = 95;	//테스트용. 미스
@@ -402,9 +402,9 @@ void ExecuteBattle::Update()
 						assert(!"안만든거 있는가 체크");
 						break;
 					}
-					if (attacker.moveCounter >= 0) 
-					{ 
-						attacker.moveCounter--; 
+					if (attacker.moveCounter >= 0)
+					{
+						attacker.moveCounter--;
 					}
 					else
 					{
@@ -416,9 +416,9 @@ void ExecuteBattle::Update()
 				{
 					//▼피격자가 반격상태일때
 					if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() >= attacker.charPtr->GetAttackRange())
-					//if (false) //테스트
+						//if (false) //테스트
 					{
-						if(attacker.charPtr->GetSpeed() >= victim.charPtr->GetSpeed() + 5)
+						if (attacker.charPtr->GetSpeed() >= victim.charPtr->GetSpeed() + 5)
 						{
 							//▼상대 공격 후에 한번 더 쳐야하니 아직 액션 안끝났다고 false
 							attacker.isActionDone = false;
@@ -439,8 +439,8 @@ void ExecuteBattle::Update()
 					}
 
 					//▼피격자가 사거리도 딸리고 속도도5이상 딸릴시, 공격자 2타 때리게 되돌려보냄
-					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed()>=victim.charPtr->GetSpeed()+5 && attacker.attackCount == 0)
-					//else if (attacker.attackCount==0) //테스트
+					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.charPtr->GetSpeed() >= victim.charPtr->GetSpeed() + 5 && attacker.attackCount == 0)
+						//else if (attacker.attackCount==0) //테스트
 					{
 						attacker.hitDistinguisher = (rand() % 100) + 1;
 						attacker.attackCount++;
@@ -454,7 +454,7 @@ void ExecuteBattle::Update()
 					}
 					//▼피격자가 사거리, 속도가 딸리고 2타가 이미 진행되었을시
 					else if (victim.charPtr->GetCurrentHealth() > 0 && victim.charPtr->GetAttackRange() < attacker.charPtr->GetAttackRange() && attacker.attackCount == 1)
-					//else if (attacker.attackCount == 1) //테스트
+						//else if (attacker.attackCount == 1) //테스트
 					{
 						victim.charPtr->SetStatus(Character::CharStatus::Idle);
 						battleState = BattleState::BattleEnd;
@@ -469,7 +469,7 @@ void ExecuteBattle::Update()
 						cursor->SetCursorTurn(cursor->GetCursorTurnPrev());
 						cursor->SetIsOtherUnitOn("", OwnedBy::Nobody);
 						battleState = BattleState::AttackerMoving;
-						SOUNDMANAGER->play("CharacterDead"); 
+						SOUNDMANAGER->play("CharacterDead");
 						battleState = BattleState::BattleEnd;
 						//attacker.phase++;
 
@@ -830,7 +830,7 @@ void ExecuteBattle::Update()
 					else if (attacker.charPtr->GetCurrentHealth() > 0 && !(attacker.isActionDone) && victim.attackCount == 0)
 					{
 						attacker.phase = 0;
-						attacker.attackCount=1;
+						attacker.attackCount = 1;
 						attacker.moveCounter = 0;
 						attacker.criticalFrameRenderX = 0;
 						attacker.critMotionCounter = 0;
@@ -840,9 +840,9 @@ void ExecuteBattle::Update()
 						victim.phase++;
 						battleState = BattleState::AttackerAttacking;
 					}
-					
+
 					//▼반격자의 공격 대상이 살았고, 반격대상의 속도가 원 공격자보다 5이상 빠를때
-					else if (attacker.charPtr->GetCurrentHealth() > 0 && attacker.charPtr->GetSpeed()+5 <= victim.charPtr->GetSpeed() && victim.attackCount == 0)
+					else if (attacker.charPtr->GetCurrentHealth() > 0 && attacker.charPtr->GetSpeed() + 5 <= victim.charPtr->GetSpeed() && victim.attackCount == 0)
 					{
 						victim.phase = 0;
 						victim.attackCount++;
@@ -879,8 +879,8 @@ void ExecuteBattle::Update()
 				}
 				else if (victim.phase == 6)
 				{
-				battleState = BattleState::BattleEnd;
- }
+					battleState = BattleState::BattleEnd;
+				}
 			}
 			//▼공격이 끝났다면
 			else
