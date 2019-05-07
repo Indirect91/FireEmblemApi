@@ -16,7 +16,6 @@
 Battle01::Battle01()
 {
 	bg = nullptr;
-	bg2 = nullptr;
 }
 
 void Battle01::Init()
@@ -80,7 +79,6 @@ void Battle01::Init()
 	DATACENTRE.AddObj(ObjType::UI, "SelectionUI", selectionUI);
 
 	bg = IMAGEMANAGER->AddImage("tmp", L"IMAGE/Tiles/temp.png");
-	bg2 = IMAGEMANAGER->AddImage("tmp1", L"IMAGE/Tiles/temp2.png");
 
 	CAMERA.Init();
 
@@ -230,17 +228,20 @@ void Battle01::Render()
 		IMAGEMANAGER->FindImage("BattleBg")->Render(0, 0);
 		//▼랜더 순서를 결정지을 수 있음
 		bg->RelativeRender(0, 0);
-		bg->RelativeRender(288, 0);
-		bg->RelativeRender(288 + 288, 0);
-		bg->RelativeRender(288 + 288 + 288, 0);
-		bg->RelativeRender(288 + 288 + 288 + 288, 0);
+		bg->RelativeRender(384, 0);
+		bg->RelativeRender(384 + 384, 0);
+		bg->RelativeRender(384 + 384 + 384, 0);
+		bg->RelativeRender(384 + 384 + 384 + 384, 0);
+		bg->RelativeRender(384 + 384 + 384 + 384 + 384, 0);
+		bg->RelativeRender(0, 480);
+		bg->RelativeRender(384, 480);
+		bg->RelativeRender(384 + 384, 480);
+		bg->RelativeRender(384 + 384 + 384, 480);
+		bg->RelativeRender(384 + 384 + 384 + 384, 480);
+		bg->RelativeRender(384 + 384 + 384 + 384 + 384, 480);
 
-		bg2->RelativeRender(0, bg->GetHeight());
-		bg2->RelativeRender(bg2->GetWidth(), bg->GetHeight());
-		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
-		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
-		bg2->RelativeRender(bg2->GetWidth() + bg2->GetWidth(), bg->GetHeight());
 
+		
 		tileManager->Render();
 
 		player->Render();

@@ -45,7 +45,7 @@ void MainGame::Render()
 	/********************************************************/
 	
 	SCENEMANAGER->Render();
-	TIMEMANAGER->Render();
+	//TIMEMANAGER->Render();
 
 	/********************************************************/
 	D2DRENDERER->EndRender();

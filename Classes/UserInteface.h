@@ -7,6 +7,8 @@ private:
 	{
 		std::string toShowName = "";		//누구 보여줄건지 이름
 		INT rating = 0;
+		INT currentHealth = 0;
+		INT maxHealth = 0;
 	};
 
 

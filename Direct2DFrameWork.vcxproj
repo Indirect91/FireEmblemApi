@@ -163,7 +163,6 @@
     <ClInclude Include="Classes\Lords.h" />
     <ClInclude Include="Classes\MainGame.h" />
     <ClInclude Include="Classes\MapToolScene.h" />
-    <ClInclude Include="Classes\Pathfinder.h" />
     <ClInclude Include="Classes\Player.h" />
     <ClInclude Include="Classes\Resource.h" />
     <ClInclude Include="Classes\SceneManager.h" />
@@ -171,7 +170,6 @@
     <ClInclude Include="Classes\SingletonBase.h" />
     <ClInclude Include="Classes\SoundManager.h" />
     <ClInclude Include="Classes\StartPlacement.h" />
-    <ClInclude Include="Classes\StringHelper.h" />
     <ClInclude Include="Classes\targetver.h" />
     <ClInclude Include="Classes\testScene.h" />
     <ClInclude Include="Classes\TileManager.h" />
@@ -209,7 +207,6 @@
     <ClCompile Include="Classes\Lords.cpp" />
     <ClCompile Include="Classes\MainGame.cpp" />
     <ClCompile Include="Classes\MapToolScene.cpp" />
-    <ClCompile Include="Classes\Pathfinder.cpp" />
     <ClCompile Include="Classes\Player.cpp" />
     <ClCompile Include="Classes\SceneManager.cpp" />
     <ClCompile Include="Classes\SelectionUI.cpp" />
@@ -218,7 +215,6 @@
     <ClCompile Include="Classes\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Classes\StringHelper.cpp" />
     <ClCompile Include="Classes\testScene.cpp" />
     <ClCompile Include="Classes\TileManager.cpp" />
     <ClCompile Include="Classes\Tiles.cpp" />

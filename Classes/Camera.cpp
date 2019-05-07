@@ -15,7 +15,8 @@ Camera::Camera()
 	cursor = nullptr;
 	maxDistance = 100;
 	minDistance = 5;
-	adjustFourPoints = { -80,-80,TILECOLX*TILESIZE + 80, TILEROWY * TILESIZE +TILESIZE + 180};
+	//adjustFourPoints = { -80,-80,TILECOLX*TILESIZE + 80, TILEROWY * TILESIZE +TILESIZE + 180};
+	adjustFourPoints = { -2,-2,TILECOLX * TILESIZE + 2, TILEROWY * TILESIZE + TILESIZE + 102 };
 }
 
 //▼카메라 이닛. 현재 활성화된 커서를 넣음

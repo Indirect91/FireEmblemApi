@@ -28,14 +28,14 @@ public:
 	//▼예측화면서 사용할 그림 그릴 위치
 	struct toRender
 	{
-		class Character* charPtr = nullptr;								//적 캐릭터 포인터
-		POINT RenderPortrait = { 0 };								//적 초상화 그릴 위치
-		POINT RenderPortraitOriginal = { 758,100 };					//적 초상화 원위치
-		POINT RenderPortraitToMove = { 500,100 };					//적 초상화 이동하고자 하
-		POINT RenderName = { 0 };									//적 이름 그릴 위치
-		POINT RenderHealthPredict = { 0 };							//적 체력 예상 그릴 위치
-		POINT RenderHitRatePredict = { 0 };							//적 명중 예상 그릴 위치
-		POINT RenderWeaponAdvantage = { 0 };						//적 무기 상성 그릴 위치
+		class Character* charPtr = nullptr;							//캐릭터 포인터
+		POINT RenderPortrait = { 0 };								//초상화 그릴 위치
+		POINT RenderPortraitOriginal = { 758,100 };					//초상화 원위치
+		POINT RenderPortraitToMove = { 500,100 };					//초상화 이동하고자 하
+		POINT RenderName = { 0 };									//이름 그릴 위치
+		POINT RenderHealthPredict = { 0 };							//체력 예상 그릴 위치
+		POINT RenderHitRatePredict = { 0 };							//명중 예상 그릴 위치
+		POINT RenderWeaponAdvantage = { 0 };						//무기 상성 그릴 위치
 	};
 
 	//▼전투 예측화면일시

@@ -79,9 +79,6 @@
     <Filter Include="MainGame\GameObject\item">
       <UniqueIdentifier>{ebecd264-5dc4-42e8-9352-29c252ed71c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\Pathfinder">
-      <UniqueIdentifier>{5e6729bf-8654-4c87-b9bc-5913bce2fdee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\GameObject\Lords">
       <UniqueIdentifier>{d923cefe-1e84-4101-a13e-d51d289cd4ad}</UniqueIdentifier>
     </Filter>
@@ -127,6 +124,9 @@
     <Filter Include="MainGame\GameObject\Battle">
       <UniqueIdentifier>{a239fa2c-4547-4ab4-a62d-207e750ad6e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\GameObject\Tiles">
+      <UniqueIdentifier>{186f1cdb-d18f-4bb3-9370-c596fe12cb61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\D2DRenderer.h">
@@ -156,16 +156,10 @@
     <ClInclude Include="Classes\CommonMacroFunction.h">
       <Filter>GameFrameWork\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\StringHelper.h">
-      <Filter>GameFrameWork\Util</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\SingletonBase.h">
       <Filter>GameFrameWork</Filter>
     </ClInclude>
     <ClInclude Include="Classes\MapToolScene.h">
-      <Filter>MainGame\Scene들\MapToolScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\Tiles.h">
       <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClInclude>
     <ClInclude Include="Classes\TitleScene.h">
@@ -213,9 +207,6 @@
     <ClInclude Include="Classes\Item.h">
       <Filter>MainGame\GameObject\item</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Pathfinder.h">
-      <Filter>MainGame\Pathfinder</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\Enemy.h">
       <Filter>MainGame\GameObject\Lords\Enemy</Filter>
     </ClInclude>
@@ -258,6 +249,9 @@
     <ClInclude Include="Classes\ExecuteBattle.h">
       <Filter>MainGame\GameObject\Battle</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\Tiles.h">
+      <Filter>MainGame\GameObject\Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Classes\D2DRenderer + DrawFunc.cpp">
@@ -290,13 +284,7 @@
     <ClCompile Include="Classes\CommonMacroFunction.cpp">
       <Filter>GameFrameWork\Util</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\StringHelper.cpp">
-      <Filter>GameFrameWork\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\MapToolScene.cpp">
-      <Filter>MainGame\Scene들\MapToolScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\Tiles.cpp">
       <Filter>MainGame\Scene들\MapToolScene</Filter>
     </ClCompile>
     <ClCompile Include="Classes\TitleScene.cpp">
@@ -337,9 +325,6 @@
     </ClCompile>
     <ClCompile Include="Classes\Item.cpp">
       <Filter>MainGame\GameObject\item</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\Pathfinder.cpp">
-      <Filter>MainGame\Pathfinder</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Enemy.cpp">
       <Filter>MainGame\GameObject\Lords\Enemy</Filter>
@@ -382,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="Classes\ExecuteBattle.cpp">
       <Filter>MainGame\GameObject\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Tiles.cpp">
+      <Filter>MainGame\GameObject\Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

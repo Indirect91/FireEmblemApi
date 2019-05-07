@@ -167,6 +167,15 @@ void LoadingScene::LoadingImage()
 	//▼타일용
 	_loading->LoadFrameImage("타일커서", L"IMAGE/Tiles/SelectedTile.png", 4, 1);
 	_loading->LoadFrameImage("MoveArrow", L"IMAGE/Tiles/MoveArrow.png", 4, 4);
+	_loading->LoadFrameImage("object", L"IMAGE/Tiles/Object/object.png", 4, 5);
+	_loading->LoadFrameImage("rock", L"IMAGE/Tiles/terrain/rock.png", 4, 5);
+	_loading->LoadFrameImage("grass", L"IMAGE/Tiles/terrain/grass.png", 4, 5);
+	_loading->LoadFrameImage("LavaOrange", L"IMAGE/Tiles/MovingTileset/LavaOrange(x15y1).png", 15, 1);
+	_loading->LoadFrameImage("LavaYellow", L"IMAGE/Tiles/MovingTileset/LavaYellow(x15y1).png", 15, 1);
+	_loading->LoadFrameImage("Sand", L"IMAGE/Tiles/MovingTileset/Sand(x15y1).png", 15, 1);
+	_loading->LoadFrameImage("WaterDeep", L"IMAGE/Tiles/MovingTileset/WaterDeep(x15y1).png", 15, 1);
+	_loading->LoadFrameImage("WaterShallow", L"IMAGE/Tiles/MovingTileset/WaterShallow(x15y1).png", 15, 1);
+	_loading->LoadFrameImage("MovingTile", L"IMAGE/Tiles/MovingTileset/MovingTilePallet.png", 4, 5);
 
 	//UI용
 	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
@@ -174,6 +183,11 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("BattleBg", L"IMAGE/ETC/BattleBg.png");
 	_loading->LoadImg("PhotoFrame", L"IMAGE/ETC/PhotoFrame.png");
 	_loading->LoadImg("DialogBox", L"IMAGE/ETC/dialogBox.png");
+	_loading->LoadImg("AttackerUI", L"IMAGE/ETC/AttackerUI.png");
+	_loading->LoadImg("EnemyUI", L"IMAGE/ETC/EnemyUI.png");
+	_loading->LoadImg("StatusUI", L"IMAGE/ETC/StatusUI.png");
+	_loading->LoadFrameImage("number", L"IMAGE/ETC/number.png",10,1);
+	_loading->LoadFrameImage("advantage", L"IMAGE/ETC/advantage.png", 3, 1);
 	
 	//▼이펙트용
 	_loading->LoadFrameImage("Blink", L"IMAGE/Tiles/Blink.png",8,1);
@@ -188,6 +202,7 @@ void LoadingScene::LoadingSound()
 	_loading->LoadSound("타이틀BGM", "SOUND/FE/BGM/TitleBgm.mp3", true, true);//타이틀용
 	_loading->LoadSound("인게임BGM", "SOUND/FE/BGM/InGame_March to Deliverance.mp3", true, true); //인게임용
 	_loading->LoadSound("DeadBGM", "SOUND/FE/BGM/DeadBGM.mp3", true, true); //인게임용
+	_loading->LoadSound("SelectBGM", "SOUND/FE/BGM/SelectBGM.mp3", true, true); //유닛 선택용
 
 	//▼SFX
 	_loading->LoadSound("SelectionTitleComplete", "SOUND/FE/SFX/SelectionTitleComplete.wav");

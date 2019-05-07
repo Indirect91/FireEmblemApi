@@ -11,7 +11,19 @@ MapToolScene::MapToolScene()
 
 	moveAngle = 0;
 	field =0;
-	memset(&palletes,0, sizeof(palletes));
+	sheetV.push_back(L"MovingTile");
+	sheetV.push_back(L"rock");
+	sheetV.push_back(L"grass");
+	sheetV.push_back(L"object");
+
+	for (UINT j = 0; j < 5; j++)
+	{
+		for (UINT i = 0; i < 4; i++)
+		{
+			pallet.push_back(RectMake( 1230 + i*TILESIZE,240 + j*TILESIZE,TILESIZE,TILESIZE ));
+
+		}
+	}
 }
 
 
@@ -37,31 +49,21 @@ void MapToolScene::Init()
 	RightLeft.pressed = false;
 	UpDown.pos = { -50,-50 };
 	UpDown.pressed = false;
-	
-	////▼고를 이미지 4장
-	//for (UINT i = 1; i < 5; i++)
-	//{
-	//	std::string tempIndex;
-	//	std::string tempIndex2;
-	//	tempIndex = std::to_string(i);
-	//	tempIndex2 = (tempIndex += ".bmp").c_str();
-	//	IMAGEMANAGER->AddImage(tempIndex, StringHelper::StringToWString(tempIndex2));
-	//	
-	//	tempImg->setX(i * 50 - 50);
-	//	colours.push_back(tempIndex);
-	//}
 
 
 	//▼카메라 및 타일들 초기화
 	CAMERA.SetCamera({0,0,815,688});
 	field = new Tiles[TILECOLX * TILEROWY];
 	
-	for (int i = 0; i < TILEROWY; i++)
+	for (int j = 0; j < TILEROWY; j++)
 	{
-		for (int j = 0; j < TILECOLX; j++)
+		for (int i = 0; i < TILECOLX; i++)
 		{
-			field[i * TILECOLX + j].Init(); //생성된 타일 초기화
-			field[i * TILECOLX + j].SetPosition(RectMake(j * TILESIZE,i * TILESIZE, TILESIZE, TILESIZE));
+			field[j * TILECOLX + i].Init(); //생성된 타일 초기화
+			field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
+			field[j * TILECOLX + i].SetIndex({ i,j });
+			field[j * TILECOLX + i].SetPositionViaIndex();
+			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
 	tempC = { 0 }; //충돌에 쓸 임시렉트 0
@@ -71,7 +73,7 @@ void MapToolScene::Init()
 void MapToolScene::Release()
 {
 	//맵툴서 뉴할당받은건 타일들
-	SAFE_DELETE_ARRAY(field);
+	//SAFE_DELETE_ARRAY(field);
 }
 
 void MapToolScene::Update()
@@ -85,6 +87,60 @@ void MapToolScene::Update()
 	}
 	else
 		IMAGEMANAGER->FindImage("Cursor")->SetAngle(0);
+
+
+	if ((PtInRect(&changePalletPrev, _ptMouse) && whichSheet != (WhichSheet)0))
+	{
+		if(KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
+		{
+			whichSheet = (WhichSheet)((INT)whichSheet - 1);
+			
+		}
+	}
+	else if ((PtInRect(&changePalletNext, _ptMouse) && whichSheet != (WhichSheet)3))
+	{
+		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
+		{
+			whichSheet = (WhichSheet)((INT)whichSheet + 1);
+		}
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+	switch (whichSheet)
+	{
+	case MapToolScene::WhichSheet::MovingTile:
+		break;
+	case MapToolScene::WhichSheet::rock:
+		break;
+	case MapToolScene::WhichSheet::grass:
+		break;
+	case MapToolScene::WhichSheet::object:
+		break;
+	default:
+		break;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -191,14 +247,6 @@ void MapToolScene::Render()
 	{
 		if (IntersectRect(&tempC, &field[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
-			
-			//RECT toDraw = arrField[i].GetPosition();
-			//toDraw.left += 158;
-			//toDraw.right += 158;
-			//toDraw.top += 138;
-			//toDraw.bottom += 138;
-			//toDraw = CAMERA.RelativeCameraRect(toDraw);
-			
 			D2DRENDERER->DrawRectangle(reLocate(field[i].GetPosition()));
 		}
 	}
@@ -219,17 +267,23 @@ void MapToolScene::Render()
 		IMAGEMANAGER->FindImage("Red")->Render(RightLeft.pos.x, RightLeft.pos.y);
 	}
 	IMAGEMANAGER->FindImage("MapToolTitle")->Render(800, 70, Pivot::Centre);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 18, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 16, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 14, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 12, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 10, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 8, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 6, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 4, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 2, 0);
-	IMAGEMANAGER->FindImage("oldpaper")->SkewRenderRotate(WINSIZEX / 2, WINSIZEY / 2,moveAngle + 0, 0);
-	D2DRENDERER->RenderText(300, 100,std::to_wstring( moveAngle),50);
+
+	
+
+	IMAGEMANAGER->FindImage(WStringToString(sheetV[(INT)whichSheet]))->Render(1230,240);
+
+	D2DRENDERER->RenderText(1232, 498, sheetV[(INT)whichSheet],20);
+		
+	for (auto plt : pallet)
+	{
+		D2DRENDERER->DrawRectangle(plt);
+	}
+
+
+
+
+
+
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
 }
 

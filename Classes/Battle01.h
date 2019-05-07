@@ -5,7 +5,6 @@ class Battle01 : public BattleScenes
 private:
 
 	Image* bg = nullptr;
-	Image* bg2 = nullptr;
 	
 	BOOL gameoverInit = false;
 	BOOL gameEndReady = false;

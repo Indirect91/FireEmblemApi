@@ -28,6 +28,7 @@ public:
 	};
 
 private:
+	BOOL isStartLocation;//플레이어 캐릭들이 놓일 시작점인지
 
 	TileStatus status;	//타일에 무엇이 올라왔는지
 
@@ -51,7 +52,7 @@ private:
 	colourTiles greenTile;
 	colourTiles blueTile;
 	colourTiles redTile;
-
+	
 public:
 	//▼오버라이드된 함수들
 	virtual void Init()override;

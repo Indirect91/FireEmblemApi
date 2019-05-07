@@ -15,8 +15,8 @@ SelectionUI::SelectionUI()
 
 	battlePredict.enemyRender.charPtr = nullptr;
 	battlePredict.enemyRender.RenderPortrait = { 0 };									//적 초상화 그릴 위치
-	battlePredict.enemyRender.RenderPortraitOriginal = { 758,100 };						//적 초상화 원위치
-	battlePredict.enemyRender.RenderPortraitToMove = { 500,100 };						//적 초상화 이동하고자 하는 위치
+	battlePredict.enemyRender.RenderPortraitOriginal = { 600+476,100 };						//적 초상화 원위치
+	battlePredict.enemyRender.RenderPortraitToMove = { 446,100 };						//적 초상화 이동하고자 하는 위치
 	battlePredict.enemyRender.RenderName = { 0 };										//적 이름 그릴 위치
 	battlePredict.enemyRender.RenderHealthPredict = { 0 };								//적 체력 예상 그릴 위치
 	battlePredict.enemyRender.RenderHitRatePredict = { 0 };								//적 명중 예상 그릴 위치
@@ -24,8 +24,8 @@ SelectionUI::SelectionUI()
 
 	battlePredict.thisCharRender.charPtr = nullptr;										//현재 캐릭터 포인터
 	battlePredict.thisCharRender.RenderPortrait = { 0 };								//현재 캐릭터 초상화 그릴 위치
-	battlePredict.thisCharRender.RenderPortraitOriginal = { -158,100 };					//현재 캐릭터 원위치
-	battlePredict.thisCharRender.RenderPortraitToMove = { 100,100 };					//현재 캐릭터 이동하고자 하는 위치
+	battlePredict.thisCharRender.RenderPortraitOriginal = { -476,100 };					//현재 캐릭터 원위치
+	battlePredict.thisCharRender.RenderPortraitToMove = { 44,100 };					//현재 캐릭터 이동하고자 하는 위치
 	battlePredict.thisCharRender.RenderName = { 0 };									//현재 캐릭터 이름 그릴 위치
 	battlePredict.thisCharRender.RenderHealthPredict = { 0 };							//현재 캐릭터 체력 예상 그릴 위치
 	battlePredict.thisCharRender.RenderHitRatePredict = { 0 };							//현재 캐릭터 명중 예상 그릴 위치
@@ -132,11 +132,11 @@ void SelectionUI::Update()
 
 			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitOriginal))
 			{
-				battlePredict.thisCharRender.RenderPortrait.x -= 43;
+				battlePredict.thisCharRender.RenderPortrait.x -= 52;
 			}
 			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitOriginal))
 			{
-				battlePredict.enemyRender.RenderPortrait.x += 43;
+				battlePredict.enemyRender.RenderPortrait.x += 63;
 			}
 			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitOriginal.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitOriginal.x)
 			{
@@ -155,12 +155,12 @@ void SelectionUI::Update()
 			//▼플레이어캐릭터 이미지가 아직 이미지 보여주는 지점에 도달하지 못하였다면
 			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitToMove))
 			{
-				battlePredict.thisCharRender.RenderPortrait.x += 43;
+				battlePredict.thisCharRender.RenderPortrait.x += 52;
 			}
 			//▼적 캐릭터 이미지가 아직 이미지 보여주는 지점에 도달하지 못하였다면
 			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitToMove))
 			{
-				battlePredict.enemyRender.RenderPortrait.x -= 43;
+				battlePredict.enemyRender.RenderPortrait.x -= 63;
 			}
 			//▼플레이어캐릭터, 적 캐릭터 모두 정위치에 도달하였다면
 			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitToMove.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitToMove.x)
@@ -319,10 +319,76 @@ void SelectionUI::Render()
 
 		break;
 	case SelectionUI::ToShow::BattlePredict:
-		IMAGEMANAGER->FindImage("초상화" + battlePredict.thisCharRender.charPtr->GetName())->Render(battlePredict.thisCharRender.RenderPortrait.x, battlePredict.thisCharRender.RenderPortrait.y);
-		IMAGEMANAGER->FindImage("초상화" + battlePredict.enemyRender.charPtr->GetName())->Render(battlePredict.enemyRender.RenderPortrait.x, battlePredict.enemyRender.RenderPortrait.y);
+	{
+		//▼초상화 랜더
+		IMAGEMANAGER->FindImage("공격" + battlePredict.thisCharRender.charPtr->GetName())->SetScale(0.8);
+		IMAGEMANAGER->FindImage("공격" + battlePredict.enemyRender.charPtr->GetName())->SetScale(0.8);
+		IMAGEMANAGER->FindImage("공격" + battlePredict.thisCharRender.charPtr->GetName())->Render(battlePredict.thisCharRender.RenderPortrait.x, battlePredict.thisCharRender.RenderPortrait.y);
+		IMAGEMANAGER->FindImage("공격" + battlePredict.enemyRender.charPtr->GetName())->Render(battlePredict.enemyRender.RenderPortrait.x, battlePredict.enemyRender.RenderPortrait.y);
+
+		//▼백그라운드 랜더
+		IMAGEMANAGER->FindImage("AttackerUI")->SetScale(0.8);
+		IMAGEMANAGER->FindImage("EnemyUI")->SetScale(0.8);
+		IMAGEMANAGER->FindImage("AttackerUI")->Render(battlePredict.thisCharRender.RenderPortrait.x, battlePredict.thisCharRender.RenderPortrait.y + 300);
+		IMAGEMANAGER->FindImage("EnemyUI")->Render(battlePredict.enemyRender.RenderPortrait.x, battlePredict.enemyRender.RenderPortrait.y + 300);
+
+		//▼상성 랜더
+		if (battlePredict.thisCharRender.charPtr->GetWeaponType() == WeaponType::Axe && battlePredict.enemyRender.charPtr->GetWeaponType() == WeaponType::Lance)
+		{
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.thisCharRender.RenderPortrait.x + 210, battlePredict.thisCharRender.RenderPortrait.y + 330, 0, 0);
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.enemyRender.RenderPortrait.x + 105, battlePredict.enemyRender.RenderPortrait.y + 330, 1, 0);
+		}
+		else if (battlePredict.thisCharRender.charPtr->GetWeaponType() == WeaponType::Axe && battlePredict.enemyRender.charPtr->GetWeaponType() == WeaponType::Sword)
+		{
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.thisCharRender.RenderPortrait.x + 210, battlePredict.thisCharRender.RenderPortrait.y + 330, 1, 0);
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.enemyRender.RenderPortrait.x + 105, battlePredict.enemyRender.RenderPortrait.y + 330, 0, 0);
+		}
+		else if (battlePredict.thisCharRender.charPtr->GetWeaponType() == WeaponType::Sword && battlePredict.enemyRender.charPtr->GetWeaponType() == WeaponType::Lance)
+		{
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.thisCharRender.RenderPortrait.x + 210, battlePredict.thisCharRender.RenderPortrait.y + 330, 1, 0);
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.enemyRender.RenderPortrait.x + 105, battlePredict.enemyRender.RenderPortrait.y + 330, 0, 0);
+		}
+		else
+		{
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.thisCharRender.RenderPortrait.x + 210, battlePredict.thisCharRender.RenderPortrait.y + 330, 2, 0);
+			IMAGEMANAGER->FindImage("advantage")->SetScale(0.8);
+			IMAGEMANAGER->FindImage("advantage")->SetSize(IMAGEMANAGER->FindImage("advantage")->GetFrameSize());
+			IMAGEMANAGER->FindImage("advantage")->FrameRender(battlePredict.enemyRender.RenderPortrait.x + 105, battlePredict.enemyRender.RenderPortrait.y + 330, 2, 0);
+		}
+
+
+		//▼명중률 그림
+		D2DRENDERER->RenderText(battlePredict.thisCharRender.RenderPortrait.x + 50, battlePredict.thisCharRender.RenderPortrait.y + 365, std::to_wstring(static_cast<INT>(battlePredict.thisCharRender.charPtr->GetLuck())), 30, D2DRenderer::DefaultBrush::White);
+		D2DRENDERER->RenderText(battlePredict.enemyRender.RenderPortrait.x + 223, battlePredict.enemyRender.RenderPortrait.y + 365, std::to_wstring(static_cast<INT>(battlePredict.enemyRender.charPtr->GetLuck())), 30, D2DRenderer::DefaultBrush::White);
+
+		//예상 HP그림
+		INT calculateEstimate = battlePredict.thisCharRender.charPtr->GetCurrentHealth() - battlePredict.enemyRender.charPtr->GetDamage();
+		if (calculateEstimate <= 0) calculateEstimate = 0;
+		D2DRENDERER->RenderText(battlePredict.thisCharRender.RenderPortrait.x + 185, battlePredict.thisCharRender.RenderPortrait.y + 372, std::to_wstring(static_cast<INT>(battlePredict.thisCharRender.charPtr->GetCurrentHealth())), 25, D2DRenderer::DefaultBrush::Black);
+		D2DRENDERER->RenderText(battlePredict.thisCharRender.RenderPortrait.x + 235, battlePredict.thisCharRender.RenderPortrait.y + 372, std::to_wstring(static_cast<INT>(calculateEstimate)), 25, D2DRenderer::DefaultBrush::Black);
+
+		INT calculateEstimate2 = battlePredict.enemyRender.charPtr->GetCurrentHealth() - battlePredict.thisCharRender.charPtr->GetDamage();
+		if (calculateEstimate2 <= 0) calculateEstimate2 = 0;
+		D2DRENDERER->RenderText(battlePredict.enemyRender.RenderPortrait.x + 80, battlePredict.enemyRender.RenderPortrait.y + 372, std::to_wstring(static_cast<INT>(battlePredict.enemyRender.charPtr->GetCurrentHealth())), 25, D2DRenderer::DefaultBrush::Black);
+		D2DRENDERER->RenderText(battlePredict.enemyRender.RenderPortrait.x + 130, battlePredict.enemyRender.RenderPortrait.y + 372, std::to_wstring(static_cast<INT>(calculateEstimate2)), 25, D2DRenderer::DefaultBrush::Black);
+
 
 		break;
+	}
 	case SelectionUI::ToShow::AllyDead:
 	{
 		std::wstring charName = L"";

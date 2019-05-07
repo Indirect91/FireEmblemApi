@@ -10,6 +10,31 @@ private:
 		POINT pos;
 		BOOL pressed;
 	};
+
+	struct MapToolCursor
+	{
+		std::string terrain;//타일이 들고있는 지형
+		POINT terrainFrame;	//타일위의 지형 프레임렌더용
+
+		std::string objectT; //타일이 들고있는 오브젝트
+		POINT objTFrame;		//타일위의 오브젝트 프레임렌더용
+
+		std::string movingT;//타일이 들고있는 움직이는 타일
+		POINT movingtFrame;	//움직이는 타일 프레임렌더용
+
+		std::string arrowT;	//타일이 들고있는 화살표
+		POINT arrowtFrame;	//화살표 프레임랜더용
+	};
+
+	enum class WhichSheet
+	{
+		MovingTile,
+		rock,
+		grass,
+		object,
+
+	};
+
 private:
 	float moveWindowRateX;	  //윈도우 이동시킬 수치
 	float moveWindowRateAccX; //윈도우 이동시킬 수치 가속
@@ -22,10 +47,22 @@ private:
 	class Tiles *field;					//타일들 보유할 배열. 저장에 사용
 	void moveCamera();
 	RECT reLocate(RECT _rc);
-	RECT palletes[9];
 	
 	moveDir RightLeft;
 	moveDir UpDown;
+
+
+
+
+	MapToolCursor maptoolCursor;
+	WhichSheet whichSheet = (WhichSheet)0;
+	std::vector<std::wstring> sheetV;
+	RECT exitRc = {};
+	RECT changePalletPrev = {1228,167, 1320,207};
+	RECT changePalletNext = { 1336,167, 1428,207};
+	std::vector<RECT> pallet;
+
+
 
 public:
 	virtual void Init();

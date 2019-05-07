@@ -321,3 +321,21 @@ inline RECT HealthBarFrontLocater(RECT _healthBarBack, INT _maxHp, INT _currentH
 	RECT toCalculate = { _healthBarBack.left + 1, _healthBarBack.top + 1, _healthBarBack.left+1 + newWidth, _healthBarBack.bottom - 1 };
 	return toCalculate;
 }
+
+//▼스트링을 W스트링으로 변환
+inline std::wstring StringToWString(std::string value)
+{
+	std::wstring temp = L"";
+	temp.assign(value.begin(), value.end());
+
+	return temp;
+}
+
+//▼W스트링을 스트링으로 변환
+inline std::string WStringToString(std::wstring value)
+{
+	std::string temp = "";
+	temp.assign(value.begin(), value.end());
+
+	return temp;
+}
