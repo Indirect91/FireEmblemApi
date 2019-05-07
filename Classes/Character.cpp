@@ -1694,18 +1694,6 @@ void Character::AdjustFrame()
 		frameLoop++; //프레임 이미지 증가
 		if (frameLoop >= 4) frameLoop = 0; //모든 캐릭터 이미지는 0~3범위
 	}
-
-	//추후 UI로 뺄 부분
-	if (charStatus == CharStatus::IsCursorOn || charStatus == CharStatus::IsClicked)
-	{
-		portraitAlpha += 0.1f;
-		if (portraitAlpha >= 1) portraitAlpha = 1;
-	}
-	else
-	{
-		portraitAlpha -= 0.1f;
-		if (portraitAlpha <= 0) portraitAlpha = 0;
-	}
 }
 
 //▼ 공격범위인 빨강과 이동범위 파란색을 둘 다 보여주는 기능
@@ -2020,21 +2008,6 @@ void Character::Render()
 			{
 				D2DRENDERER->RelativeFillRectangle(HealthBarFrontLocater(healthBarBackground, GetHealth(), currentHealth), D2DRenderer::DefaultBrush::Red);
 			}
-		}
-
-
-
-
-
-		//▼추후 UI로 뺼 부분
-		portraitImg->SetAlpha(portraitAlpha);
-		if (index.x == 6 && index.y == 6)
-		{
-			portraitImg->Render(900, 300);
-		}
-		else
-		{
-			portraitImg->Render(900, 100);
 		}
 	}
 	//▼캐릭터 범위를 표시 후 드래깅중일때 예상 이동경로에 캐릭터를 그림

@@ -30,27 +30,27 @@ SelectionUI::SelectionUI()
 	battlePredict.thisCharRender.RenderHealthPredict = { 0 };							//현재 캐릭터 체력 예상 그릴 위치
 	battlePredict.thisCharRender.RenderHitRatePredict = { 0 };							//현재 캐릭터 명중 예상 그릴 위치
 	battlePredict.thisCharRender.RenderWeaponAdvantage = { 0 };							//현재 캐릭터 무기 상성 그릴 위치
+
+	DeadDialogs.clear();
+	DeadDialogs.emplace_back(L"집에.. 돌봐야 할 가족이 있는데..");
+	DeadDialogs.emplace_back(L"전 죽어도 괜찮지만..다른 사람은 죽으면.. 안돼요..");
+	DeadDialogs.emplace_back(L"앞이..잘.. 안보여요.. 조금만 쉴게요..");
+	DeadDialogs.emplace_back(L"돌아가면..결혼하겠다는 약속..미안해..");
+	DeadDialogs.emplace_back(L"죽을때만큼은..웃고싶었는데..눈물이 멈추질 않네..");
+	DeadDialogs.emplace_back(L"저..이번엔.. 안 도망가고 잘했죠?..");
+	DeadDialogs.emplace_back(L"죄송하지만..집에는..못 갈거 같아요..");
+	DeadDialogs.emplace_back(L"이번 잠은..조금..길 거같네요..");
+	DeadDialogs.emplace_back(L"이번..전투..후..전역이었는데..");
+	DeadDialogs.emplace_back(L"..너무 아파..살고 싶어..죽고싶지 않아..");
+	DeadDialogs.emplace_back(L"딸의.. 생일 선물을..대신 전해줘요..");
+	DeadDialogs.emplace_back(L"주말..데이트 약속이 있었는데..");
+	DeadDialogs.emplace_back(L"무기를..잡아야 하는데..손에 힘이 안들어가요..");
 }
 
 void SelectionUI::Init()
 {
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
 	assert(cursor != nullptr); //커서 제대로 안들어왔으면 터뜨림
-	DeadDialogs.clear();
-	DeadDialogs.emplace_back(L"집에.. 돌봐야 할 가족이 있는데..");
-	DeadDialogs.emplace_back(L"전 죽어도 괜찮지만..다른 사람은 안돼요..");
-	DeadDialogs.emplace_back(L"앞이..잘.. 안보여요.. 조금만 쉴게요..");
-	DeadDialogs.emplace_back(L"돌아가면..결혼하겠다는 약속..미안해..");
-	DeadDialogs.emplace_back(L"죽을때만큼은..웃고싶었는데..눈물이 나네..");
-	DeadDialogs.emplace_back(L"저..이번엔 안 도망가고..잘했죠?..");
-	DeadDialogs.emplace_back(L"죄송하지만..집에는..못갈거같아요..");
-	DeadDialogs.emplace_back(L"이번건..좀..많이 아프네..");
-	DeadDialogs.emplace_back(L"이번..전투..후..전역이었는데..");
-	DeadDialogs.emplace_back(L"죽음이..두렵지..않다는건..역시 거짓말이야");
-	DeadDialogs.emplace_back(L"딸의.. 생일선물을..대신 전해줘..");
-	DeadDialogs.emplace_back(L"주말..데이트 약속이 있었는데..");
-	DeadDialogs.emplace_back(L"여기가..제..여정이 끝나는..곳이군요..");
-	//DeadDialogs.emplace_back(L"가..크롬..어서..");
 }
 
 void SelectionUI::SetToShow(ToShow _whatToShow)

@@ -3,7 +3,6 @@
 class TurnManager : public GameObject
 {
 private:
-	class Cursor* cursor = nullptr;
 	enum class ChangingStatus
 	{
 		Idle,

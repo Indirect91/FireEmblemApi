@@ -138,7 +138,7 @@ void Battle01::Update()
 		cursor->SetCursorTurn(IngameStatus::GameOver);
 
 	}
-	else if (DATACENTRE.RefObjects(ObjType::EnemyArmy).size() == 0)
+	else if (DATACENTRE.RefObjects(ObjType::EnemyArmy).size() == 0 || (DATACENTRE.RefObjects(ObjType::PlayerArmy).size() == 1 && dynamic_cast<Character*>((*(DATACENTRE.RefObjects(ObjType::EnemyArmy).begin())).second)->GetStatus() == Character::CharStatus::IsDying))
 	{
 		cursor->SetCursorTurn(IngameStatus::PlayerWon);
 	}
@@ -255,8 +255,7 @@ void Battle01::Render()
 			selectionUI->Render();
 		}
 		battleManager->Render();
-		IMAGEMANAGER->FindImage("BattleUIBg")->Render(0, 0);
-		//ÀÎ°ÔÀÓUI
+		ingameUI->Render();
 
 	}
 }

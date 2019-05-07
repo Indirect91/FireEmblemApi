@@ -45,7 +45,6 @@ private:
 	class Item *item = nullptr;				//보유중인 아이템
 	CharStatus charStatus;					//캐릭터 상태
 	Occupation occupation;					//직업
-	class Cursor* cursor;					//커서는 너무 커서
 	std::string name;						//캐릭터명
 	OwnedBy whosChar;						//누구의 캐릭터인지
 	

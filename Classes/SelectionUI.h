@@ -81,7 +81,6 @@ public:
 private:
 	std::vector<std::wstring> DeadDialogs;
 	ToShow toShow;					//어느 상호작용을 요구하는지 체크하는 옵션
-	class Cursor *cursor;			//커서는 너무 커서
 	FLOAT photoFrameAlpha;			//포토프레임 서서히 밝아짐
 	HealPredict healPredict;		//힐 예측 상태일때 사용하는 변수들 모음
 	SelectionBox selectionBox;		//고르는박스 상태일때 사용하는 변수들 모음

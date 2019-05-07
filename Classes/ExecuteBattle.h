@@ -42,7 +42,6 @@ private:
 	Opponents attacker;						//공격자
 	Opponents victim;						//피격대상
 
-	class Cursor* cursor = nullptr;			//커서는 너무 커서
 	BattleMode battleMode;					//배틀 방식
 	BattleState battleState;				//배틀 스테이트
 	
