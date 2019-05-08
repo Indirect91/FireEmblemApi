@@ -221,10 +221,16 @@ inline float RandomRangeFloat(float fromNum, float toNum)
 	return (rnd * (toNum - fromNum) + fromNum);
 }
 
-//▼ 2차원배열 인덱스 1차원배열 인덱스로 바꿔줌
+//▼ 2차원배열 인덱스 1차원배열 스트링 인덱스로 바꿔줌
 inline std::string TwoDimentionArrayToOneString(POINT _twoDimention, int _tileCOLX)
 {
 	return std::to_string(_twoDimention.y * _tileCOLX + _twoDimention.x);
+}
+
+//▼ 2차원배열 인덱스 1차원배열 인트 인덱스로 바꿔줌
+inline INT TwoDimentionArrayToInt(POINT _twoDimention, int _tileCOLX)
+{
+	return (_twoDimention.y * _tileCOLX + _twoDimention.x);
 }
 
 inline POINT IndexToLeftTop(POINT _index, int _tileSize)
@@ -336,6 +342,16 @@ inline std::string WStringToString(std::wstring value)
 {
 	std::string temp = "";
 	temp.assign(value.begin(), value.end());
+
+	return temp;
+}
+
+//▼
+inline POINT SingleArrayToPoint (INT _singleArrayNum, INT _tileCOLX)
+{
+	POINT temp = {};
+	temp.y = _singleArrayNum / _tileCOLX;
+	temp.x = _singleArrayNum % _tileCOLX;
 
 	return temp;
 }

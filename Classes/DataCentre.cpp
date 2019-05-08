@@ -125,11 +125,16 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
-	AddObj(ObjType::PlayerArmy, "Chrome", new Character(GameObject::Occupation::Swordsman, "Chrome", { 5,2 }, OwnedBy::Player));
-	AddObj(ObjType::PlayerArmy, "Anna", new Character(GameObject::Occupation::Swordsman, "Anna", { 3,4 }, OwnedBy::Player));
+	//if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
+	AddObj(ObjType::PlayerArmy, "Chrome", new Character(GameObject::Occupation::Swordsman, "Chrome", { 1,2 }, OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Anna", new Character(GameObject::Occupation::Swordsman, "Anna", { 3,2 }, OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Lucina2", new Character(GameObject::Occupation::Mage, "Lucina", { 5,3 }, OwnedBy::Player));
+	AddObj(ObjType::PlayerArmy, "Virion", new Character(GameObject::Occupation::Archer, "Virion", { 4,4 }, OwnedBy::Player));
 
-	AddObj(ObjType::EnemyArmy, "Olivia", new Character(GameObject::Occupation::Assassin, "Olivia", { 6,6 }, OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Lucina", new Character(GameObject::Occupation::Sniper, "Lucina", { 8,8 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Virion", new Character(GameObject::Occupation::Sniper, "Virion", { 1,6 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Lucina3", new Character(GameObject::Occupation::GreatKnight, "Lucina", { 8,8 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Olivia", new Character(GameObject::Occupation::Assassin, "Olivia", { 3,6 }, OwnedBy::Enemy));
+	AddObj(ObjType::EnemyArmy, "Lucina", new Character(GameObject::Occupation::Knight, "Lucina", { 7,9 }, OwnedBy::Enemy));
 
 	return S_OK;
 }

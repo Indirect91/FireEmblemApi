@@ -33,7 +33,7 @@ TileManager::TileManager()
 
 
 			//°Â¿”Ω√
-			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
+			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 7 && j == 5))
 			{
 				field[j * TILECOLX + i].SetObjT("tmp");
 			}

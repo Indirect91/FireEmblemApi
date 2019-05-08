@@ -175,11 +175,11 @@ void SelectionUI::Update()
 
 			if (!PointCompare(battlePredict.thisCharRender.RenderPortrait, battlePredict.thisCharRender.RenderPortraitOriginal))
 			{
-				battlePredict.thisCharRender.RenderPortrait.x -= 43;
+				battlePredict.thisCharRender.RenderPortrait.x -= 52;
 			}
 			if (!PointCompare(battlePredict.enemyRender.RenderPortrait, battlePredict.enemyRender.RenderPortraitOriginal))
 			{
-				battlePredict.enemyRender.RenderPortrait.x += 43;
+				battlePredict.enemyRender.RenderPortrait.x += 63;
 			}
 			if (battlePredict.thisCharRender.RenderPortrait.x == battlePredict.thisCharRender.RenderPortraitOriginal.x && battlePredict.enemyRender.RenderPortrait.x == battlePredict.enemyRender.RenderPortraitOriginal.x)
 			{
@@ -314,8 +314,8 @@ void SelectionUI::Render()
 	switch (toShow)
 	{
 	case SelectionUI::ToShow::SelectionBox:
-		IMAGEMANAGER->FindImage("Blue")->SetSize({ 300, 100 });
-		IMAGEMANAGER->FindImage("Blue")->Render(selectionBox.selectionBoxList.left, selectionBox.selectionBoxList.top);
+		//IMAGEMANAGER->FindImage("MoveConfirm")->SetSize({ 300, 100 });
+		IMAGEMANAGER->FindImage("MoveConfirm")->Render(selectionBox.selectionBoxList.left, selectionBox.selectionBoxList.top);
 
 		break;
 	case SelectionUI::ToShow::BattlePredict:

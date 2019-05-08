@@ -16,6 +16,7 @@ MapToolScene::MapToolScene()
 	sheetV.push_back(L"grass");
 	sheetV.push_back(L"object");
 
+	//▼파레트용 렉트들
 	for (UINT j = 0; j < 5; j++)
 	{
 		for (UINT i = 0; i < 4; i++)
@@ -24,6 +25,10 @@ MapToolScene::MapToolScene()
 
 		}
 	}
+	field = new Tiles[TILECOLX * TILEROWY];
+
+	movingTilex = 0;
+
 }
 
 
@@ -53,7 +58,7 @@ void MapToolScene::Init()
 
 	//▼카메라 및 타일들 초기화
 	CAMERA.SetCamera({0,0,815,688});
-	field = new Tiles[TILECOLX * TILEROWY];
+	
 	
 	for (int j = 0; j < TILEROWY; j++)
 	{
@@ -66,8 +71,8 @@ void MapToolScene::Init()
 			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
-	tempC = { 0 }; //충돌에 쓸 임시렉트 0
-	
+	movingTilex = 0;
+	whichSheet = WhichSheet::MovingTile;
 }
 
 void MapToolScene::Release()
@@ -81,16 +86,13 @@ void MapToolScene::Update()
 	if (!isMovingDone) moveWindowFrame(); //윈도우 이동완료까지 이동
 	moveCamera(); //방향키 입력에 따른 화면 이동
 	RECT rc = { 158,138,158+815,138+688 };
-	if (PtInRect(&rc, _ptMouse))
-	{
-		IMAGEMANAGER->FindImage("Cursor")->SetAngle(228);
-	}
-	else
-		IMAGEMANAGER->FindImage("Cursor")->SetAngle(0);
 
 
 	if ((PtInRect(&changePalletPrev, _ptMouse) && whichSheet != (WhichSheet)0))
 	{
+		maptoolCursor.movingT = "";
+		maptoolCursor.objectT = "";
+		maptoolCursor.terrain = "";
 		if(KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 		{
 			whichSheet = (WhichSheet)((INT)whichSheet - 1);
@@ -99,49 +101,148 @@ void MapToolScene::Update()
 	}
 	else if ((PtInRect(&changePalletNext, _ptMouse) && whichSheet != (WhichSheet)3))
 	{
+		maptoolCursor.movingT = "";
+		maptoolCursor.objectT = "";
+		maptoolCursor.terrain = "";
 		if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 		{
 			whichSheet = (WhichSheet)((INT)whichSheet + 1);
 		}
-
 	}
 
-
-
-
-
-
-
-
-
-
-
-	switch (whichSheet)
+	if (KEYMANAGER->IsOnceKeyDown(VK_RBUTTON))
 	{
-	case MapToolScene::WhichSheet::MovingTile:
-		break;
-	case MapToolScene::WhichSheet::rock:
-		break;
-	case MapToolScene::WhichSheet::grass:
-		break;
-	case MapToolScene::WhichSheet::object:
-		break;
-	default:
-		break;
+		maptoolCursor.movingT = "";
+		maptoolCursor.objectT = "";
+		maptoolCursor.terrain = "";
+	}
+
+	for (UINT i = 0; i< pallet.size(); i++)
+	{
+		if (PtInRect(&pallet[i], _ptMouse))
+		{
+			if (KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
+			{
+				if (sheetV[(INT)whichSheet] == L"MovingTile")
+				{
+					if (i == TwoDimentionArrayToInt({ 0,0 }, 4))
+					{
+						maptoolCursor.movingT = "LavaOrange";
+						maptoolCursor.movingtFrame = { 0,0 };
+						maptoolCursor.terrain = "";
+						maptoolCursor.objectT = "";
+						break;
+					}
+					else if (i == TwoDimentionArrayToInt({ 1,0 }, 4))
+					{
+						maptoolCursor.movingT = "Sand";
+						maptoolCursor.movingtFrame = { 0,0 };
+						maptoolCursor.terrain = "";
+						maptoolCursor.objectT = "";
+						break;
+					}
+					else if (i == TwoDimentionArrayToInt({ 2,0 }, 4))
+					{
+						maptoolCursor.movingT = "LavaYellow";
+						maptoolCursor.movingtFrame = { 0,0 };
+						maptoolCursor.terrain = "";
+						maptoolCursor.objectT = "";
+						break;
+					}
+					else if (i == TwoDimentionArrayToInt({ 0,1 }, 4))
+					{
+						maptoolCursor.movingT = "WaterDeep";
+						maptoolCursor.movingtFrame = { 0,0 };
+						maptoolCursor.terrain = "";
+						maptoolCursor.objectT = "";
+						break;
+					}
+					else if (i == TwoDimentionArrayToInt({ 1,1 }, 4))
+					{
+						maptoolCursor.movingT = "WaterShallow";
+						maptoolCursor.movingtFrame = {0,0};
+						maptoolCursor.terrain = "";
+						maptoolCursor.objectT = "";
+						break;
+					}
+				}
+				else if (sheetV[(INT)whichSheet] == L"object")
+				{
+					if (i != TwoDimentionArrayToInt({ 3,1 }, 4) && i != TwoDimentionArrayToInt({ 3,2 }, 4) && i != TwoDimentionArrayToInt({ 3,3 }, 4) && i != TwoDimentionArrayToInt({ 3,4 }, 4))
+					{
+						maptoolCursor.objectT = WStringToString(sheetV[(INT)whichSheet]);
+						maptoolCursor.objTFrame = SingleArrayToPoint(i, 4);
+						maptoolCursor.terrain = "";
+						maptoolCursor.movingT = "";
+						break;
+					}
+				}
+				else if (sheetV[(INT)whichSheet] == L"grass")
+				{
+					maptoolCursor.terrain = WStringToString(sheetV[(INT)whichSheet]);
+					maptoolCursor.terrainFrame = SingleArrayToPoint(i, 4);
+					maptoolCursor.movingT = "";
+					maptoolCursor.objectT = "";
+					break;
+				}
+				else
+				{
+					if (i != TwoDimentionArrayToInt({ 2,0 }, 4) && i != TwoDimentionArrayToInt({ 3,0 }, 4) && i != TwoDimentionArrayToInt({ 3,1 }, 4) && i != TwoDimentionArrayToInt({1,3}, 4) && i != TwoDimentionArrayToInt({ 2,3 }, 4) && i != TwoDimentionArrayToInt({ 3,3 }, 4) && i != TwoDimentionArrayToInt({1,4 }, 4) && i != TwoDimentionArrayToInt({2,4 }, 4) && i != TwoDimentionArrayToInt({3,4 }, 4))
+					{
+						maptoolCursor.objectT = WStringToString(sheetV[(INT)whichSheet]);
+						maptoolCursor.objTFrame = SingleArrayToPoint(i, 4);
+						maptoolCursor.movingT = "";
+						maptoolCursor.terrain = "";
+						break;
+					}
+				}
+			}
+		}
+	}
+	if (PtInRect(&selectArea, _ptMouse) && !((maptoolCursor.terrain == "") && (maptoolCursor.objectT == "") && (maptoolCursor.movingT == "")))
+	{
+		for (UINT i = 0; i < TILECOLX * TILEROWY; i++)
+		{
+			RECT toCompare = reLocate(field[i].GetPosition());
+			if (PtInRect(&toCompare, _ptMouse))
+			{
+				if (KEYMANAGER->IsStayKeyDown(VK_LBUTTON))
+				{
+					if (maptoolCursor.terrain != "")
+					{
+						field[i].SetTerrain(maptoolCursor.terrain);
+						field[i].SetTerrainFrame(maptoolCursor.terrainFrame);
+						break;
+					}
+					else if (maptoolCursor.objectT != "")
+					{
+						field[i].SetObjT(maptoolCursor.objectT);
+						field[i].SetObjTFrame(maptoolCursor.objTFrame);
+						break;
+					}
+					else if (maptoolCursor.movingT != "")
+					{
+						field[i].SetMovingT(maptoolCursor.movingT);
+						field[i].SetMovingtFrame({ 0,0 });
+						break;
+					}
+					else
+					{
+						assert(!"여기 들오면 안되는디");
+					}
+				}
+			}
+		}
 	}
 
 
 
-
-
-
-
-
-
-
-
-
-
+	counter++;
+	if (counter % 5 == 0)
+	{
+		movingTilex++;
+		if (movingTilex > 14) movingTilex = 0;
+	}
 }
 
 void MapToolScene::moveWindowFrame()
@@ -247,7 +348,23 @@ void MapToolScene::Render()
 	{
 		if (IntersectRect(&tempC, &field[i].GetPosition(), &CAMERA.GetCameraRc()))
 		{
-			D2DRENDERER->DrawRectangle(reLocate(field[i].GetPosition()));
+			RECT relocatedRc = reLocate(field[i].GetPosition());
+			D2DRENDERER->DrawRectangle(relocatedRc);
+			if (field[i].GetMovingT() != "")
+			{
+				IMAGEMANAGER->FindImage(field[i].GetMovingT())->SetSize(IMAGEMANAGER->FindImage(field[i].GetMovingT())->GetFrameSize());
+				IMAGEMANAGER->FindImage(field[i].GetMovingT())->FrameRender(relocatedRc.left, relocatedRc.top, movingTilex, 0);
+			}
+			if (field[i].GetTerrain() != "")
+			{
+				IMAGEMANAGER->FindImage(field[i].GetTerrain())->SetSize(IMAGEMANAGER->FindImage(field[i].GetTerrain())->GetFrameSize());
+				IMAGEMANAGER->FindImage(field[i].GetTerrain())->FrameRender(relocatedRc.left, relocatedRc.top, field[i].GetTerrainFrame().x, field[i].GetTerrainFrame().y);
+			}
+			if (field[i].GetObjT() != "")
+			{
+				IMAGEMANAGER->FindImage(field[i].GetObjT())->SetSize(IMAGEMANAGER->FindImage(field[i].GetObjT())->GetFrameSize());
+				IMAGEMANAGER->FindImage(field[i].GetObjT())->FrameRender(relocatedRc.left, relocatedRc.top, field[i].GetObjTFrame().x, field[i].GetObjTFrame().y);
+			}
 		}
 	}
 
@@ -279,11 +396,31 @@ void MapToolScene::Render()
 		D2DRENDERER->DrawRectangle(plt);
 	}
 
+	if (maptoolCursor.terrain != "")
+	{
+		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
+		IMAGEMANAGER->FindImage(maptoolCursor.terrain)->SetSize(IMAGEMANAGER->FindImage(maptoolCursor.terrain)->GetFrameSize());
+		IMAGEMANAGER->FindImage(maptoolCursor.terrain)->FrameRender(_ptMouse.x+20, _ptMouse.y+20, maptoolCursor.terrainFrame.x, maptoolCursor.terrainFrame.y);
+	}
+	else if (maptoolCursor.movingT != "")
+	{
+		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
+		IMAGEMANAGER->FindImage(maptoolCursor.movingT)->SetSize(IMAGEMANAGER->FindImage(maptoolCursor.movingT)->GetFrameSize());
+		IMAGEMANAGER->FindImage(maptoolCursor.movingT)->FrameRender(_ptMouse.x+20, _ptMouse.y+20, maptoolCursor.movingtFrame.x, maptoolCursor.movingtFrame.y);
+	}
+	else if (maptoolCursor.objectT != "")
+	{
+		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
+		IMAGEMANAGER->FindImage(maptoolCursor.objectT)->SetSize(IMAGEMANAGER->FindImage(maptoolCursor.objectT)->GetFrameSize());
+		IMAGEMANAGER->FindImage(maptoolCursor.objectT)->FrameRender(_ptMouse.x+20, _ptMouse.y+20, maptoolCursor.objTFrame.x, maptoolCursor.objTFrame.y);
+	}
+	else
+	{
+		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
+	}
 
 
-
-
+	D2DRENDERER->DrawRectangle(selectArea);
 
 	IMAGEMANAGER->FindImage("MapToolBg2")->Render(paperScrollX, 0);
 }
-

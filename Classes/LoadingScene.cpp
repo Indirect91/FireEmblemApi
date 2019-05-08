@@ -55,6 +55,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("EnemyTurnRing", L"IMAGE/ETC/EnemyTurnRing.png");
 	_loading->LoadImg("EnemyTurnBack", L"IMAGE/ETC/EnemyTurnBack.png");
 	_loading->LoadImg("EnemyTurnText", L"IMAGE/ETC/EnemyTurnText.png");
+	_loading->LoadImg("MoveConfirm", L"IMAGE/ETC/MoveConfirm.png");
 
 	//▼커서
 	_loading->LoadImg("Cursor", L"IMAGE/ETC/cursor.png");

@@ -1788,7 +1788,7 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Attack = 5;
 		occupationData.Defence = 5;
 		occupationData.Luck = 90;
-		occupationData.Move = 7;
+		occupationData.Move = 3;
 		occupationData.Weapon = WeaponType::Lance;
 		break;
 	case Occupation::Mage:
@@ -1810,6 +1810,16 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Luck = 95;
 		occupationData.Move = 5;
 		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case Occupation::GreatKnight:
+		occupationData.Speed = 15;
+		occupationData.Range = 1;
+		occupationData.Health = 20;
+		occupationData.Attack = 8;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Axe;
 		break;
 	case Occupation::Archer:
 		occupationData.Speed = 5;

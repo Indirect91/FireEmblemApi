@@ -21,9 +21,6 @@ private:
 
 		std::string movingT;//타일이 들고있는 움직이는 타일
 		POINT movingtFrame;	//움직이는 타일 프레임렌더용
-
-		std::string arrowT;	//타일이 들고있는 화살표
-		POINT arrowtFrame;	//화살표 프레임랜더용
 	};
 
 	enum class WhichSheet
@@ -55,14 +52,18 @@ private:
 
 
 	MapToolCursor maptoolCursor;
-	WhichSheet whichSheet = (WhichSheet)0;
+	WhichSheet whichSheet;
 	std::vector<std::wstring> sheetV;
 	RECT exitRc = {};
 	RECT changePalletPrev = {1228,167, 1320,207};
 	RECT changePalletNext = { 1336,167, 1428,207};
 	std::vector<RECT> pallet;
 
-
+	RECT exitButton = {};
+	RECT saveButton = {};
+	RECT selectArea = { 156,138, 970, 828};
+	INT movingTilex = 0;
+	INT counter = 0;
 
 public:
 	virtual void Init();

@@ -69,7 +69,7 @@ public:
 
 	//▼ 실제 지형. 둘째 레이어
 	const std::string& GetTerrain() const { return terrain; }
-	const POINT& GetTerrainFrame() const { return objTFrame; }
+	const POINT& GetTerrainFrame() const { return terrainFrame; }
 
 	//▼ 오브젝트들. 세번째 레이어
 	const std::string & GetObjT() const { return objectT; }
@@ -103,7 +103,7 @@ public:
 	void SetStatus(TileStatus _status) { this->status = _status; }
 
 	//▼움직이는 타일 세팅
-	void SetMovingT(const std::string _movingT) { this->terrain = _movingT; }
+	void SetMovingT(const std::string _movingT) { this->movingT = _movingT; }
 	void SetMovingtFrame(const POINT _movingtFrame) { this->movingtFrame = _movingtFrame; }
 
 	//▼지형 세팅
