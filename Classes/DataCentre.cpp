@@ -125,7 +125,7 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
-	//if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 6 && j == 5))
+
 	AddObj(ObjType::PlayerArmy, "Chrome", new Character(GameObject::Occupation::Swordsman, "Chrome", { 1,2 }, OwnedBy::Player));
 	AddObj(ObjType::PlayerArmy, "Anna", new Character(GameObject::Occupation::Swordsman, "Anna", { 3,2 }, OwnedBy::Player));
 	AddObj(ObjType::PlayerArmy, "Lucina2", new Character(GameObject::Occupation::Mage, "Lucina", { 5,3 }, OwnedBy::Player));

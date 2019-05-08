@@ -562,6 +562,7 @@ void Character::Update()
 					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y - 1) * TILECOLX + toExamen->GetIndex().x)));
 					UpValidity &= !checkTarget->GetCheckedNum();	//체크넘버 가져옴
 					UpValidity &= checkTarget->GetObjT() == "";		//장애물 있는지 가져옴
+					UpValidity &= checkTarget->GetMovingT() == "";	//장애물2 있는지 가져옴
 					//▼이번에도 참이라면
 					if (UpValidity)
 					{
@@ -626,6 +627,7 @@ void Character::Update()
 					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x - 1)));
 					LeftValidity &= !checkTarget->GetCheckedNum();
 					LeftValidity &= checkTarget->GetObjT() == "";
+					LeftValidity &= checkTarget->GetMovingT() == "";
 					if (LeftValidity)
 					{
 						if (whosChar == OwnedBy::Player)
@@ -688,6 +690,7 @@ void Character::Update()
 					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y + 1) * TILECOLX + toExamen->GetIndex().x)));
 					DownValidity &= !checkTarget->GetCheckedNum();
 					DownValidity &= checkTarget->GetObjT() == "";
+					DownValidity &= checkTarget->GetMovingT() == "";
 					if (DownValidity)
 					{
 						if (whosChar == OwnedBy::Player)
@@ -750,6 +753,7 @@ void Character::Update()
 					Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x + 1)));
 					RightValidity &= !checkTarget->GetCheckedNum();
 					RightValidity &= checkTarget->GetObjT() == "";
+					RightValidity &= checkTarget->GetMovingT() == "";
 					if (RightValidity)
 					{
 						if (whosChar == OwnedBy::Player)
@@ -1364,6 +1368,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y - 1) * TILECOLX + toExamen->GetIndex().x)));
 			UpValidity &= !checkTarget->GetCheckedNum();	//체크넘버 가져옴
 			UpValidity &= checkTarget->GetObjT() == "";		//장애물 있는지 가져옴
+			UpValidity &= checkTarget->GetMovingT() == "";	//장애물2 있는지 가져옴
 			//▼이번에도 참이라면
 			if (UpValidity)
 			{
@@ -1428,6 +1433,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x - 1)));
 			LeftValidity &= !checkTarget->GetCheckedNum();
 			LeftValidity &= checkTarget->GetObjT() == "";
+			LeftValidity &= checkTarget->GetMovingT() == "";
 			if (LeftValidity)
 			{
 				if (whosChar == OwnedBy::Player)
@@ -1490,6 +1496,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string((toExamen->GetIndex().y + 1) * TILECOLX + toExamen->GetIndex().x)));
 			DownValidity &= !checkTarget->GetCheckedNum();
 			DownValidity &= checkTarget->GetObjT() == "";
+			DownValidity &= checkTarget->GetMovingT() == "";
 			if (DownValidity)
 			{
 				if (whosChar == OwnedBy::Player)
@@ -1552,6 +1559,7 @@ void Character::ShowMoveRange(void (Character:: * colourShow)(INT))
 			Tiles* checkTarget = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, std::to_string(toExamen->GetIndex().y * TILECOLX + toExamen->GetIndex().x + 1)));
 			RightValidity &= !checkTarget->GetCheckedNum();
 			RightValidity &= checkTarget->GetObjT() == "";
+			RightValidity &= checkTarget->GetMovingT() == "";
 			if (RightValidity)
 			{
 				if (whosChar == OwnedBy::Player)

@@ -925,4 +925,9 @@ void ExecuteBattle::Render()
 		IMAGEMANAGER->FindImage("Blink")->SetSize(IMAGEMANAGER->FindImage("Blink")->GetFrameSize());
 		IMAGEMANAGER->FindImage("Blink")->RelativeFrameRender(attacker.charPtr->GetPosition().left - 80, attacker.charPtr->GetPosition().top - 80, attacker.criticalFrameRenderX, 0);
 	}
+	if (victim.attackStatus == AttackStatue::Critical && victim.criticalFrameRenderX < 8)
+	{
+		IMAGEMANAGER->FindImage("Blink")->SetSize(IMAGEMANAGER->FindImage("Blink")->GetFrameSize());
+		IMAGEMANAGER->FindImage("Blink")->RelativeFrameRender(attacker.charPtr->GetPosition().left - 80, attacker.charPtr->GetPosition().top - 80, attacker.criticalFrameRenderX, 0);
+	}
 }

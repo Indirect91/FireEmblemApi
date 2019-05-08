@@ -1,9 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-constexpr UINT TILESIZE = 48; //타일 하나의 사이즈
-constexpr UINT TILEROWY = 20; //타일 Y 갯수
-constexpr auto TILECOLX = 32; //타일 X 갯수, constexpr 자동추론 테스트
+
 
 
 class Tiles : public GameObject
@@ -58,7 +56,7 @@ public:
 	virtual void Init()override;
 	virtual void Release()override;
 	virtual void Update()override;
-	virtual void Render()override;
+	virtual void Render()override {}
 
 	//▼ 겟터. 참조자로 반환하되 변경되지않게 상수화.
 	const TileStatus & GetTileStatus() const { return status; }

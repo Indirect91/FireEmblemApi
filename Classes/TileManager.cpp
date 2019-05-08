@@ -1,6 +1,6 @@
 #include "../stdafx.h"
 #include "TileManager.h"
-#include "Tiles.h"
+
 
 //▼타일 매니져는 태초에 생성될떈 그냥 초기화값만 가진다
 TileManager::TileManager()
@@ -11,31 +11,6 @@ TileManager::TileManager()
 
 	field = nullptr;
 	field = new Tiles[TILECOLX * TILEROWY];
-	//
-	//for (int j = 0; j < TILEROWY; j++)
-	//{
-	//	for (int i = 0; i < TILECOLX; i++)
-	//	{
-	//		field[j * TILECOLX + i].Init(); //생성된 타일 초기화
-	//		field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
-	//		field[j * TILECOLX + i].SetIndex({ i,j });
-	//		field[j * TILECOLX + i].SetPositionViaIndex();
-	//		
-	//		//▼4방향 이웃 추가
-	//		if (i > 0) //맨 우측 예외처리
-	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i - 1)]);
-	//		if (i < TILECOLX - 1) //맨 좌측 예외처리
-	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i + 1)]);
-	//		if (j > 0) //윗부분 예외처리
-	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
-	//		if (j < TILEROWY - 1) // 바닥 예외처리
-	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
-	//
-	//		DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
-	//	}
-	//}
-	
-
 }
 
 //▼타일매니져 이닛
@@ -46,8 +21,14 @@ void TileManager::Init()
 	
 	file = CreateFile(L"saveFile.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, field, sizeof(Tiles) * TILECOLX * TILEROWY, &read, NULL);
+	assert(ReadFile(file, toLoad, sizeof(Tiles) * TILECOLX * TILEROWY, &read, NULL));
 	CloseHandle(file);
+
+	for (UINT i = 0; i < TILECOLX * TILEROWY; i++)
+	{
+		field[i] = toLoad[i];
+	}
+
 
 	for (int j = 0; j < TILEROWY; j++)
 	{
@@ -62,7 +43,7 @@ void TileManager::Init()
 			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
 		if (j < TILEROWY - 1) // 바닥 예외처리
 			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
-			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
+		DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
 		}
 	}
 }
@@ -72,6 +53,16 @@ void TileManager::Update()
 {	
 	ClipTiles(); //타일 클리핑 범위를 계산함
 	UpdateClippedTiles(); //범위에 따라 담고 해당타일 업뎃시킴
+
+
+
+	//▼프레임카운터
+	counter++;
+	if (counter % 5 == 0)
+	{
+		movingTilex++;
+		if (movingTilex > 14) movingTilex = 0;
+	}
 }
 
 //▼릴리즈땐 사용한거 전부 비움
@@ -147,10 +138,24 @@ void TileManager::Render()
 		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
 		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::Black, 1);
 
-		//1.무빙타일
-		//2.터레인
-		//3.오브젝트
-		//4.화살표
+
+
+		if (toExamen->GetMovingT() != "")
+		{
+			IMAGEMANAGER->FindImage(toExamen->GetMovingT())->SetSize(IMAGEMANAGER->FindImage(toExamen->GetMovingT())->GetFrameSize());
+			IMAGEMANAGER->FindImage(toExamen->GetMovingT())->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, movingTilex, 0);
+		}
+		if (toExamen->GetTerrain() != "")
+		{
+			IMAGEMANAGER->FindImage(toExamen->GetTerrain())->SetSize(IMAGEMANAGER->FindImage(toExamen->GetTerrain())->GetFrameSize());
+			IMAGEMANAGER->FindImage(toExamen->GetTerrain())->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetTerrainFrame().x, toExamen->GetTerrainFrame().y);
+		}
+		if (toExamen->GetObjT() != "")
+		{
+			IMAGEMANAGER->FindImage(toExamen->GetObjT())->SetSize(IMAGEMANAGER->FindImage(toExamen->GetObjT())->GetFrameSize());
+			IMAGEMANAGER->FindImage(toExamen->GetObjT())->RelativeFrameRender(toExamen->GetPosition().left, toExamen->GetPosition().top, toExamen->GetObjTFrame().x, toExamen->GetObjTFrame().y);
+		}
+
 		if (toExamen->GetIsRed())
 		{
 			IMAGEMANAGER->FindImage("Red")->SetAlpha(toExamen->GetRedAlpha()); //빨간 알파값 가져와서

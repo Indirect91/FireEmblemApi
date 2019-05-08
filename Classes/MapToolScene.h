@@ -1,5 +1,6 @@
 #pragma once
 #include "GameNode.h"
+#include "Tiles.h"
 
 class MapToolScene : public GameNode
 {
@@ -21,6 +22,11 @@ private:
 
 		std::string movingT;//타일이 들고있는 움직이는 타일
 		POINT movingtFrame;	//움직이는 타일 프레임렌더용
+
+		INT occupation;
+		std::string name = "General";
+		POINT enemyPos;
+
 	};
 
 	enum class WhichSheet
@@ -29,7 +35,7 @@ private:
 		rock,
 		grass,
 		object,
-
+		Enemy,
 	};
 
 private:
@@ -41,7 +47,8 @@ private:
 
 	//std::vector<class Tiles> vecField;    //
 	float moveAngle;
-	class Tiles *field;					//타일들 보유할 배열. 저장에 사용
+	class Tiles *field;					//타일들 보유할 포인터
+	Tiles toSave[TILECOLX * TILEROWY];
 	void moveCamera();
 	RECT reLocate(RECT _rc);
 	

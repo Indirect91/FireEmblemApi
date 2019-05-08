@@ -177,6 +177,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadFrameImage("WaterDeep", L"IMAGE/Tiles/MovingTileset/WaterDeep(x15y1).png", 15, 1);
 	_loading->LoadFrameImage("WaterShallow", L"IMAGE/Tiles/MovingTileset/WaterShallow(x15y1).png", 15, 1);
 	_loading->LoadFrameImage("MovingTile", L"IMAGE/Tiles/MovingTileset/MovingTilePallet.png", 4, 5);
+	_loading->LoadFrameImage("Enemy", L"IMAGE/Tiles/EnemyReserve/enemy.png", 4, 5);
 
 	//UI용
 	_loading->LoadImg("ActionTaken", L"IMAGE/ETC/ActionTaken.png");
