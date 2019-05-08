@@ -5,49 +5,66 @@
 //▼타일 매니져는 태초에 생성될떈 그냥 초기화값만 가진다
 TileManager::TileManager()
 {
-	field = nullptr;
 	clippedIndex = { 0 };
 	clippedX = 0;
 	clippedY = 0;
 
+	field = nullptr;
 	field = new Tiles[TILECOLX * TILEROWY];
-
-	for (int j = 0; j < TILEROWY; j++)
-	{
-		for (int i = 0; i < TILECOLX; i++)
-		{
-			field[j * TILECOLX + i].Init(); //생성된 타일 초기화
-			field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
-			field[j * TILECOLX + i].SetIndex({ i,j });
-			field[j * TILECOLX + i].SetPositionViaIndex();
-			
-			//▼4방향 이웃 추가
-			if (i > 0) //맨 우측 예외처리
-				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i - 1)]);
-			if (i < TILECOLX - 1) //맨 좌측 예외처리
-				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i + 1)]);
-			if (j > 0) //윗부분 예외처리
-				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
-			if (j < TILEROWY - 1) // 바닥 예외처리
-				field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
-
-
-			//▼임시
-			if ((i == 2 && j == 4) || (i == 5 && j == 4) || (i == 7 && j == 5))
-			{
-				field[j * TILECOLX + i].SetObjT("tmp");
-			}
-			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
-		}
-	}
-
+	//
+	//for (int j = 0; j < TILEROWY; j++)
+	//{
+	//	for (int i = 0; i < TILECOLX; i++)
+	//	{
+	//		field[j * TILECOLX + i].Init(); //생성된 타일 초기화
+	//		field[j * TILECOLX + i].SetPosition(RectMake(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE));
+	//		field[j * TILECOLX + i].SetIndex({ i,j });
+	//		field[j * TILECOLX + i].SetPositionViaIndex();
+	//		
+	//		//▼4방향 이웃 추가
+	//		if (i > 0) //맨 우측 예외처리
+	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i - 1)]);
+	//		if (i < TILECOLX - 1) //맨 좌측 예외처리
+	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i + 1)]);
+	//		if (j > 0) //윗부분 예외처리
+	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
+	//		if (j < TILEROWY - 1) // 바닥 예외처리
+	//			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
+	//
+	//		DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
+	//	}
+	//}
+	
 
 }
 
 //▼타일매니져 이닛
 void TileManager::Init()
 {
+	HANDLE file;
+	DWORD read;
+	
+	file = CreateFile(L"saveFile.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, field, sizeof(Tiles) * TILECOLX * TILEROWY, &read, NULL);
+	CloseHandle(file);
 
+	for (int j = 0; j < TILEROWY; j++)
+	{
+		for (int i = 0; i < TILECOLX; i++)
+		{
+		//▼4방향 이웃 추가
+		if (i > 0) //맨 우측 예외처리
+			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i - 1)]);
+		if (i < TILECOLX - 1) //맨 좌측 예외처리
+			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 0) * TILECOLX + (i + 1)]);
+		if (j > 0) //윗부분 예외처리
+			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j - 1) * TILECOLX + (i + 0)]);
+		if (j < TILEROWY - 1) // 바닥 예외처리
+			field[j * TILECOLX + i].RefNeighbours().push_back(&field[(j + 1) * TILECOLX + (i + 0)]);
+			DATACENTRE.AddObj(ObjType::Tile, std::to_string(j * TILECOLX + i), &field[j * TILECOLX + i]);
+		}
+	}
 }
 
 //▼업데이트는 보통 클리핑을 실시함.

@@ -18,7 +18,9 @@ Tiles::Tiles() //생성될때는 그냥 빈상태로 출고
 	arrowT = "";
 	arrowtFrame = { 0 };
 
+	isStartLocation = false;
 	checkedNum = 0;
+	routeNum = 0;			//적 위치 추적에만 사용될 숫자
 
 	ZeroMemory(&purpleTile, sizeof(purpleTile));
 	ZeroMemory(&greenTile, sizeof(greenTile));

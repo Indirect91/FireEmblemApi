@@ -59,8 +59,8 @@ private:
 	RECT changePalletNext = { 1336,167, 1428,207};
 	std::vector<RECT> pallet;
 
-	RECT exitButton = {};
-	RECT saveButton = {};
+	RECT saveButton = { 1220,610,1460,680 };
+	RECT exitButton = {1220,720,1460,780};
 	RECT selectArea = { 156,138, 970, 828};
 	INT movingTilex = 0;
 	INT counter = 0;

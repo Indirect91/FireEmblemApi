@@ -28,7 +28,7 @@ public:
 	};
 
 private:
-	BOOL isStartLocation;//플레이어 캐릭들이 놓일 시작점인지
+	BOOL isStartLocation = 0;//플레이어 캐릭들이 놓일 시작점인지
 
 	TileStatus status;	//타일에 무엇이 올라왔는지
 
@@ -44,8 +44,8 @@ private:
 	std::string arrowT;	//타일이 들고있는 화살표
 	POINT arrowtFrame;	//화살표 프레임랜더용
 	
-	INT checkedNum;			//타일이 검사되었는지 여부
-	INT routeNum;			//적 위치 추적에만 사용될 숫자
+	INT checkedNum = 0;			//타일이 검사되었는지 여부
+	INT routeNum = 0;			//적 위치 추적에만 사용될 숫자
 
 	std::vector<Tiles*> neighbour;
 	colourTiles purpleTile;

@@ -95,6 +95,7 @@ HRESULT SceneManager::LoadScene(std::string sceneName)
 	find->second->Init();
 	{
 		SetWindowPos(_hWnd, 0, WINSTARTX, WINSTARTY, WINSIZEX, WINSIZEY, SWP_NOMOVE);
+		D2DRENDERER->GetRenderTarget()->Resize({ WINSIZEX,WINSIZEY });
 		_currentScene = find->second;
 		return S_OK;
 	}

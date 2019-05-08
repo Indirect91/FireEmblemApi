@@ -4,8 +4,6 @@ class Battle01 : public BattleScenes
 {
 private:
 
-	Image* bg = nullptr;
-	
 	BOOL gameoverInit = false;
 	BOOL gameEndReady = false;
 	INT gameOverPhase = 0;
