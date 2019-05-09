@@ -131,6 +131,8 @@ void MapToolScene::Update()
 						maptoolCursor.movingtFrame = { 0,0 };
 						maptoolCursor.terrain = "";
 						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "";
+
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,0 }, 4))
@@ -139,6 +141,7 @@ void MapToolScene::Update()
 						maptoolCursor.movingtFrame = { 0,0 };
 						maptoolCursor.terrain = "";
 						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,0 }, 4))
@@ -147,6 +150,7 @@ void MapToolScene::Update()
 						maptoolCursor.movingtFrame = { 0,0 };
 						maptoolCursor.terrain = "";
 						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 0,1 }, 4))
@@ -155,6 +159,7 @@ void MapToolScene::Update()
 						maptoolCursor.movingtFrame = { 0,0 };
 						maptoolCursor.terrain = "";
 						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,1 }, 4))
@@ -163,6 +168,7 @@ void MapToolScene::Update()
 						maptoolCursor.movingtFrame = { 0,0 };
 						maptoolCursor.terrain = "";
 						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 				}
@@ -174,6 +180,7 @@ void MapToolScene::Update()
 						maptoolCursor.objTFrame = SingleArrayToPoint(i, 4);
 						maptoolCursor.terrain = "";
 						maptoolCursor.movingT = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 				}
@@ -183,6 +190,7 @@ void MapToolScene::Update()
 					maptoolCursor.terrainFrame = SingleArrayToPoint(i, 4);
 					maptoolCursor.movingT = "";
 					maptoolCursor.objectT = "";
+					maptoolCursor.EnemyName = "";
 					break;
 				}
 				else if (sheetV[(INT)whichSheet] == L"rock")
@@ -193,6 +201,7 @@ void MapToolScene::Update()
 						maptoolCursor.objTFrame = SingleArrayToPoint(i, 4);
 						maptoolCursor.movingT = "";
 						maptoolCursor.terrain = "";
+						maptoolCursor.EnemyName = "";
 						break;
 					}
 				}
@@ -200,169 +209,153 @@ void MapToolScene::Update()
 				{
 					if (i == TwoDimentionArrayToInt({ 0,0 }, 4))
 					{
-						maptoolCursor.movingT = "LavaOrange";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 0,0 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Assassin);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,0 }, 4))
 					{
-						maptoolCursor.movingT = "Sand";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 1,0 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::SwordMaster);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,0 }, 4))
 					{
-						maptoolCursor.movingT = "LavaYellow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 2,0 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Myrmidon);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 3,0 }, 4))
 					{
-						maptoolCursor.movingT = "WaterDeep";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 3,0 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Swordsman);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 0,1 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 0,1 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Theif);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,1 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 1,1 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Knight);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,1 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 2,1 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Paladin);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 3,1 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 3,1 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Troubadour);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 0,2 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 0,2 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::GreatKnight);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,2 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 1,2 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Cavalier);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,2 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 2,2 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::DarkKnight);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 3,2 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 3,2 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::BowKnight);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 0,3 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 0,3 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Grandmaster);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,3 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 1,3 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Mage);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,3 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 2,3 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Archer);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 3,3 }, 4))
 					{
-						maptoolCursor.movingT = "WaterShallow";
-						maptoolCursor.movingtFrame = { 0,0 };
-						maptoolCursor.terrain = "";
-						maptoolCursor.objectT = "";
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 3,3 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Sniper);
 						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 0,4 }, 4))
 					{
-					maptoolCursor.movingT = "WaterShallow";
-					maptoolCursor.movingtFrame = { 0,0 };
-					maptoolCursor.terrain = "";
-					maptoolCursor.objectT = "";
-					break;
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 0,4 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Mercenary);
+						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 1,4 }, 4))
 					{
-					maptoolCursor.movingT = "WaterShallow";
-					maptoolCursor.movingtFrame = { 0,0 };
-					maptoolCursor.terrain = "";
-					maptoolCursor.objectT = "";
-					break;
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 1,4 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Hero);
+						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 2,4 }, 4))
 					{
-					maptoolCursor.movingT = "WaterShallow";
-					maptoolCursor.movingtFrame = { 0,0 };
-					maptoolCursor.terrain = "";
-					maptoolCursor.objectT = "";
-					break;
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 2,4 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::DarkMage);
+						break;
 					}
 					else if (i == TwoDimentionArrayToInt({ 3,4 }, 4))
 					{
-					maptoolCursor.movingT = "WaterShallow";
-					maptoolCursor.movingtFrame = { 0,0 };
-					maptoolCursor.terrain = "";
-					maptoolCursor.objectT = "";
-					break;
+						maptoolCursor.EnemyName = "Enemy";
+						maptoolCursor.enemyPos = { 3,4 };
+						maptoolCursor.occupation = static_cast<INT>(Occupation::Cleric);
+						break;
 					}
 				}
 			}
+			else
+			{
+
+			}
 		}
 	}
-	if (PtInRect(&selectArea, _ptMouse) && !((maptoolCursor.terrain == "") && (maptoolCursor.objectT == "") && (maptoolCursor.movingT == "")))
+	if (PtInRect(&selectArea, _ptMouse) && !((maptoolCursor.terrain == "") && (maptoolCursor.objectT == "") && (maptoolCursor.movingT == "")&& (maptoolCursor.EnemyName == "")))
 	{
 		for (UINT i = 0; i < TILECOLX * TILEROWY; i++)
 		{
@@ -389,6 +382,12 @@ void MapToolScene::Update()
 						field[i].SetMovingtFrame({ 0,0 });
 						break;
 					}
+					else if (maptoolCursor.EnemyName !="")
+					{
+						
+						EnemiesMap.insert(std::make_pair(SingleArrayToPoint(i, TILECOLX),EnemyData{maptoolCursor.occupation,SingleArrayToPoint(i,TILECOLX)}));
+						
+					}
 					else
 					{
 						assert(!"여기 들오면 안되는디");
@@ -413,6 +412,8 @@ void MapToolScene::Update()
 			FILE_ATTRIBUTE_NORMAL, NULL);
 		WriteFile(file, toSave, sizeof(Tiles) * TILECOLX * TILEROWY, &write, NULL);
 		CloseHandle(file);
+
+
 	}
 	else if (PtInRect(&exitButton, _ptMouse) && KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 	{
@@ -547,6 +548,10 @@ void MapToolScene::Render()
 				IMAGEMANAGER->FindImage(field[i].GetObjT())->SetSize(IMAGEMANAGER->FindImage(field[i].GetObjT())->GetFrameSize());
 				IMAGEMANAGER->FindImage(field[i].GetObjT())->FrameRender(relocatedRc.left, relocatedRc.top, field[i].GetObjTFrame().x, field[i].GetObjTFrame().y);
 			}
+			if (EnemiesMap.count(SingleArrayToPoint(i, TILECOLX)) > 0)
+			{
+				IMAGEMANAGER->FindImage("Enemy")->FrameRender(EnemiesMap[SingleArrayToPoint(i, TILECOLX)].
+			}
 		}
 	}
 
@@ -595,6 +600,12 @@ void MapToolScene::Render()
 		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
 		IMAGEMANAGER->FindImage(maptoolCursor.objectT)->SetSize(IMAGEMANAGER->FindImage(maptoolCursor.objectT)->GetFrameSize());
 		IMAGEMANAGER->FindImage(maptoolCursor.objectT)->FrameRender(_ptMouse.x + 20, _ptMouse.y + 20, maptoolCursor.objTFrame.x, maptoolCursor.objTFrame.y);
+	}
+	else if (maptoolCursor.EnemyName != "")
+	{
+		IMAGEMANAGER->FindImage("CursorBlue")->Render(_ptMouse.x, _ptMouse.y);
+		IMAGEMANAGER->FindImage("Enemy")->SetSize(IMAGEMANAGER->FindImage("Enemy")->GetFrameSize());
+		IMAGEMANAGER->FindImage("Enemy")->FrameRender(_ptMouse.x + 20, _ptMouse.y + 20, maptoolCursor.enemyPos.x, maptoolCursor.enemyPos.y);
 	}
 	else
 	{
