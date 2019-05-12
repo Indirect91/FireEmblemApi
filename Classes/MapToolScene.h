@@ -86,7 +86,9 @@ private:
 	float moveAngle;
 	class Tiles *field;					//타일들 보유할 포인터
 	Tiles toSave[TILECOLX * TILEROWY];
+	Tiles toLoad[TILECOLX * TILEROWY];
 	EnemyData toSaveEnemy[100];
+
 	std::vector<EnemyData> EnemiesV;
 	void moveCamera();
 	RECT reLocate(RECT _rc);
