@@ -4,6 +4,9 @@
 
 MapToolScene::MapToolScene()
 {
+	
+	ZeroMemory(toSaveEnemy, sizeof(EnemyData) * 100);
+
 	moveWindowRateX = 0;
 	moveWindowRateAccX = 0;
 	isMovingDone = 0;
@@ -78,7 +81,7 @@ void MapToolScene::Init()
 void MapToolScene::Release()
 {
 	//맵툴서 뉴할당받은건 타일들
-	//SAFE_DELETE_ARRAY(field);
+	SAFE_DELETE_ARRAY(field);
 }
 
 void MapToolScene::Update()
@@ -385,7 +388,8 @@ void MapToolScene::Update()
 					else if (maptoolCursor.EnemyName !="")
 					{
 						
-						EnemiesMap.insert(std::make_pair(SingleArrayToPoint(i, TILECOLX),EnemyData{maptoolCursor.occupation,SingleArrayToPoint(i,TILECOLX)}));
+						EnemiesV.push_back({ maptoolCursor.occupation,SingleArrayToPoint(i, TILECOLX) });
+						break;
 						
 					}
 					else
@@ -397,9 +401,44 @@ void MapToolScene::Update()
 		}
 	}
 
+	//▼로드
+	if (KEYMANAGER->IsOnceKeyDown(VK_F1))
+	{
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile(L"saveFile.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL, NULL);
+		assert(ReadFile(file, toSave, sizeof(Tiles)* TILECOLX* TILEROWY, &read, NULL));
+		CloseHandle(file);
+
+		for (UINT i = 0; i < TILECOLX * TILEROWY; i++)
+		{
+			field[i] = toSave[i];
+		}
+	}
+
 	//▼세이브
 	if (PtInRect(&saveButton, _ptMouse) && KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 	{
+
+
+		
+
+		for (UINT i = 0; i < EnemiesV.size(); i++)
+		{
+			toSaveEnemy[i] = EnemiesV[i];
+		}
+
+
+		HANDLE file2;
+		DWORD write2;
+
+		file2 = CreateFile(L"EnemyFile.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL, NULL);
+		WriteFile(file2, toSaveEnemy, sizeof(EnemyData)*100, &write2, NULL);
+		CloseHandle(file2);
+
 		for (UINT i = 0; i < TILECOLX * TILEROWY; i++)
 		{
 			toSave[i] = field[i];
@@ -410,9 +449,8 @@ void MapToolScene::Update()
 
 		file = CreateFile(L"saveFile.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 			FILE_ATTRIBUTE_NORMAL, NULL);
-		WriteFile(file, toSave, sizeof(Tiles) * TILECOLX * TILEROWY, &write, NULL);
+		WriteFile(file, toSave, sizeof(Tiles)* TILECOLX* TILEROWY, &write, NULL);
 		CloseHandle(file);
-
 
 	}
 	else if (PtInRect(&exitButton, _ptMouse) && KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
@@ -423,8 +461,10 @@ void MapToolScene::Update()
 	counter++;
 	if (counter % 5 == 0)
 	{
+		enemyX++;
 		movingTilex++;
 		if (movingTilex > 14) movingTilex = 0;
+		if (enemyX > 3) enemyX = 0;
 	}
 }
 
@@ -548,9 +588,16 @@ void MapToolScene::Render()
 				IMAGEMANAGER->FindImage(field[i].GetObjT())->SetSize(IMAGEMANAGER->FindImage(field[i].GetObjT())->GetFrameSize());
 				IMAGEMANAGER->FindImage(field[i].GetObjT())->FrameRender(relocatedRc.left, relocatedRc.top, field[i].GetObjTFrame().x, field[i].GetObjTFrame().y);
 			}
-			if (EnemiesMap.count(SingleArrayToPoint(i, TILECOLX)) > 0)
+			for (auto& eachElement : EnemiesV)
 			{
-				IMAGEMANAGER->FindImage("Enemy")->FrameRender(EnemiesMap[SingleArrayToPoint(i, TILECOLX)].
+				if (TwoDimentionArrayToInt(eachElement.realPos, TILECOLX) == i)
+				{
+					RECT temp = { eachElement.realPos.x * TILESIZE, eachElement.realPos.y * TILESIZE, eachElement.realPos.x * TILESIZE +TILESIZE, eachElement.realPos.y * TILESIZE  + TILESIZE};
+					
+					IMAGEMANAGER->FindImage("캐릭터General")->SetSize({ TILESIZE,TILESIZE });
+					IMAGEMANAGER->FindImage("캐릭터General")->FrameRender(reLocate(temp).left,reLocate(temp).top, enemyX, eachElement.occupation);
+					break;
+				}
 			}
 		}
 	}

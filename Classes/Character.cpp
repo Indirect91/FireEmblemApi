@@ -920,6 +920,7 @@ void Character::Update()
 			std::string shortestChar = "";
 			for (auto& toExamineDistance : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 			{
+				if (dynamic_cast<Character*>(toExamineDistance.second)->GetStatus() == Character::CharStatus::IsDying) continue;
 				FLOAT calculated = GetDistance(this->index, toExamineDistance.second->GetIndex());
 				if (shortest > calculated)
 				{
@@ -927,6 +928,7 @@ void Character::Update()
 					shortestChar = toExamineDistance.first;
 				}
 			}
+
 			Tiles* reach = dynamic_cast<Tiles*>(DATACENTRE.GetCertainObject(ObjType::Tile, TwoDimentionArrayToOneString(DATACENTRE.GetCertainObject(ObjType::PlayerArmy, shortestChar)->GetIndex(), TILECOLX)));;
 
 			//▼타겟까지의 길 찾기 전에 전부 초기화
@@ -1777,39 +1779,10 @@ void Character::PurpleShow(INT _actionRange)
 void Character::SetOccupation(Occupation _job)
 {
 	this->occupation = _job;
-	switch (this->occupation)
+
+	switch (occupation)
 	{
-	case Occupation::Swordsman:
-		occupationData.Range = 1;
-		occupationData.Speed = 5;
-		occupationData.Health = 25;
-		occupationData.Attack = 5;
-		occupationData.Defence = 5;
-		occupationData.Luck = 90;
-		occupationData.Move = 5;
-		occupationData.Weapon = WeaponType::Sword;
-		break;
-	case Occupation::Knight:
-		occupationData.Range = 1;
-		occupationData.Speed = 15;
-		occupationData.Health = 25;
-		occupationData.Attack = 5;
-		occupationData.Defence = 5;
-		occupationData.Luck = 90;
-		occupationData.Move = 3;
-		occupationData.Weapon = WeaponType::Lance;
-		break;
-	case Occupation::Mage:
-		occupationData.Speed = 5;
-		occupationData.Range = 2;
-		occupationData.Health = 20;
-		occupationData.Attack = 8;
-		occupationData.Defence = 2;
-		occupationData.Luck = 80;
-		occupationData.Move = 5;
-		occupationData.Weapon = WeaponType::Tomb;
-		break;
-	case Occupation::Assassin:
+	case GameObject::Occupation::Assassin:
 		occupationData.Speed = 15;
 		occupationData.Range = 1;
 		occupationData.Health = 20;
@@ -1819,17 +1792,47 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Move = 5;
 		occupationData.Weapon = WeaponType::Sword;
 		break;
-	case Occupation::GreatKnight:
-		occupationData.Speed = 15;
+	case GameObject::Occupation::Swordsman:
 		occupationData.Range = 1;
-		occupationData.Health = 20;
-		occupationData.Attack = 8;
-		occupationData.Defence = 2;
-		occupationData.Luck = 80;
-		occupationData.Move = 7;
-		occupationData.Weapon = WeaponType::Axe;
+		occupationData.Speed = 5;
+		occupationData.Health = 25;
+		occupationData.Attack = 5;
+		occupationData.Defence = 5;
+		occupationData.Luck = 90;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
 		break;
-	case Occupation::Archer:
+	case GameObject::Occupation::Myrmidon:
+		occupationData.Range = 1;
+		occupationData.Speed = 7;
+		occupationData.Health = 25;
+		occupationData.Attack = 10;
+		occupationData.Defence = 4;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::Mercenary:
+		occupationData.Range = 1;
+		occupationData.Speed = 7;
+		occupationData.Health = 30;
+		occupationData.Attack = 5;
+		occupationData.Defence = 14;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::SwordMaster:
+		occupationData.Range = 1;
+		occupationData.Speed = 10;
+		occupationData.Health = 28;
+		occupationData.Attack = 18;
+		occupationData.Defence = 1;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::Archer:
 		occupationData.Speed = 5;
 		occupationData.Range = 2;
 		occupationData.Health = 15;
@@ -1839,7 +1842,77 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Move = 5;
 		occupationData.Weapon = WeaponType::Bow;
 		break;
-	case Occupation::Cleric:
+	case GameObject::Occupation::Sniper:
+		occupationData.Speed = 1;
+		occupationData.Range = 3;
+		occupationData.Health = 15;
+		occupationData.Attack = 10;
+		occupationData.Defence = 2;
+		occupationData.Luck = 70;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Bow;
+		break;
+	case GameObject::Occupation::GreatLord:
+		occupationData.Range = 1;
+		occupationData.Speed = 10;
+		occupationData.Health = 30;
+		occupationData.Attack = 10;
+		occupationData.Defence = 10;
+		occupationData.Luck = 80;
+		occupationData.Move = 6;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::Knight:
+		occupationData.Range = 1;
+		occupationData.Speed = 15;
+		occupationData.Health = 25;
+		occupationData.Attack = 5;
+		occupationData.Defence = 5;
+		occupationData.Luck = 90;
+		occupationData.Move = 3;
+		occupationData.Weapon = WeaponType::Lance;
+		break;
+	case GameObject::Occupation::WarCleric:
+		occupationData.Speed = 7;
+		occupationData.Range = 2;
+		occupationData.Health = 25;
+		occupationData.Attack = 2;
+		occupationData.Defence = 1;
+		occupationData.Luck = 100;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Staff;
+		break;
+	case GameObject::Occupation::Hero:
+		occupationData.Range = 1;
+		occupationData.Speed = 5;
+		occupationData.Health = 30;
+		occupationData.Attack = 3;
+		occupationData.Defence = 20;
+		occupationData.Luck = 90;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::Sage:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 12;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::Mage:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 8;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::Cleric:
 		occupationData.Speed = 5;
 		occupationData.Range = 1;
 		occupationData.Health = 15;
@@ -1849,15 +1922,135 @@ void Character::SetOccupation(Occupation _job)
 		occupationData.Move = 5;
 		occupationData.Weapon = WeaponType::Staff;
 		break;
-	case Occupation::Sniper:
+	case GameObject::Occupation::Grandmaster:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 12;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::Tactician:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 8;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::BowKnight:
 		occupationData.Speed = 1;
-		occupationData.Range = 3;
+		occupationData.Range = 2;
 		occupationData.Health = 15;
 		occupationData.Attack = 10;
-		occupationData.Defence = 2;
-		occupationData.Luck = 70;
-		occupationData.Move = 5;
+		occupationData.Defence = 3;
+		occupationData.Luck = 60;
+		occupationData.Move = 7;
 		occupationData.Weapon = WeaponType::Bow;
+		break;
+	case GameObject::Occupation::DarkKnight:
+		occupationData.Range = 1;
+		occupationData.Speed = 10;
+		occupationData.Health = 28;
+		occupationData.Attack = 18;
+		occupationData.Defence = 1;
+		occupationData.Luck = 80;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::GreatKnight:
+		occupationData.Speed = 15;
+		occupationData.Range = 1;
+		occupationData.Health = 20;
+		occupationData.Attack = 8;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Axe;
+		break;
+	case GameObject::Occupation::Cavalier:
+		occupationData.Range = 1;
+		occupationData.Speed = 10;
+		occupationData.Health = 28;
+		occupationData.Attack = 8;
+		occupationData.Defence = 1;
+		occupationData.Luck = 80;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Lance;
+		break;
+	case GameObject::Occupation::Paladin:
+		occupationData.Range = 1;
+		occupationData.Speed = 10;
+		occupationData.Health = 28;
+		occupationData.Attack = 10;
+		occupationData.Defence = 5;
+		occupationData.Luck = 80;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Lance;
+		break;
+	case GameObject::Occupation::Troubadour:
+		occupationData.Speed = 5;
+		occupationData.Range = 1;
+		occupationData.Health = 20;
+		occupationData.Attack = 2;
+		occupationData.Defence = 2;
+		occupationData.Luck = 100;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Staff;
+		break;
+	case GameObject::Occupation::Valkyrie:
+		occupationData.Speed = 5;
+		occupationData.Range = 1;
+		occupationData.Health = 25;
+		occupationData.Attack = 2;
+		occupationData.Defence = 5;
+		occupationData.Luck = 100;
+		occupationData.Move = 7;
+		occupationData.Weapon = WeaponType::Staff;
+		break;
+	case GameObject::Occupation::Dancer:
+		occupationData.Range = 1;
+		occupationData.Speed = 5;
+		occupationData.Health = 20;
+		occupationData.Attack = 5;
+		occupationData.Defence = 3;
+		occupationData.Luck = 90;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
+		break;
+	case GameObject::Occupation::DarkMage:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 8;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::Sorcerer:
+		occupationData.Speed = 5;
+		occupationData.Range = 2;
+		occupationData.Health = 20;
+		occupationData.Attack = 12;
+		occupationData.Defence = 2;
+		occupationData.Luck = 80;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Tomb;
+		break;
+	case GameObject::Occupation::Theif:
+		occupationData.Speed = 15;
+		occupationData.Range = 1;
+		occupationData.Health = 20;
+		occupationData.Attack = 10;
+		occupationData.Defence = 2;
+		occupationData.Luck = 95;
+		occupationData.Move = 5;
+		occupationData.Weapon = WeaponType::Sword;
 		break;
 	default:
 		assert(false && "Occupation does not exist"); //존재하지 않는 직업 들어오면 터뜨림

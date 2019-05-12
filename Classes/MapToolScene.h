@@ -30,7 +30,7 @@ private:
 		std::string movingT;//타일이 들고있는 움직이는 타일
 		POINT movingtFrame;	//움직이는 타일 프레임렌더용
 
-		std::string EnemyName = "General";
+		std::string EnemyName = "";
 		INT occupation = 0;
 		POINT enemyPos;
 
@@ -86,7 +86,8 @@ private:
 	float moveAngle;
 	class Tiles *field;					//타일들 보유할 포인터
 	Tiles toSave[TILECOLX * TILEROWY];
-	std::map<POINT,EnemyData> EnemiesMap;
+	EnemyData toSaveEnemy[100];
+	std::vector<EnemyData> EnemiesV;
 	void moveCamera();
 	RECT reLocate(RECT _rc);
 	
@@ -107,8 +108,10 @@ private:
 	RECT saveButton = { 1220,610,1460,680 };
 	RECT exitButton = {1220,720,1460,780};
 	RECT selectArea = { 156,138, 970, 828};
+
 	INT movingTilex = 0;
 	INT counter = 0;
+	INT enemyX = 0;
 
 
 public:

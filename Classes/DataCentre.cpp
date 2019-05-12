@@ -125,17 +125,39 @@ HRESULT DataCentre::SavetoFile()
 
 HRESULT DataCentre::LoadFromFile()
 {
+	HANDLE file;
+	DWORD read;
+
+	EnemyData toLoadEnemy[100];
+
+	file = CreateFile(L"EnemyFile.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
+	assert(ReadFile(file, toLoadEnemy, sizeof(EnemyData)*100, &read, NULL));
+	CloseHandle(file);
+
+
 
 	AddObj(ObjType::PlayerArmy, "Chrome", new Character(GameObject::Occupation::Swordsman, "Chrome", { 1,2 }, OwnedBy::Player));
 	AddObj(ObjType::PlayerArmy, "Anna", new Character(GameObject::Occupation::Swordsman, "Anna", { 3,2 }, OwnedBy::Player));
 	AddObj(ObjType::PlayerArmy, "Lucina2", new Character(GameObject::Occupation::Mage, "Lucina", { 5,3 }, OwnedBy::Player));
 	AddObj(ObjType::PlayerArmy, "Virion", new Character(GameObject::Occupation::Archer, "Virion", { 4,4 }, OwnedBy::Player));
 
-	AddObj(ObjType::EnemyArmy, "Virion", new Character(GameObject::Occupation::Sniper, "Virion", { 1,6 }, OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Lucina3", new Character(GameObject::Occupation::GreatKnight, "Lucina", { 8,8 }, OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Olivia", new Character(GameObject::Occupation::Assassin, "Olivia", { 3,6 }, OwnedBy::Enemy));
-	AddObj(ObjType::EnemyArmy, "Lucina", new Character(GameObject::Occupation::Knight, "Lucina", { 7,9 }, OwnedBy::Enemy));
+	//AddObj(ObjType::EnemyArmy, "Virion", new Character(GameObject::Occupation::Sniper, "Virion", { 1,6 }, OwnedBy::Enemy));
+	//AddObj(ObjType::EnemyArmy, "Lucina3", new Character(GameObject::Occupation::GreatKnight, "Lucina", { 8,8 }, OwnedBy::Enemy));
+	//AddObj(ObjType::EnemyArmy, "Olivia", new Character(GameObject::Occupation::Assassin, "Olivia", { 3,6 }, OwnedBy::Enemy));
+	//AddObj(ObjType::EnemyArmy, "Lucina", new Character(GameObject::Occupation::Knight, "Lucina", { 7,9 }, OwnedBy::Enemy));
 
+	for (UINT i = 0; i < 100; i++)
+	{
+		if (!(toLoadEnemy[i].occupation == 0 && PointCompare(toLoadEnemy[i].realPos, { 0,0 })))
+		{
+			AddObj(ObjType::EnemyArmy, "General" + std::to_string(i), new Character((GameObject::Occupation)toLoadEnemy[i].occupation,"General", toLoadEnemy[i].realPos, OwnedBy::Enemy));
+		}
+		else if (toLoadEnemy[i].occupation == 0 && PointCompare(toLoadEnemy[i].realPos, { 0,0 }))
+		{
+			break;
+		}
+	}
 	return S_OK;
 }
 

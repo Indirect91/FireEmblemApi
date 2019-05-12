@@ -94,6 +94,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadFrameImage("캐릭터Olivia", L"IMAGE/Characters/Olivia.png", 12, 293);
 	_loading->LoadFrameImage("캐릭터Tharja", L"IMAGE/Characters/Tharja.png", 12, 293);
 	_loading->LoadFrameImage("캐릭터Virion", L"IMAGE/Characters/Virion.png", 12, 293);
+	_loading->LoadFrameImage("캐릭터General", L"IMAGE/Characters/General.png", 12, 293);
 	
 	//▼캐릭터 초상화
 	_loading->LoadImg("초상화Anna", L"IMAGE/Portraits/Anna.png");
@@ -104,6 +105,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("초상화Olivia", L"IMAGE/Portraits/Olivia.png");
 	_loading->LoadImg("초상화Tharja", L"IMAGE/Portraits/Tharja.png");
 	_loading->LoadImg("초상화Virion", L"IMAGE/Portraits/Virion.png");
+	_loading->LoadImg("초상화General", L"IMAGE/Portraits/General.png");
 
 	//▼캐릭터 작은 공격 이미지
 	_loading->LoadImg("공격Anna", L"IMAGE/Portraits/AnnaAttack.png");
@@ -114,6 +116,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("공격Olivia", L"IMAGE/Portraits/OliviaAttack.png");
 	_loading->LoadImg("공격Tharja", L"IMAGE/Portraits/TharjaAttack.png");
 	_loading->LoadImg("공격Virion", L"IMAGE/Portraits/VirionAttack.png");
+	_loading->LoadImg("공격General", L"IMAGE/Portraits/GeneralAttack.png");
 
 	//▼캐릭터 큰 공격 이미지
 	_loading->LoadImg("공격풀사이즈Anna", L"IMAGE/Portraits/AnnaAttackFull.png");
@@ -124,6 +127,7 @@ void LoadingScene::LoadingImage()
 	_loading->LoadImg("공격풀사이즈Olivia", L"IMAGE/Portraits/OliviaAttackFull.png");
 	_loading->LoadImg("공격풀사이즈Tharja", L"IMAGE/Portraits/TharjaAttackFull.png");
 	_loading->LoadImg("공격풀사이즈Virion", L"IMAGE/Portraits/VirionAttackFull.png");
+	_loading->LoadImg("공격풀사이즈General", L"IMAGE/Portraits/GeneralAttackFull.png");
 
 	//▼캐릭터 큰 크리티컬 이미지
 	_loading->LoadImg("치명타풀사이즈Anna", L"IMAGE/Portraits/AnnaCriticalFull.png");

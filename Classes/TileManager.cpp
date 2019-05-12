@@ -138,8 +138,6 @@ void TileManager::Render()
 		Tiles* toExamen = dynamic_cast<Tiles*>(toRender.second); //검사할 타일 하나를 임시 포인터에 저장
 		D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2DRenderer::DefaultBrush::Black, 1);
 
-
-
 		if (toExamen->GetMovingT() != "")
 		{
 			IMAGEMANAGER->FindImage(toExamen->GetMovingT())->SetSize(IMAGEMANAGER->FindImage(toExamen->GetMovingT())->GetFrameSize());
@@ -181,10 +179,6 @@ void TileManager::Render()
 			IMAGEMANAGER->FindImage("Purple")->SetSize({ TILESIZE,TILESIZE }); //사이즈 세팅해주고
 			IMAGEMANAGER->FindImage("Purple")->RelativeRender(toExamen->GetPosition().left, toExamen->GetPosition().top);//출력
 		}
-		//else if (toExamen->GetObjT() != "")
-		//{
-		//	D2DRENDERER->FillRectangle(CAMERA.RelativeCameraRect(toExamen->GetPosition()), D2D1::ColorF::Red, toExamen->GetBlueAlpha());
-		//}
 		if (toExamen->GetArrowT() != "")
 		{
 			auto arrow = IMAGEMANAGER->FindImage("MoveArrow");
@@ -193,7 +187,4 @@ void TileManager::Render()
 		}
 
 	}
-
-	//D2DRENDERER->DrawRectangle(CAMERA.RelativeCameraRect(CAMERA.GetCameraRc()),D2DRenderer::DefaultBrush::Red,1);
-
 }

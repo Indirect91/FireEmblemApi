@@ -29,6 +29,12 @@ public:
 		return instance;
 	}
 private:
+	struct EnemyData //로드용
+	{
+		INT occupation;
+		POINT realPos;
+	};
+
 	DataCentre();		//싱글톤이라 생성자 소멸자 숨김
 	~DataCentre() {};	//뉴할당 받은거 없음
 
