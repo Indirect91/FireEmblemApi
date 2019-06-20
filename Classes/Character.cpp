@@ -595,6 +595,7 @@ void Character::Update()
 							{
 								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
 								{
+									if (dynamic_cast<Character*>(isEnemy.second)->GetStatus() == Character::CharStatus::IsDying)continue;
 									redTiles.insert(checkTarget);
 									foeTiles.insert(checkTarget);
 									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -658,6 +659,7 @@ void Character::Update()
 							{
 								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
 								{
+									if (dynamic_cast<Character*>(isEnemy.second)->GetStatus() == Character::CharStatus::IsDying)continue;
 									redTiles.insert(checkTarget);
 									foeTiles.insert(checkTarget);
 									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -721,6 +723,7 @@ void Character::Update()
 							{
 								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
 								{
+									if (dynamic_cast<Character*>(isEnemy.second)->GetStatus() == Character::CharStatus::IsDying)continue;
 									redTiles.insert(checkTarget);
 									foeTiles.insert(checkTarget);
 									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -784,6 +787,7 @@ void Character::Update()
 							{
 								if (PointCompare(checkTarget->GetIndex(), isEnemy.second->GetIndex()))
 								{
+									if (dynamic_cast<Character*>(isEnemy.second)->GetStatus() == Character::CharStatus::IsDying)continue;
 									redTiles.insert(checkTarget);
 									foeTiles.insert(checkTarget);
 									checkTarget->SetCheckedNum(toExamen->GetCheckedNum() - 1);
@@ -920,7 +924,8 @@ void Character::Update()
 			std::string shortestChar = "";
 			for (auto& toExamineDistance : DATACENTRE.RefObjects(ObjType::PlayerArmy))
 			{
-				if (dynamic_cast<Character*>(toExamineDistance.second)->GetStatus() == Character::CharStatus::IsDying) continue;
+				if (dynamic_cast<Character*>(toExamineDistance.second)->GetStatus() == Character::CharStatus::IsDying) 
+					continue;
 				FLOAT calculated = GetDistance(this->index, toExamineDistance.second->GetIndex());
 				if (shortest > calculated)
 				{
@@ -968,7 +973,7 @@ void Character::Update()
 				for (auto& nodeNeighbour : nodeCurrent->RefNeighbours())
 				{
 					//▼지금 까보고 있는 이웃타일이 이미 방문한 타일이 아니거나 장애물이 아니라면, 
-					if (!(nodeNeighbour->RefIsVisited() || nodeNeighbour->GetObjT() != ""))
+					if (!(nodeNeighbour->RefIsVisited() || nodeNeighbour->GetObjT() != "" || nodeNeighbour->GetMovingT() != ""))
 						listNotTestedNodes.push_back(nodeNeighbour); //지금 검사중인 이웃타일을 미검사 리스트에 집어넣음
 
 					//▼(지금 검사중인 이웃타일)과 (이웃타일이 파생된 원본 타일)과의 거리 + 시작점으로부터의 거리 계산해서 잠시 저장해둠

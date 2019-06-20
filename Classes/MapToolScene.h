@@ -89,6 +89,7 @@ private:
 	Tiles toLoad[TILECOLX * TILEROWY];
 	EnemyData toSaveEnemy[100];
 
+	std::vector<EnemyData> enemySave;
 	std::vector<EnemyData> EnemiesV;
 	void moveCamera();
 	RECT reLocate(RECT _rc);

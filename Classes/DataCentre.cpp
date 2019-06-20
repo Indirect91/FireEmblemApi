@@ -101,7 +101,7 @@ void DataCentre::RemoveObj(ObjType _type, std::string _name, GameObject* _obj)
 //▼특정 오브젝트 가져오기
 GameObject* DataCentre::GetCertainObject(ObjType _type, std::string _name)
 {
-	assert(objContainer[_type].count(_name) > 0 && "searched object not found"); 
+	assert(objContainer[_type].count(_name) > 0 && "찾는거 없어용"); 
 	return objContainer[_type][_name]; //타입,이름이 일치하는 오브젝트 반환
 }
 
@@ -151,13 +151,23 @@ HRESULT DataCentre::LoadFromFile()
 	{
 		if (!(toLoadEnemy[i].occupation == 0 && PointCompare(toLoadEnemy[i].realPos, { 0,0 })))
 		{
-			AddObj(ObjType::EnemyArmy, "General" + std::to_string(i), new Character((GameObject::Occupation)toLoadEnemy[i].occupation,"General", toLoadEnemy[i].realPos, OwnedBy::Enemy));
+			int dupCounter = 0;
+			for (auto& duplicate : objContainer[ObjType::EnemyArmy])
+			{
+				if (PointCompare(duplicate.second->GetIndex(), toLoadEnemy[i].realPos))
+				{
+					dupCounter++;
+				}
+			}
+			if(dupCounter==0)
+				AddObj(ObjType::EnemyArmy, "General" + std::to_string(i), new Character((GameObject::Occupation)toLoadEnemy[i].occupation,"General", toLoadEnemy[i].realPos, OwnedBy::Enemy));
 		}
 		else if (toLoadEnemy[i].occupation == 0 && PointCompare(toLoadEnemy[i].realPos, { 0,0 }))
 		{
-			break;
+			continue;
 		}
 	}
+
 	return S_OK;
 }
 

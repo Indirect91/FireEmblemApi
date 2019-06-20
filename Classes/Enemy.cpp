@@ -13,7 +13,11 @@ Enemy::Enemy()
 void Enemy::Init()
 {
 	cursor = dynamic_cast<Cursor*>(DATACENTRE.GetCertainObject(ObjType::UI, "Cursor"));
-	for (auto& characters : enemyTroop) { dynamic_cast<Character*>(characters.second)->Init(); }
+	std::vector<Character> duplicate;
+	for (auto& characters : enemyTroop) 
+	{ 
+		dynamic_cast<Character*>(characters.second)->Init(); 
+	}
 }
 
 void Enemy::Release()

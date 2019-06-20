@@ -421,15 +421,10 @@ void MapToolScene::Update()
 	//¡å¼¼ÀÌºê
 	if (PtInRect(&saveButton, _ptMouse) && KEYMANAGER->IsOnceKeyDown(VK_LBUTTON))
 	{
-
-
-		
-
 		for (UINT i = 0; i < EnemiesV.size(); i++)
 		{
 			toSaveEnemy[i] = EnemiesV[i];
 		}
-
 
 		HANDLE file2;
 		DWORD write2;
